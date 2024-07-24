@@ -26,7 +26,7 @@
             <ul class="flex space-x-4">
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="border-2 border-white">Cerrar Sesión</button>
+                    <button type="submit" class="border-2 hover:font-bold border-white">Cerrar Sesión</button>
                 </form>
             </ul>
             {% endif %}
