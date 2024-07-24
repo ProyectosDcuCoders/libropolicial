@@ -27,6 +27,7 @@
                 <th class="px-4 py-2">Descripción</th>
                 <th class="px-4 py-2">Instituciones Intervinientes</th>
                 <th class="px-4 py-2">Tareas Judiciales</th>
+                <th class="px-4 py-2">Estado</th>
                 <th class="px-4 py-2">Acciones</th>
             </tr>
         </thead>
@@ -43,6 +44,9 @@
                 <td class="px-4 py-2">{{ comisaria.descripcion }}</td>
                 <td class="px-4 py-2">{{ comisaria.instituciones_intervinientes }}</td>
                 <td class="px-4 py-2">{{ comisaria.tareas_judiciales }}</td>
+                <td class="px-4 py-2 {% if comisaria.estado %}bg-red-500 text-white{% endif %}">
+                    {{ comisaria.estado|yesno:"Activo,Inactivo" }}
+                </td>
                 <td class="px-4 py-2">
                     <a href="{% url 'comisaria_primera_edit' comisaria.id %}" class="bg-slate-800 text-white px-2 p-2 rounded hover:bg-yellow-700">Editar</a>
                 </td>

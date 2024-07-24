@@ -13,7 +13,7 @@ class BaseComisariaForm(forms.ModelForm):
     )
 
     class Meta:
-        fields = ['cuarto', 'fecha_hora', 'codigo', 'movil_patrulla', 'a_cargo', 'secundante', 'lugar_codigo', 'descripcion', 'instituciones_intervinientes', 'tareas_judiciales']
+        fields = ['cuarto', 'fecha_hora', 'codigo', 'movil_patrulla', 'a_cargo', 'secundante', 'lugar_codigo', 'descripcion', 'instituciones_intervinientes', 'tareas_judiciales', 'estado']
 
 class ComisariaPrimeraForm(BaseComisariaForm):
     class Meta(BaseComisariaForm.Meta):
