@@ -3,10 +3,10 @@
 {% block title %}Registros Completos de Comisarías{% endblock %}
 
 {% block content %}
-<div class=" mx-auto mt-4 p-4">
+<div class="mx-auto mt-4 p-4">
     <h1 class="text-2xl font-bold mb-4 text-center">Registros Completos de Comisarías</h1>
 
-    <form method="GET" class="mb-4 flex justify-between mx-auto w-fit">
+    <form method="GET" class="mb-4 flex justify-between w-full">
         <div class="flex items-center">
             <label for="search" class="block text-gray-700 mr-2">Buscar:</label>
             <input type="text" id="search" name="q" value="{{ query }}" class="bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg  w-full  p-2">
@@ -23,10 +23,10 @@
         </div>
     </form>
 
-    <table class="min-w-full bg-white border border-gray-400">
-        <thead class="bg-gray-500">
-            <tr>
-                <th class="px-4 py-4">Comisaría</th>
+    <table class="w-full bg-white border border-gray-400 rounded-t-lg">
+        <thead class="bg-gray-700 text-white rounded-t-lg">
+            <tr class="">
+                <th class="rounded-t-lg px-4 py-4">Comisaría</th>
                 <th class="px-4 py-4">Guardia</th>
                 <th class="px-4 py-4">Fecha y Hora</th>
                 <th class="px-4 py-4">Código</th>

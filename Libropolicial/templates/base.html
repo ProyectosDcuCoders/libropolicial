@@ -8,23 +8,24 @@
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@1.4.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2" defer></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <header class="flex justify-between bg-slate-900 text-white p-4">
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <header class="flex justify-between items-center bg-slate-900 text-white p-4">
         <h1 class="text-3xl">Libropolicial</h1>
         <nav class="">
             {% if user.is_authenticated %}
             <ul class="flex space-x-4">
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="border-2 border-white">Cerrar Sesión</button>
+                    <button type="submit" class="pb-1 px-3 rounded-md border-2 border-white hover:bg-white hover:text-black hover:font-bold">Cerrar Sesión</button>
                 </form>
             </ul>
             {% endif %}
         </nav>
     </header>
-    <main class=" mx-auto">
-
+    <main class="flex-grow mx-auto w-full p-4">
         {% if messages %}
         <div id="messages" class="fixed top-0 left-0 right-0 bg-red-500 text-black p-4 z-50">
             {% for message in messages %}
@@ -41,7 +42,7 @@
         {% block content %}
         {% endblock %}
     </main>
-    <footer class="bg-slate-900 text-white text-center p-4 mt-4">
+    <footer class="bg-slate-900 text-white text-center p-4 mt-auto w-full">
         <p>&copy; 2024 Libropolicial. Todos los derechos reservados.</p>
     </footer>
 </body>
