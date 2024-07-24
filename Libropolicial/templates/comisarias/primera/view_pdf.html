@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Previsualizar PDF{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-4 p-4 text-center">
+    <h1 class="text-2xl font-bold mb-4">Previsualización del PDF</h1>
+    <iframe src="{{ pdf_url }}" width="80%" height="600px"></iframe>
+    <div class="mt-4">
+        <a href="{{ pdf_url }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" download>Descargar PDF</a>
+    </div>
+</div>
+{% endblock %}

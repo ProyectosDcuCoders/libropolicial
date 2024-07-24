@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Registros Completos de Comisarías{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-4 p-4">
+    <h1 class="text-2xl font-bold mb-4 text-center">Registros Completos de Comisarías</h1>
+
+    <form method="GET" class="mb-4 flex justify-between">
+        <div class="flex items-center">
+            <label for="search" class="block text-gray-700 mr-2">Buscar:</label>
+            <input type="text" id="search" name="q" value="{{ query }}" class="bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg  w-full  p-2">
+        </div>
+        <div class="flex items-center">
+            <label for="show" class="block text-gray-700 mr-2">Mostrar:</label>
+            <select id="show" name="items_per_page" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2">
+                <option value="10" {% if paginate_by == 10 %}selected{% endif %}>10</option>
+                <option value="25" {% if paginate_by == 25 %}selected{% endif %}>25</option>
+                <option value="50" {% if paginate_by == 50 %}selected{% endif %}>50</option>
+                <option value="100" {% if paginate_by == 100 %}selected{% endif %}>100</option>
+            </select>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 ml-2 rounded hover:bg-blue-700">Aplicar</button>
+        </div>
+    </form>
+
+    <table class="min-w-full bg-white border border-gray-400">
+        <thead class="bg-gray-500">
+            <tr>
+                <th class="px-4 py-4">Comisaría</th>
+                <th class="px-4 py-4">Guardia</th>
+                <th class="px-4 py-4">Fecha y Hora</th>
+                <th class="px-4 py-4">Código</th>
+                <th class="px-4 py-4">Móvil Patrulla</th>
+                <th class="px-4 py-4">A Cargo</th>
+                <th class="px-4 py-4">Secundante</th>
+                <th class="px-4 py-4">Lugar del Código</th>
+                <th class="px-4 py-4">Descripción</th>
+                <th class="px-4 py-4">Instituciones Intervinientes</th>
+                <th class="px-4 py-4">Tareas Judiciales</th>
+                <th class="px-4 py-4">Fecha de Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comisaria in comisarias %}
+            <tr class="border-b">
+                <td class="py-1 px-2 font-bold text-blue-700 bg-blue-100">{{ comisaria.comisaria_nombre }}</td>
+                <td class="py-1 px-2">{{ comisaria.cuarto.cuarto }}</td>
+                <td class="py-1 px-2">{{ comisaria.fecha_hora }}</td>
+                <td class="py-1 px-2">{{ comisaria.codigo.codigo }}</td>
+                <td class="py-1 px-2">{{ comisaria.movil_patrulla }}</td>
+                <td class="py-1 px-2">{{ comisaria.a_cargo }}</td>
+                <td class="py-1 px-2">{{ comisaria.secundante }}</td>
+                <td class="py-1 px-2">{{ comisaria.lugar_codigo }}</td>
+                <td class="py-1 px-2">{{ comisaria.descripcion }}</td>
+                <td class="py-1 px-2">{{ comisaria.instituciones_intervinientes }}</td>
+                <td class="py-1 px-2">{{ comisaria.tareas_judiciales }}</td>
+                <td class="py-1 px-2">{{ comisaria.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <span class="text-sm text-gray-700">Mostrando {{ comisarias.start_index }} a {{ comisarias.end_index }} de {{ comisarias.paginator.count }} entradas</span>
+        <div class="pagination flex justify-center mt-2">
+            {% if comisarias.has_previous %}
+                <a href="?page=1&items_per_page={{ paginate_by }}&q={{ query }}" class="mr-2 px-3 py-1 text-white border rounded-lg bg-gray-800">Primero</a>
+                <a href="?page={{ comisarias.previous_page_number }}&items_per_page={{ paginate_by }}&q={{ query }}" class="mr-2 px-3 py-1 text-white border rounded-lg bg-gray-800">Anterior</a>
+            {% endif %}
+            <span class="mr-2 px-3 py-1 text-white border rounded-lg bg-gray-800">{{ comisarias.number }}</span>
+            {% if comisarias.has_next %}
+                <a href="?page={{ comisarias.next_page_number }}&items_per_page={{ paginate_by }}&q={{ query }}" class="mr-2 px-3 py-1 text-white border rounded-lg bg-gray-800">Siguiente</a>
+                <a href="?page={{ comisarias.paginator.num_pages }}&items_per_page={{ paginate_by }}&q={{ query }}" class="mr-2 px-3 py-1 text-white border rounded-lg bg-gray-800">Último</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="/" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 text-center">Volver a la página principal</a>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Comunicaciones{% endblock %}
+
+{% block content %}
+
+
+
+
+    <h1 class="text-2xl font-bold mb-4 text-center">Lista de Comunicaciones</h1>
+    <div class="flex justify-end mb-4">
+        <a href="{% url 'divisioncomunicaciones_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Nueva Comunicación</a>
+    </div>
+    <table class="min-w-full bg-white border border-gray-200">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="px-4 py-2">Inicio Guardia</th>
+                <th class="px-4 py-2">Finalización Guardia</th>
+                <th class="px-4 py-2">Encargado Guardia</th>
+                <th class="px-4 py-2">Solicitante</th>
+                <th class="px-4 py-2">Nombre y Apellido</th>
+                <th class="px-4 py-2">DNI</th>
+                <th class="px-4 py-2">Teléfono</th>
+                <th class="px-4 py-2">Móvil Patrulla</th>
+                <th class="px-4 py-2">Personal a Cargo</th>
+                <th class="px-4 py-2">Descripción</th>
+                <th class="px-4 py-2">Intervención Comisaria</th>
+                <th class="px-4 py-2">Personal Guardia</th>
+                <th class="px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comunicacion in comunicaciones %}
+            <tr class="bg-gray-100 border-b">
+                <td class="px-4 py-2">{{ comunicacion.inicio_guardia }}</td>
+                <td class="px-4 py-2">{{ comunicacion.finalizacion_guardia }}</td>
+                <td class="px-4 py-2">{{ comunicacion.encargado_guardia }}</td>
+                <td class="px-4 py-2">{{ comunicacion.solicitante }}</td>
+                <td class="px-4 py-2">{{ comunicacion.nombre_apellido }}</td>
+                <td class="px-4 py-2">{{ comunicacion.dni }}</td>
+                <td class="px-4 py-2">{{ comunicacion.telefono }}</td>
+                <td class="px-4 py-2">{{ comunicacion.movil_patrulla }}</td>
+                <td class="px-4 py-2">{{ comunicacion.personal_cargo }}</td>
+                <td class="px-4 py-2">{{ comunicacion.descripcion }}</td>
+                <td class="px-4 py-2">{{ comunicacion.intervencion_comisaria }}</td>
+                <td class="px-4 py-2">
+                    {% for personal in comunicacion.personal_guardia.all %}
+                        {{ personal.nombre_apellido }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td class="px-4 py-2">
+                    <a href="{% url 'divisioncomunicaciones_edit' comunicacion.id %}" class="bg-slate-800 text-white px-2 p-3 rounded hover:bg-yellow-700">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

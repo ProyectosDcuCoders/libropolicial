@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Comisaría Primera - Lista de Codigos{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-4 p-4">
+    <h1 class="text-2xl font-bold mb-4 text-center">Comisaria Primera lista de codigos</h1>
+
+    <div class="flex justify-between mb-4">
+        <a href="{% url 'comisaria_primera_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar guardia</a>
+        <a href="{% url 'comisarias_completa_list' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Libro general</a>
+        <a href="{% url 'view_comisaria_primera_pdf' %}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700">Ver PDF</a>
+        <a href="{% url 'generate_comisaria_primera_pdf' %}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Descargar PDF</a>
+        <a href="{% url 'generate_comisaria_primera_pdf' %}?signature=true" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Firmar y Descargar PDF</a>
+    </div>
+
+    <table id="datatable" class="min-w-full bg-white border border-gray-400">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">Guardia</th>
+                <th class="px-4 py-2">Fecha y Hora</th>
+                <th class="px-4 py-2">Código</th>
+                <th class="px-4 py-2">Móvil Patrulla</th>
+                <th class="px-4 py-2">A Cargo</th>
+                <th class="px-4 py-2">Secundante</th>
+                <th class="px-4 py-2">Lugar Código</th>
+                <th class="px-4 py-2">Descripción</th>
+                <th class="px-4 py-2">Instituciones Intervinientes</th>
+                <th class="px-4 py-2">Tareas Judiciales</th>
+                <th class="px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comisaria in object_list %}
+            <tr class="bg-gray-100 border-b">
+                <td class="px-4 py-2">{{ comisaria.cuarto }}</td>
+                <td class="px-4 py-2">{{ comisaria.fecha_hora }}</td>
+                <td class="px-4 py-2">{{ comisaria.codigo.codigo }}</td>
+                <td class="px-4 py-2">{{ comisaria.movil_patrulla }}</td>
+                <td class="px-4 py-2">{{ comisaria.a_cargo }}</td>
+                <td class="px-4 py-2">{{ comisaria.secundante }}</td>
+                <td class="px-4 py-2">{{ comisaria.lugar_codigo }}</td>
+                <td class="px-4 py-2">{{ comisaria.descripcion }}</td>
+                <td class="px-4 py-2">{{ comisaria.instituciones_intervinientes }}</td>
+                <td class="px-4 py-2">{{ comisaria.tareas_judiciales }}</td>
+                <td class="px-4 py-2">
+                    <a href="{% url 'comisaria_primera_edit' comisaria.id %}" class="bg-slate-800 text-white px-2 p-2 rounded hover:bg-yellow-700">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

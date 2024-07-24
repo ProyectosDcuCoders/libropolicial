@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Libropolicial{% endblock %}</title>
+    {% load static %}
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.4.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2" defer></script>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-slate-900 text-white p-4">
+        <h1 class="text-3xl">Libropolicial</h1>
+        <nav>
+            {% if user.is_authenticated %}
+            <ul class="flex space-x-4">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                </form>
+            </ul>
+            {% endif %}
+        </nav>
+    </header>
+    <main class="container mx-auto">
+
+        {% if messages %}
+        <div id="messages" class="fixed top-0 left-0 right-0 bg-red-500 text-black p-4 z-50">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        <script>
+            setTimeout(function() {
+                document.getElementById('messages').style.display = 'none';
+            }, 300000); // 5 minutos en milisegundos
+        </script>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="bg-slate-900 text-white text-center p-4 mt-4">
+        <p>&copy; 2024 Libropolicial. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

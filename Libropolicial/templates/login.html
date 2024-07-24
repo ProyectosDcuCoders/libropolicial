@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de Sesión</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold mb-4">Bienvenido usuario policial</h1>
+            <div class="mb-4">
+                <img src="{% static 'comisarias/images/ESCUDO POLICIA.jpeg' %}" alt="Imagen descriptiva" class="rounded-lg shadow-md w-24 mx-auto">
+            </div>
+            <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mx-auto">
+                <h1 class="text-2xl font-bold mb-4">Iniciar Sesión</h1>
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                <div>
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                </div>
+                <div>
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+                    <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ingresar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

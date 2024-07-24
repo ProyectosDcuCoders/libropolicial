@@ -1,0 +1,311 @@
+# Libropolicial/comisarias/views.py
+
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from django.utils import timezone
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import ListView, CreateView, UpdateView, TemplateView
+from django.contrib.auth.views import LoginView
+from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta
+from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, CustomLoginForm
+from django.urls import reverse_lazy
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.utils.dateparse import parse_datetime
+from datetime import datetime
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+
+
+def user_is_in_group(user, group_name):
+    return user.groups.filter(name=group_name).exists()
+
+def no_permission(request):
+    return render(request, 'no_permission.html', {})
+
+class HomeView(TemplateView):
+    template_name = 'home.html'
+
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+    authentication_form = CustomLoginForm
+
+    def get_success_url(self):
+        if self.request.user.groups.filter(name='comisariaprimera').exists():
+            return reverse_lazy('comisaria_primera_list')
+        elif self.request.user.groups.filter(name='comisariasegunda').exists():
+            return reverse_lazy('comisaria_segunda_list')
+        elif self.request.user.groups.filter(name='divisioncomunicaciones').exists():
+            return reverse_lazy('divisioncomunicaciones_list')
+        else:
+            return reverse_lazy('no_permission')
+
+class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = ComisariaPrimera
+    template_name = 'comisarias/primera/comisaria_primera_list.html'
+
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariaprimera')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        notification = self.request.session.pop('comisarias_notification', None)
+        if notification:
+            messages.add_message(self.request, messages.WARNING, f"Notificación: {notification['description']}, Solicitante: {notification['solicitante']}")
+        context['messages'] = messages.get_messages(self.request)
+        return context
+
+class ComisariaPrimeraCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = ComisariaPrimera
+    form_class = ComisariaPrimeraForm
+    template_name = 'comisarias/primera/comisaria_primera_form.html'
+    success_url = reverse_lazy('comisaria_primera_list')
+
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariaprimera')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
+
+class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = ComisariaPrimera
+    form_class = ComisariaPrimeraForm
+    template_name = 'comisarias/primera/comisaria_primera_form.html'
+    success_url = reverse_lazy('comisaria_primera_list')
+
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariaprimera')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
+
+class ComisariaSegundaListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = ComisariaSegunda
+    template_name = 'comisarias/segunda/comisaria_segunda_list.html'
+
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariasegunda')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
+
+class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = ComisariaSegunda
+    form_class = ComisariaSegundaForm
+    template_name = 'comisarias/segunda/comisaria_segunda_form.html'
+    success_url = reverse_lazy('comisaria_segunda_list')
+
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariasegunda')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
+
+class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = ComisariaSegunda
+    form_class = ComisariaSegundaForm
+    template_name = 'comisarias/segunda/comisaria_segunda_form.html'
+    success_url = reverse_lazy('comisaria_segunda_list')
+
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariasegunda')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
+
+class ComisariaTerceraListView(LoginRequiredMixin, ListView):
+    model = ComisariaTercera
+    template_name = 'comisarias/tercera/comisaria_tercera_list.html'
+
+class ComisariaTerceraCreateView(LoginRequiredMixin, CreateView):
+    model = ComisariaTercera
+    form_class = ComisariaTerceraForm
+    template_name = 'comisarias/tercera/comisaria_tercera_form.html'
+    success_url = reverse_lazy('comisaria_tercera_list')
+
+class ComisariaCuartaListView(LoginRequiredMixin, ListView):
+    model = ComisariaCuarta
+    template_name = 'comisarias/cuarta/comisaria_cuarta_list.html'
+
+class ComisariaCuartaCreateView(LoginRequiredMixin, CreateView):
+    model = ComisariaCuarta
+    form_class = ComisariaCuartaForm
+    template_name = 'comisarias/cuarta/comisaria_cuarta_form.html'
+    success_url = reverse_lazy('comisaria_cuarta_list')
+
+class ComisariaQuintaListView(LoginRequiredMixin, ListView):
+    model = ComisariaQuinta
+    template_name = 'comisarias/quinta/comisaria_quinta_list.html'
+
+class ComisariaQuintaCreateView(LoginRequiredMixin, CreateView):
+    model = ComisariaQuinta
+    form_class = ComisariaQuintaForm
+    template_name = 'comisarias/quinta/comisaria_quinta_form.html'
+    success_url = reverse_lazy('comisaria_quinta_list')
+
+class ComisariasCompletaListView(LoginRequiredMixin, ListView):
+    template_name = 'comisarias/comisarias_completa_list.html'
+    context_object_name = 'comisarias'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        items_per_page = self.request.GET.get('items_per_page', 10)
+        
+        # Asegurarse de que items_per_page sea un número válido
+        try:
+            items_per_page = int(items_per_page)
+        except ValueError:
+            items_per_page = 10
+        
+        combined_list = []
+
+        comisarias_primera = ComisariaPrimera.objects.select_related('cuarto').all()
+        comisarias_segunda = ComisariaSegunda.objects.select_related('cuarto').all()
+        comisarias_tercera = ComisariaTercera.objects.select_related('cuarto').all()
+        comisarias_cuarta = ComisariaCuarta.objects.select_related('cuarto').all()
+        comisarias_quinta = ComisariaQuinta.objects.select_related('cuarto').all()
+
+        for comisaria in comisarias_primera:
+            comisaria.comisaria_nombre = 'Comisaria Primera'
+        for comisaria in comisarias_segunda:
+            comisaria.comisaria_nombre = 'Comisaria Segunda'
+        for comisaria in comisarias_tercera:
+            comisaria.comisaria_nombre = 'Comisaria Tercera'
+        for comisaria in comisarias_cuarta:
+            comisaria.comisaria_nombre = 'Comisaria Cuarta'
+        for comisaria in comisarias_quinta:
+            comisaria.comisaria_nombre = 'Comisaria Quinta'
+
+        combined_list = list(comisarias_primera) + list(comisarias_segunda) + \
+                        list(comisarias_tercera) + list(comisarias_cuarta) + \
+                        list(comisarias_quinta)
+
+        if query:
+            combined_list = [comisaria for comisaria in combined_list if self.query_in_comisaria(comisaria, query)]
+
+        combined_list = sorted(combined_list, key=lambda x: x.created_at, reverse=True)
+
+        paginator = Paginator(combined_list, items_per_page)
+        page = self.request.GET.get('page')
+        try:
+            comisarias = paginator.page(page)
+        except PageNotAnInteger:
+            comisarias = paginator.page(1)
+        except EmptyPage:
+            comisarias = paginator.page(paginator.num_pages)
+
+        return comisarias
+
+    def query_in_comisaria(self, comisaria, query):
+        return query.lower() in comisaria.comisaria_nombre.lower() or \
+               query.lower() in comisaria.cuarto.cuarto.lower() or \
+               query.lower() in comisaria.codigo.codigo.lower() or \
+               query.lower() in comisaria.movil_patrulla.lower() or \
+               query.lower() in comisaria.a_cargo.lower() or \
+               query.lower() in comisaria.secundante.lower() or \
+               query.lower() in comisaria.lugar_codigo.lower() or \
+               query.lower() in comisaria.descripcion.lower() or \
+               query.lower() in comisaria.instituciones_intervinientes.lower() or \
+               query.lower() in comisaria.tareas_judiciales.lower()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        context['paginate_by'] = self.request.GET.get('items_per_page', 10)
+        return context
+
+    
+def generate_pdf(request, comisaria_model, filename, add_signature=False):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+
+    p.setFont("Helvetica", 8)
+    y = height - 50
+
+    now = timezone.now()
+    start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+
+    registros = comisaria_model.objects.filter(created_at__range=(start_of_day, end_of_day))
+
+    if not registros.exists():
+        p.drawString(100, y, "No hay registros para hoy.")
+    else:
+        p.drawString(100, y, f"Registros de {comisaria_model._meta.verbose_name} - Hoy")
+        y -= 20
+
+        for registro in registros:
+            p.drawString(50, y, f"Guardia: {registro.cuarto}")
+            p.drawString(150, y, f"Código: {registro.codigo.codigo}")
+            p.drawString(250, y, f"Móvil Patrulla: {registro.movil_patrulla}")
+            p.drawString(350, y, f"A Cargo: {registro.a_cargo}")
+            y -= 10
+            p.drawString(50, y, f"Secundante: {registro.secundante}")
+            p.drawString(150, y, f"Lugar del Código: {registro.lugar_codigo}")
+            p.drawString(250, y, f"Descripción: {registro.descripcion}")
+            y -= 10
+            p.drawString(50, y, f"Instituciones Intervinientes: {registro.instituciones_intervinientes}")
+            p.drawString(150, y, f"Tareas Judiciales: {registro.tareas_judiciales}")
+            y -= 20
+            if y < 100:
+                p.showPage()
+                p.setFont("Helvetica", 8)
+                y = height - 30
+
+    if add_signature:
+        username = request.user.username
+        p.setFont("Helvetica-Bold", 14)
+        p.setFillColorRGB(0.5, 0.5, 0.5, alpha=0.5)  # Gris claro, semi-transparente
+        p.drawString(100, 50, f"Firmado electrónicamente por: {username}")
+
+    p.showPage()
+    p.save()
+    return response
+
+def view_pdf(request, comisaria_model, template_name):
+    return render(request, template_name, {'pdf_url': request.path + 'download/'})
+
+def generate_comisaria_primera_pdf(request):
+    add_signature = 'signature' in request.GET
+    return generate_pdf(request, ComisariaPrimera, 'comisaria_primera_registros.pdf', add_signature=add_signature)
+
+def view_comisaria_primera_pdf(request):
+    return view_pdf(request, ComisariaPrimera, 'comisarias/primera/view_pdf.html')
+
+def generate_comisaria_segunda_pdf(request):
+    add_signature = 'signature' in request.GET
+    return generate_pdf(request, ComisariaSegunda, 'comisaria_segunda_registros.pdf', add_signature=add_signature)
+
+def view_comisaria_segunda_pdf(request):
+    return view_pdf(request, ComisariaSegunda, 'comisarias/segunda/view_pdf.html')
+
+def generate_comisaria_tercera_pdf(request):
+    add_signature = 'signature' in request.GET
+    return generate_pdf(request, ComisariaTercera, 'comisaria_tercera_registros.pdf', add_signature=add_signature)
+
+def view_comisaria_tercera_pdf(request):
+    return view_pdf(request, ComisariaTercera, 'comisarias/tercera/view_pdf.html')
+
+def generate_comisaria_cuarta_pdf(request):
+    add_signature = 'signature' in request.GET
+    return generate_pdf(request, ComisariaCuarta, 'comisaria_cuarta_registros.pdf', add_signature=add_signature)
+
+def view_comisaria_cuarta_pdf(request):
+    return view_pdf(request, ComisariaCuarta, 'comisarias/cuarta/view_pdf.html')
+
+def generate_comisaria_quinta_pdf(request):
+    add_signature = 'signature' in request.GET
+    return generate_pdf(request, ComisariaQuinta, 'comisaria_quinta_registros.pdf', add_signature=add_signature)
+
+def view_comisaria_quinta_pdf(request):
+    return view_pdf(request, ComisariaQuinta, 'comisarias/quinta/view_pdf.html')
