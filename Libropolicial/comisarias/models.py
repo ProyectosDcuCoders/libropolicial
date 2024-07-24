@@ -24,6 +24,7 @@ class BaseComisaria(models.Model):
     descripcion = models.TextField(null=True, blank=True)
     instituciones_intervinientes = models.TextField(null=True, blank=True)
     tareas_judiciales = models.TextField(null=True, blank=True)
+    estado = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
