@@ -18,21 +18,21 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <header class="bg-slate-900 text-white p-4">
+<body class="bg-gray-100 min-h-screen">
+    <header class="flex justify-between bg-slate-900 text-white p-4">
         <h1 class="text-3xl">Libropolicial</h1>
-        <nav>
+        <nav class="">
             {% if user.is_authenticated %}
             <ul class="flex space-x-4">
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                    <button type="submit" class="border-2 border-white">Cerrar Sesión</button>
                 </form>
             </ul>
             {% endif %}
         </nav>
     </header>
-    <main class="container mx-auto">
+    <main class=" mx-auto">
 
         {% if messages %}
         <div id="messages" class="fixed top-0 left-0 right-0 bg-red-500 text-black p-4 z-50">
