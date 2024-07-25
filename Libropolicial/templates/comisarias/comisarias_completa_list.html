@@ -7,9 +7,9 @@
     <h1 class="text-2xl font-bold mb-4 text-center">Registros Completos de Comisarías</h1>
 
     <form method="GET" class="mb-4 flex justify-between w-full">
-        <div class="flex items-center">
+        <div class="flex items-center xl:w-[35%] w-[40%] ml-3">
             <label for="search" class="block text-gray-700 mr-2">Buscar:</label>
-            <input type="text" id="search" name="q" value="{{ query }}" class="bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg  w-full  p-2">
+            <input type="text" id="search" name="q" value="{{ query }}" class="w-full bg-gray-50 border border-gray-700 text-gray-900 text-sm rounded-lg p-2">
         </div>
         <div class="flex items-center">
             <label for="show" class="block text-gray-700 mr-2">Mostrar:</label>
@@ -22,44 +22,46 @@
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 ml-2 rounded hover:bg-blue-700">Aplicar</button>
         </div>
     </form>
-
-    <table class="w-full bg-white border border-gray-400 rounded-t-lg">
-        <thead class="bg-gray-700 text-white rounded-t-lg">
-            <tr class="">
-                <th class="rounded-t-lg px-4 py-4">Comisaría</th>
-                <th class="px-4 py-4">Guardia</th>
-                <th class="px-4 py-4">Fecha y Hora</th>
-                <th class="px-4 py-4">Código</th>
-                <th class="px-4 py-4">Móvil Patrulla</th>
-                <th class="px-4 py-4">A Cargo</th>
-                <th class="px-4 py-4">Secundante</th>
-                <th class="px-4 py-4">Lugar del Código</th>
-                <th class="px-4 py-4">Descripción</th>
-                <th class="px-4 py-4">Instituciones Intervinientes</th>
-                <th class="px-4 py-4">Tareas Judiciales</th>
-                <th class="px-4 py-4">Fecha de Registro</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for comisaria in comisarias %}
-            <tr class="border-b">
-                <td class="py-1 px-2 font-bold text-blue-700 bg-blue-100">{{ comisaria.comisaria_nombre }}</td>
-                <td class="py-1 px-2">{{ comisaria.cuarto.cuarto }}</td>
-                <td class="py-1 px-2">{{ comisaria.fecha_hora }}</td>
-                <td class="py-1 px-2">{{ comisaria.codigo.codigo }}</td>
-                <td class="py-1 px-2">{{ comisaria.movil_patrulla }}</td>
-                <td class="py-1 px-2">{{ comisaria.a_cargo }}</td>
-                <td class="py-1 px-2">{{ comisaria.secundante }}</td>
-                <td class="py-1 px-2">{{ comisaria.lugar_codigo }}</td>
-                <td class="py-1 px-2">{{ comisaria.descripcion }}</td>
-                <td class="py-1 px-2">{{ comisaria.instituciones_intervinientes }}</td>
-                <td class="py-1 px-2">{{ comisaria.tareas_judiciales }}</td>
-                <td class="py-1 px-2">{{ comisaria.created_at }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border">
+            <thead class="bg-gray-700 text-white">
+                <tr class="">
+                    <th class="rounded-tl-lg px-4 py-4">Comisaría</th>
+                    <th class="px-4 py-4">Guardia</th>
+                    <th class="px-4 py-4">Fecha y Hora</th>
+                    <th class="px-4 py-4">Código</th>
+                    <th class="px-4 py-4">Móvil Patrulla</th>
+                    <th class="px-4 py-4">A Cargo</th>
+                    <th class="px-4 py-4">Secundante</th>
+                    <th class="px-4 py-4">Lugar del Código</th>
+                    <th class="px-4 py-4">Descripción</th>
+                    <th class="px-4 py-4">Instituciones Intervinientes</th>
+                    <th class="px-4 py-4">Tareas Judiciales</th>
+                    <th class="rounded-tr-lg px-4 py-4">Fecha de Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comisaria in comisarias %}
+                <tr class="border-b">
+                    <td class="py-1 px-2 font-bold text-blue-700 bg-blue-100">{{ comisaria.comisaria_nombre }}</td>
+                    <td class="py-1 px-2">{{ comisaria.cuarto.cuarto }}</td>
+                    <td class="py-1 px-2">{{ comisaria.fecha_hora }}</td>
+                    <td class="py-1 px-2">{{ comisaria.codigo.codigo }}</td>
+                    <td class="py-1 px-2">{{ comisaria.movil_patrulla }}</td>
+                    <td class="py-1 px-2">{{ comisaria.a_cargo }}</td>
+                    <td class="py-1 px-2">{{ comisaria.secundante }}</td>
+                    <td class="py-1 px-2">{{ comisaria.lugar_codigo }}</td>
+                    <td class="py-1 px-2 overflow-auto">
+                        <p class="w-[355px] h-[180px]">{{ comisaria.descripcion }}</p>
+                    </td>
+                    <td class="py-1 px-2">{{ comisaria.instituciones_intervinientes }}</td>
+                    <td class="py-1 px-2">{{ comisaria.tareas_judiciales }}</td>
+                    <td class="py-1 px-2">{{ comisaria.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div class="mt-4">
         <span class="text-sm text-gray-700">Mostrando {{ comisarias.start_index }} a {{ comisarias.end_index }} de {{ comisarias.paginator.count }} entradas</span>
         <div class="pagination flex justify-center mt-2">

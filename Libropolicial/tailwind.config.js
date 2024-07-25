@@ -11,6 +11,14 @@ module.exports = {
     './static/**/*.css',  // También puede incluir CSS estático si es necesario
   ],
   theme: {
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+      'xs': {'min': '440px', 'max': '640px'}, // Breakpoint personalizado
+    },
     extend: {},
   },
   plugins: [],
