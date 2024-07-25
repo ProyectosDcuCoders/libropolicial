@@ -3,7 +3,7 @@
 {% block title %}Comisaría Primera - Lista de Codigos{% endblock %}
 
 {% block content %}
-<div class="container mx-auto mt-4 p-4">
+<div class="container mx-auto mt-4 p-4" x-data="{ showModal: false, descripcion: '' }">
     <h1 class="text-2xl font-bold mb-4 text-center">Comisaria Primera lista de codigos</h1>
 
     <div class="flex justify-between mb-4">
@@ -37,13 +37,15 @@
                 <td class="px-4 py-2">{{ comisaria.cuarto }}</td>
                 <td class="px-4 py-2">{{ comisaria.fecha_hora }}</td>
                 <td class="px-4 py-2">{{ comisaria.codigo.codigo }}</td>
-                <td class="px-4 py-2">{{ comisaria.movil_patrulla }}</td>
-                <td class="px-4 py-2">{{ comisaria.a_cargo }}</td>
-                <td class="px-4 py-2">{{ comisaria.secundante }}</td>
-                <td class="px-4 py-2">{{ comisaria.lugar_codigo }}</td>
-                <td class="px-4 py-2">{{ comisaria.descripcion }}</td>
-                <td class="px-4 py-2">{{ comisaria.instituciones_intervinientes }}</td>
-                <td class="px-4 py-2">{{ comisaria.tareas_judiciales }}</td>
+                <td class="px-4 py-2">{{ comisaria.movil_patrulla|default_if_none:'' }}</td>
+                <td class="px-4 py-2">{{ comisaria.a_cargo|default_if_none:'' }}</td>
+                <td class="px-4 py-2">{{ comisaria.secundante|default_if_none:'' }}</td>
+                <td class="px-4 py-2">{{ comisaria.lugar_codigo|default_if_none:'' }}</td>
+                <td class="px-4 py-2">
+                    <button @click="descripcion = '{{ comisaria.descripcion|escapejs }}'; showModal = true" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ver</button>
+                </td>
+                <td class="px-4 py-2">{{ comisaria.instituciones_intervinientes|default_if_none:'' }}</td>
+                <td class="px-4 py-2">{{ comisaria.tareas_judiciales|default_if_none:'' }}</td>
                 <td class="px-4 py-2 {% if comisaria.estado %}bg-red-500 text-white{% endif %}">
                     {{ comisaria.estado|yesno:"Activo,Inactivo" }}
                 </td>
@@ -54,5 +56,32 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Modal -->
+    <div x-show="showModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div x-show="showModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div x-show="showModal" class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                Descripción
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500" x-text="descripcion"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button @click="showModal = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

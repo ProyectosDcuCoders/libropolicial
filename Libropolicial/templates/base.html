@@ -8,8 +8,6 @@
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@1.4.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2" defer></script>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         .bg-red-500 {
@@ -50,9 +48,18 @@
 
         {% block content %}
         {% endblock %}
+        
     </main>
     <footer class="bg-slate-900 text-white text-center p-4 mt-auto w-full">
         <p>&copy; 2024 Libropolicial. Todos los derechos reservados.</p>
     </footer>
+    <script>
+        // Deshabilitar el botón de retroceso del navegador
+        history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, location.href);
+        });
+    </script>
+    
 </body>
 </html>

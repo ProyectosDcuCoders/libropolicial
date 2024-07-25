@@ -73,6 +73,12 @@ class ComisariaPrimeraCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
 
     def handle_no_permission(self):
         return redirect('no_permission')
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        form.instance = None  # Limpiar los campos del formulario
+        form = self.get_form(self.form_class)
+        return response
 
 class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ComisariaPrimera
@@ -85,6 +91,8 @@ class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
 
     def handle_no_permission(self):
         return redirect('no_permission')
+    
+    
 
 class ComisariaSegundaListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = ComisariaSegunda
@@ -245,17 +253,17 @@ def generate_pdf(request, comisaria_model, filename, add_signature=False):
         y -= 20
 
         for registro in registros:
-            p.drawString(50, y, f"Guardia: {registro.cuarto}")
-            p.drawString(150, y, f"Código: {registro.codigo.codigo}")
-            p.drawString(250, y, f"Móvil Patrulla: {registro.movil_patrulla}")
-            p.drawString(350, y, f"A Cargo: {registro.a_cargo}")
+            p.drawString(50, y, f"Guardia: {registro.cuarto.cuarto if registro.cuarto else ''}")
+            p.drawString(150, y, f"Código: {registro.codigo.codigo if registro.codigo else ''}")
+            p.drawString(250, y, f"Móvil Patrulla: {registro.movil_patrulla if registro.movil_patrulla else ''}")
+            p.drawString(350, y, f"A Cargo: {registro.a_cargo if registro.a_cargo else ''}")
             y -= 10
-            p.drawString(50, y, f"Secundante: {registro.secundante}")
-            p.drawString(150, y, f"Lugar del Código: {registro.lugar_codigo}")
-            p.drawString(250, y, f"Descripción: {registro.descripcion}")
+            p.drawString(50, y, f"Secundante: {registro.secundante if registro.secundante else ''}")
+            p.drawString(150, y, f"Lugar del Código: {registro.lugar_codigo if registro.lugar_codigo else ''}")
+            p.drawString(250, y, f"Descripción: {registro.descripcion if registro.descripcion else ''}")
             y -= 10
-            p.drawString(50, y, f"Instituciones Intervinientes: {registro.instituciones_intervinientes}")
-            p.drawString(150, y, f"Tareas Judiciales: {registro.tareas_judiciales}")
+            p.drawString(50, y, f"Instituciones Intervinientes: {registro.instituciones_intervinientes if registro.instituciones_intervinientes else ''}")
+            p.drawString(150, y, f"Tareas Judiciales: {registro.tareas_judiciales if registro.tareas_judiciales else ''}")
             y -= 20
             if y < 100:
                 p.showPage()
@@ -271,6 +279,7 @@ def generate_pdf(request, comisaria_model, filename, add_signature=False):
     p.showPage()
     p.save()
     return response
+
 
 def view_pdf(request, comisaria_model, template_name):
     return render(request, template_name, {'pdf_url': request.path + 'download/'})

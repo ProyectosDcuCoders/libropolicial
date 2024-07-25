@@ -9,7 +9,7 @@
         {% csrf_token %}
         <div class="grid gap-4 sm:grid-cols-3">
             <div class="sm:col-span-2">
-                <label for="{{ form.cuarto.id_for_label }}">{{ form.cuarto.label }}</label>
+                <label for="{{ form.cuarto.id_for_label }}" class="block text-gray-700">{{ form.cuarto.label }}</label>
                 {{ form.cuarto }}
             </div>
             <div class="sm:col-span-1">
@@ -17,39 +17,39 @@
                 <input type="datetime-local" id="fecha_hora" name="fecha_hora" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" required value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}">
             </div>
             <div class="sm:col-span-1">
-                <label for="{{ form.codigo.id_for_label }}">{{ form.codigo.label }}</label>
+                <label for="{{ form.codigo.id_for_label }}" class="block text-gray-700">{{ form.codigo.label }}</label>
                 {{ form.codigo }}
             </div>
             <div class="sm:col-span-1">
-                <label for="{{ form.movil_patrulla.id_for_label }}">{{ form.movil_patrulla.label }}</label>
+                <label for="{{ form.movil_patrulla.id_for_label }}" class="block text-gray-700">{{ form.movil_patrulla.label }}</label>
                 <input type="text" name="{{ form.movil_patrulla.name }}" id="{{ form.movil_patrulla.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.movil_patrulla.value|default_if_none:'' }}">
             </div>
             <div class="sm:col-span-1">
-                <label for="{{ form.a_cargo.id_for_label }}">{{ form.a_cargo.label }}</label>
+                <label for="{{ form.a_cargo.id_for_label }}" class="block text-gray-700">{{ form.a_cargo.label }}</label>
                 <input type="text" name="{{ form.a_cargo.name }}" id="{{ form.a_cargo.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.a_cargo.value|default_if_none:'' }}">
             </div>
             <div class="sm:col-span-1">
-                <label for="{{ form.secundante.id_for_label }}">{{ form.secundante.label }}</label>
+                <label for="{{ form.secundante.id_for_label }}" class="block text-gray-700">{{ form.secundante.label }}</label>
                 <input type="text" name="{{ form.secundante.name }}" id="{{ form.secundante.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.secundante.value|default_if_none:'' }}">
             </div>
             <div class="sm:col-span-1">
-                <label for="{{ form.estado.id_for_label }}">{{ form.estado.label }}</label>
+                <label for="{{ form.estado.id_for_label }}" class="block text-gray-700">{{ form.estado.label }}</label>
                 {{ form.estado }}
             </div>
             <div class="sm:col-span-3">
-                <label for="{{ form.lugar_codigo.id_for_label }}">{{ form.lugar_codigo.label }}</label>
+                <label for="{{ form.lugar_codigo.id_for_label }}" class="block text-gray-700">{{ form.lugar_codigo.label }}</label>
                 <input type="text" name="{{ form.lugar_codigo.name }}" id="{{ form.lugar_codigo.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.lugar_codigo.value|default_if_none:'' }}">
             </div>
             <div class="sm:col-span-3">
-                <label for="{{ form.descripcion.id_for_label }}">{{ form.descripcion.label }}</label>
+                <label for="{{ form.descripcion.id_for_label }}" class="block text-gray-700">{{ form.descripcion.label }}</label>
                 <textarea name="{{ form.descripcion.name }}" id="{{ form.descripcion.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3">{{ form.descripcion.value|default_if_none:'' }}</textarea>
             </div>
             <div class="sm:col-span-3">
-                <label for="{{ form.instituciones_intervinientes.id_for_label }}">{{ form.instituciones_intervinientes.label }}</label>
+                <label for="{{ form.instituciones_intervinientes.id_for_label }}" class="block text-gray-700">{{ form.instituciones_intervinientes.label }}</label>
                 <textarea name="{{ form.instituciones_intervinientes.name }}" id="{{ form.instituciones_intervinientes.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3">{{ form.instituciones_intervinientes.value|default_if_none:'' }}</textarea>
             </div>
             <div class="sm:col-span-3">
-                <label for="{{ form.tareas_judiciales.id_for_label }}">{{ form.tareas_judiciales.label }}</label>
+                <label for="{{ form.tareas_judiciales.id_for_label }}" class="block text-gray-700">{{ form.tareas_judiciales.label }}</label>
                 <textarea name="{{ form.tareas_judiciales.name }}" id="{{ form.tareas_judiciales.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3">{{ form.tareas_judiciales.value|default_if_none:'' }}</textarea>
             </div>
             <div class="sm:col-span-3">
@@ -59,4 +59,6 @@
     </form>
     <a href="{% url 'comisaria_primera_list' %}" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 w-full text-center">Volver a la lista</a>
 </div>
+
+
 {% endblock %}

@@ -5,7 +5,7 @@ from datetime import timedelta
 
 class NoCacheMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
-        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
         response['Pragma'] = 'no-cache'
         response['Expires'] = '0'
         return response
@@ -30,7 +30,7 @@ class InactivityLogoutMiddleware(MiddlewareMixin):
             last_activity = request.session.get('last_activity')
             if last_activity:
                 last_activity = timezone.datetime.fromisoformat(last_activity)
-                if timezone.now() - last_activity > timedelta(hours=2):
+                if timezone.now() - last_activity > timedelta(hours=1):
                     from django.contrib.auth import logout
                     logout(request)
                     return redirect('login')
