@@ -3,9 +3,9 @@
 {% block title %}Registros Completos de Comisarías{% endblock %}
 
 {% block content %}
-<style>
-    
-</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.2/css/dataTables.dataTables.css" />
+<script src="https://cdn.datatables.net/2.1.2/js/dataTables.js"></script>
+
 <div class="mx-auto mt-4 p-4" x-data="{ showModal: false, descripcion: '' }">
     <h1 class="text-2xl font-bold mb-4 text-center">Registros Completos de Comisarías</h1>
 
@@ -58,8 +58,8 @@
                         <button @click="descripcion = '{{ comisaria.descripcion }}'; showModal = true" class=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ver</button>
                     </td>
                     <!-- <td class="py-1 px-2">{{ comisaria.descripcion }}</td> -->
-                    <td class="py-1 px-2"><p class="overflow-x-auto flex flex-col justify-center" style="height: 100px;">{{ comisaria.instituciones_intervinientes }}</p></td>
-                    <td class="py-1 px-2"><p class="overflow-x-auto" style="height: 100px;">{{ comisaria.tareas_judiciales }}</p></td>
+                    <td class="py-1 px-2"><p class="overflow-x-auto flex flex-col justify-center" style="height: 100px; min-width: 200px;">{{ comisaria.instituciones_intervinientes }}</p></td>
+                    <td class="py-1 px-2"><p class="overflow-x-auto flex flex-col justify-center" style="height: 100px; min-width: 200px;">{{ comisaria.tareas_judiciales }}</p></td>
                     <td class="py-1 px-2">{{ comisaria.created_at }}</td>
                 </tr>
                 {% endfor %}
@@ -111,4 +111,5 @@
     </div>
     <a href="/" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 text-center">Volver a la página principal</a>
 </div>
+
 {% endblock %}
