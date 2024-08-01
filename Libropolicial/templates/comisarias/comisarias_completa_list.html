@@ -45,7 +45,7 @@
             <tr class="border-b">
                 <td class="py-1 px-2 font-bold text-blue-700 bg-blue-100">{{ comisaria.comisaria_nombre }}</td>
                 <td class="py-1 px-2">{{ comisaria.cuarto.cuarto }}</td>
-                <td class="py-1 px-2">{{ comisaria.fecha_hora }}</td>
+                <td class="py-1 px-2">{{ comisaria.fecha_hora|date:"Y-m-d H:i" }}</td>
                 <td class="py-1 px-2">{{ comisaria.codigo.codigo }}</td>
                 <td class="py-1 px-2">{{ comisaria.movil_patrulla|default_if_none:'' }}</td>
                 <td class="py-1 px-2">{{ comisaria.a_cargo|default_if_none:'' }}</td>

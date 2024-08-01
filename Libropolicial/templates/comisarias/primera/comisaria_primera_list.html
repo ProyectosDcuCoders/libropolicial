@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Comisaría Primera - Lista de Codigos{% endblock %}
+{% block title %}Lista de Registros en Comisaría Primera{% endblock %}
 
 {% block content %}
 <div class="container mx-auto mt-4 p-4" x-data="{ showModal: false, descripcion: '' }">
-    <h1 class="text-2xl font-bold mb-4 text-center">Comisaria Primera lista de codigos</h1>
+    <h1 class="text-2xl font-bold mb-4 text-center">Lista de Registros en Comisaría Primera</h1>
 
     <div class="flex justify-between mb-4">
         <a href="{% url 'comisaria_primera_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar guardia</a>
@@ -14,13 +14,13 @@
         <a href="{% url 'generate_comisaria_primera_pdf' %}?signature=true" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Firmar y Descargar PDF</a>
     </div>
 
-    <table id="datatable" class="min-w-full bg-white border border-gray-400">
+    <table class="table-auto w-full bg-white border border-gray-400">
         <thead>
             <tr>
-                <th class="px-4 py-2">Guardia</th>
+                <th class="px-4 py-2">Cuarto</th>
                 <th class="px-4 py-2">Fecha y Hora</th>
                 <th class="px-4 py-2">Código</th>
-                <th class="px-4 py-2">Móvil Patrulla</th>
+                <th class="px-4 py-2">Movil Patrulla</th>
                 <th class="px-4 py-2">A Cargo</th>
                 <th class="px-4 py-2">Secundante</th>
                 <th class="px-4 py-2">Lugar Código</th>
@@ -28,29 +28,37 @@
                 <th class="px-4 py-2">Instituciones Intervinientes</th>
                 <th class="px-4 py-2">Tareas Judiciales</th>
                 <th class="px-4 py-2">Estado</th>
+                <th class="px-4 py-2">Creado por</th>
+                <th class="px-4 py-2">Editado por</th>
+                <th class="px-4 py-2">Fecha y Hora del registro</th>
+                <th class="px-4 py-2">Fecha y Hora de Actualización</th> <!-- Nueva columna -->
                 <th class="px-4 py-2">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for comisaria in object_list %}
+            {% for record in records %}
             <tr class="bg-gray-100 border-b">
-                <td class="px-4 py-2">{{ comisaria.cuarto }}</td>
-                <td class="px-4 py-2">{{ comisaria.fecha_hora }}</td>
-                <td class="px-4 py-2">{{ comisaria.codigo.codigo }}</td>
-                <td class="px-4 py-2">{{ comisaria.movil_patrulla|default_if_none:'' }}</td>
-                <td class="px-4 py-2">{{ comisaria.a_cargo|default_if_none:'' }}</td>
-                <td class="px-4 py-2">{{ comisaria.secundante|default_if_none:'' }}</td>
-                <td class="px-4 py-2">{{ comisaria.lugar_codigo|default_if_none:'' }}</td>
-                <td class="px-4 py-2">
-                    <button @click="descripcion = '{{ comisaria.descripcion|escapejs }}'; showModal = true" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ver</button>
+                <td class="border px-4 py-2">{{ record.cuarto }}</td>
+                <td class="border px-4 py-2">{{ record.fecha_hora|date:"d/m/Y H:i:s" }}</td>
+                <td class="border px-4 py-2">{{ record.codigo.codigo }}</td>
+                <td class="border px-4 py-2">{{ record.movil_patrulla|default_if_none:'' }}</td>
+                <td class="border px-4 py-2">{{ record.a_cargo|default_if_none:'' }}</td>
+                <td class="border px-4 py-2">{{ record.secundante|default_if_none:'' }}</td>
+                <td class="border px-4 py-2">{{ record.lugar_codigo|default_if_none:'' }}</td>
+                <td class="border px-4 py-2">
+                    <button @click="descripcion = '{{ record.descripcion|escapejs }}'; showModal = true" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ver</button>
                 </td>
-                <td class="px-4 py-2">{{ comisaria.instituciones_intervinientes|default_if_none:'' }}</td>
-                <td class="px-4 py-2">{{ comisaria.tareas_judiciales|default_if_none:'' }}</td>
-                <td class="px-4 py-2 {% if comisaria.estado %}bg-red-500 text-white{% endif %}">
-                    {{ comisaria.estado|yesno:"Activo,Inactivo" }}
+                <td class="border px-4 py-2">{{ record.instituciones_intervinientes|default_if_none:'' }}</td>
+                <td class="border px-4 py-2">{{ record.tareas_judiciales|default_if_none:'' }}</td>
+                <td class="border px-4 py-2 {% if record.estado %}bg-red-500 text-white{% endif %}">
+                    {{ record.estado|yesno:"Activo,Inactivo" }}
                 </td>
-                <td class="px-4 py-2">
-                    <a href="{% url 'comisaria_primera_edit' comisaria.id %}" class="bg-slate-800 text-white px-2 p-2 rounded hover:bg-yellow-700">Editar</a>
+                <td class="border px-4 py-2">{{ record.created_by }}</td>
+                <td class="border px-4 py-2">{{ record.updated_by|default_if_none:'' }}</td>
+                <td class="border px-4 py-2">{{ record.created_at|date:"d/m/Y H:i:s" }}</td>
+                <td class="border px-4 py-2">{% if record.updated_at != record.created_at %}{{ record.updated_at|date:"d/m/Y H:i:s" }}{% endif %}</td> <!-- Condición para mostrar updated_at -->
+                <td class="border px-4 py-2">
+                    <a href="{% url 'comisaria_primera_edit' record.pk %}" class="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600">Editar</a>
                 </td>
             </tr>
             {% endfor %}
