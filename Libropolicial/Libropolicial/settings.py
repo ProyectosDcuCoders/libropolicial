@@ -75,7 +75,7 @@ ASGI_APPLICATION = 'Libropolicial.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'libro',
+        'NAME': 'librodeguardia',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -108,18 +108,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'es'  # Cambiado a 'es' para establecer el idioma en español
+LANGUAGE_CODE = 'es-ar'  # Cambiado a 'es' para establecer el idioma en español
 
-LANGUAGES = [
-    ('en', 'English'),
-    ('es', 'Español'),  # Cambiado a 'Español'
-]
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
-TIME_ZONE = 'America/Buenos_Aires'
-
+USE_TZ = False
 USE_I18N = True
-
-USE_TZ = True
+USE_L10N = True
 
 
 # Static files (CSS, JavaScript, Images)

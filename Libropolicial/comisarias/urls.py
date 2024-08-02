@@ -14,17 +14,24 @@ from .views import (
 
 urlpatterns = [
     path('primera/', ComisariaPrimeraListView.as_view(), name='comisaria_primera_list'),
+    path('primera/nuevo/', ComisariaPrimeraCreateView.as_view(), name='comisaria_primera_create'),
+    path('primera/editar/<int:pk>/', ComisariaPrimeraUpdateView.as_view(), name='comisaria_primera_edit'),
+
     path('segunda/', ComisariaSegundaListView.as_view(), name='comisaria_segunda_list'),
+    path('segunda/nuevo/', ComisariaSegundaCreateView.as_view(), name='comisaria_segunda_create'),
+    path('segunda/editar/<int:pk>/', ComisariaSegundaUpdateView.as_view(), name='comisaria_segunda_edit'),
+
     path('tercera/', ComisariaTerceraListView.as_view(), name='comisaria_tercera_list'),
     path('cuarta/', ComisariaCuartaListView.as_view(), name='comisaria_cuarta_list'),
     path('quinta/', ComisariaQuintaListView.as_view(), name='comisaria_quinta_list'),
-    path('primera/nuevo/', ComisariaPrimeraCreateView.as_view(), name='comisaria_primera_create'),
-    path('segunda/nuevo/', ComisariaSegundaCreateView.as_view(), name='comisaria_segunda_create'),
+    
+   
     path('tercera/nuevo/', ComisariaTerceraCreateView.as_view(), name='comisaria_tercera_create'),
     path('cuarta/nuevo/', ComisariaCuartaCreateView.as_view(), name='comisaria_cuarta_create'),
     path('quinta/nuevo/', ComisariaQuintaCreateView.as_view(), name='comisaria_quinta_create'),
-    path('primera/editar/<int:pk>/', ComisariaPrimeraUpdateView.as_view(), name='comisaria_primera_edit'),
-    path('segunda/editar/<int:pk>/', ComisariaSegundaUpdateView.as_view(), name='comisaria_segunda_edit'),
+
+    
+    
     path('completas/', ComisariasCompletaListView.as_view(), name='comisarias_completa_list'),
 
     # Rutas para Comisaria Primera

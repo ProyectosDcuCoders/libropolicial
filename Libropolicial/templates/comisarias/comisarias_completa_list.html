@@ -94,7 +94,43 @@
         </div>
     </div>
 
-    <!-- PAGINATE -->
+    <table class="w-full bg-white border border-gray-400 rounded-t-lg">
+        <thead class="bg-gray-700 text-white rounded-t-lg">
+            <tr class="">
+                <th class="rounded-t-lg px-4 py-4">Comisaría</th>
+                <th class="px-4 py-4">Guardia</th>
+                <th class="px-4 py-4">Fecha y Hora</th>
+                <th class="px-4 py-4">Código</th>
+                <th class="px-4 py-4">Móvil Patrulla</th>
+                <th class="px-4 py-4">A Cargo</th>
+                <th class="px-4 py-4">Secundante</th>
+                <th class="px-4 py-4">Lugar del Código</th>
+                <th class="px-4 py-4">Descripción</th>
+                <th class="px-4 py-4">Instituciones Intervinientes</th>
+                <th class="px-4 py-4">Tareas Judiciales</th>
+                <th class="px-4 py-4">Fecha de Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comisaria in comisarias %}
+            <tr class="border-b">
+                <td class="py-1 px-2 font-bold text-blue-700 bg-blue-100">{{ comisaria.comisaria_nombre }}</td>
+                <td class="py-1 px-2">{{ comisaria.cuarto.cuarto }}</td>
+                <td class="py-1 px-2">{{ comisaria.fecha_hora|date:"Y-m-d H:i" }}</td>
+                <td class="py-1 px-2">{{ comisaria.codigo.codigo }}</td>
+                <td class="py-1 px-2">{{ comisaria.movil_patrulla|default_if_none:'' }}</td>
+                <td class="py-1 px-2">{{ comisaria.a_cargo|default_if_none:'' }}</td>
+                <td class="py-1 px-2">{{ comisaria.secundante|default_if_none:'' }}</td>
+                <td class="py-1 px-2">{{ comisaria.lugar_codigo|default_if_none:'' }}</td>
+                <td class="py-1 px-2">{{ comisaria.descripcion }}</td>
+                <td class="py-1 px-2">{{ comisaria.instituciones_intervinientes }}</td>
+                <td class="py-1 px-2">{{ comisaria.tareas_judiciales }}</td>
+                <td class="py-1 px-2">{{ comisaria.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <div class="mt-4">
         <span class="text-sm text-gray-700">Mostrando {{ comisarias.start_index }} a {{ comisarias.end_index }} de {{ comisarias.paginator.count }} entradas</span>
         <div class="pagination flex justify-center mt-2">

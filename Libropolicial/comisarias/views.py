@@ -18,7 +18,7 @@ from django.core.paginator import Paginator
 from django.utils.dateparse import parse_datetime
 from datetime import datetime
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+from .utils import user_is_in_group
 
 
 def user_is_in_group(user, group_name):
@@ -47,12 +47,21 @@ class CustomLoginView(LoginView):
 class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = ComisariaPrimera
     template_name = 'comisarias/primera/comisaria_primera_list.html'
+    context_object_name = 'records'  # Asegúrate de que el contexto se llame 'records'
 
     def test_func(self):
         return user_is_in_group(self.request.user, 'comisariaprimera')
 
     def handle_no_permission(self):
         return redirect('no_permission')
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        for comisaria in queryset:
+            if timezone.is_naive(comisaria.fecha_hora):
+                comisaria.fecha_hora = timezone.make_aware(comisaria.fecha_hora, timezone.get_current_timezone())
+            comisaria.fecha_hora = timezone.localtime(comisaria.fecha_hora)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -73,12 +82,10 @@ class ComisariaPrimeraCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
 
     def handle_no_permission(self):
         return redirect('no_permission')
-    
+
     def form_valid(self, form):
-        response = super().form_valid(form)
-        form.instance = None  # Limpiar los campos del formulario
-        form = self.get_form(self.form_class)
-        return response
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ComisariaPrimera
@@ -91,6 +98,10 @@ class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
 
     def handle_no_permission(self):
         return redirect('no_permission')
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
     
     
 
@@ -212,16 +223,20 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
         return comisarias
 
     def query_in_comisaria(self, comisaria, query):
-        return query.lower() in comisaria.comisaria_nombre.lower() or \
-               query.lower() in comisaria.cuarto.cuarto.lower() or \
-               query.lower() in comisaria.codigo.codigo.lower() or \
-               query.lower() in comisaria.movil_patrulla.lower() or \
-               query.lower() in comisaria.a_cargo.lower() or \
-               query.lower() in comisaria.secundante.lower() or \
-               query.lower() in comisaria.lugar_codigo.lower() or \
-               query.lower() in comisaria.descripcion.lower() or \
-               query.lower() in comisaria.instituciones_intervinientes.lower() or \
-               query.lower() in comisaria.tareas_judiciales.lower()
+        query_lower = query.lower()
+        return (
+        (query_lower in comisaria.comisaria_nombre.lower() if comisaria.comisaria_nombre else False) or
+        (query_lower in comisaria.cuarto.cuarto.lower() if comisaria.cuarto.cuarto else False) or
+        (query_lower in comisaria.codigo.codigo.lower() if comisaria.codigo.codigo else False) or
+        (query_lower in comisaria.movil_patrulla.lower() if comisaria.movil_patrulla else False) or
+        (query_lower in comisaria.a_cargo.lower() if comisaria.a_cargo else False) or
+        (query_lower in comisaria.secundante.lower() if comisaria.secundante else False) or
+        (query_lower in comisaria.lugar_codigo.lower() if comisaria.lugar_codigo else False) or
+        (query_lower in comisaria.descripcion.lower() if comisaria.descripcion else False) or
+        (query_lower in comisaria.instituciones_intervinientes.lower() if comisaria.instituciones_intervinientes else False) or
+        (query_lower in comisaria.tareas_judiciales.lower() if comisaria.tareas_judiciales else False) or
+        (query_lower in comisaria.fecha_hora.strftime('%Y-%m-%d %H:%M:%S').lower() if comisaria.fecha_hora else False)
+    )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
