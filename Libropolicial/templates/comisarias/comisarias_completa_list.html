@@ -54,7 +54,7 @@
                 <td class="py-1 px-2">{{ comisaria.descripcion }}</td>
                 <td class="py-1 px-2">{{ comisaria.instituciones_intervinientes }}</td>
                 <td class="py-1 px-2">{{ comisaria.tareas_judiciales }}</td>
-                <td class="py-1 px-2">{{ comisaria.created_at }}</td>
+                <td class="py-1 px-2">{{ comisaria.created_at|date:"Y-m-d H:i"  }}</td>
             </tr>
             {% endfor %}
         </tbody>

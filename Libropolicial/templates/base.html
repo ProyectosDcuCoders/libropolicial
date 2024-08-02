@@ -60,6 +60,56 @@
             history.pushState(null, null, location.href);
         });
     </script>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('tableData', () => ({
+                records: [],
+                page: 1,
+                search: '',
+                rowsPerPage: 10,
+                numPages: 1,
+                showModal: false,
+                descripcion: '',
+                init() {
+                    this.fetchData();
+                    this.$watch('search', () => this.page = 1 && this.fetchData());
+                    this.$watch('rowsPerPage', () => this.page = 1 && this.fetchData());
+                },
+                async fetchData() {
+                    const params = new URLSearchParams({
+                        page: this.page,
+                        q: this.search,
+                        paginate_by: this.rowsPerPage,
+                    });
+                    const response = await fetch(`${window.location.pathname}?${params.toString()}`, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    });
+                    const result = await response.json();
+                    this.records = JSON.parse(result.data);
+                    this.page = result.page;
+                    this.numPages = result.num_pages;
+                },
+                prevPage() {
+                    if (this.page > 1) {
+                        this.page--;
+                        this.fetchData();
+                    }
+                },
+                nextPage() {
+                    if (this.page < this.numPages) {
+                        this.page++;
+                        this.fetchData();
+                    }
+                },
+                viewDescription(descripcion) {
+                    this.descripcion = descripcion;
+                    this.showModal = true;
+                },
+            }));
+        });
+        </script>
+        
     
 </body>
 </html>

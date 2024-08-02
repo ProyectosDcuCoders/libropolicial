@@ -40,7 +40,7 @@
             <tr class="bg-gray-100 border-b">
                 <td class="border px-4 py-2">{{ record.cuarto }}</td>
                 <td class="border px-4 py-2">{{ record.fecha_hora|date:"d/m/Y H:i:s" }}</td>
-                <td class="border px-4 py-2">{{ record.codigo.codigo }}</td>
+                <td class="border px-4 py-2">{{ record.codigo }}</td>
                 <td class="border px-4 py-2">{{ record.movil_patrulla|default_if_none:'' }}</td>
                 <td class="border px-4 py-2">{{ record.a_cargo|default_if_none:'' }}</td>
                 <td class="border px-4 py-2">{{ record.secundante|default_if_none:'' }}</td>
@@ -65,8 +65,10 @@
         </tbody>
     </table>
 
+    
+
     <!-- Modal -->
-    <div x-show="showModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div x-show="showModal" x-cloak class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div x-show="showModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -91,5 +93,7 @@
             </div>
         </div>
     </div>
+
+    
 </div>
 {% endblock %}

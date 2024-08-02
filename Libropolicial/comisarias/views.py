@@ -1,5 +1,6 @@
 # Libropolicial/comisarias/views.py
-
+from django.http import JsonResponse
+from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from reportlab.pdfgen import canvas
@@ -47,16 +48,19 @@ class CustomLoginView(LoginView):
 class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = ComisariaPrimera
     template_name = 'comisarias/primera/comisaria_primera_list.html'
-    context_object_name = 'records'  # Asegúrate de que el contexto se llame 'records'
+    context_object_name = 'records'
 
     def test_func(self):
         return user_is_in_group(self.request.user, 'comisariaprimera')
 
     def handle_no_permission(self):
         return redirect('no_permission')
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
+        search_query = self.request.GET.get('q', '')
+        if search_query:
+            queryset = queryset.filter(cuarto__icontains=search_query)
         for comisaria in queryset:
             if timezone.is_naive(comisaria.fecha_hora):
                 comisaria.fecha_hora = timezone.make_aware(comisaria.fecha_hora, timezone.get_current_timezone())
@@ -70,6 +74,20 @@ class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView
             messages.add_message(self.request, messages.WARNING, f"Notificación: {notification['description']}, Solicitante: {notification['solicitante']}")
         context['messages'] = messages.get_messages(self.request)
         return context
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            self.object_list = self.get_queryset()
+            paginator = Paginator(self.object_list, self.request.GET.get('paginate_by', 10))
+            page = self.request.GET.get('page')
+            page_obj = paginator.get_page(page)
+            data = serialize('json', page_obj)
+            return JsonResponse({
+                'data': data,
+                'page': page_obj.number,
+                'num_pages': paginator.num_pages,
+            }, safe=False)
+        return super().get(request, *args, **kwargs)
 
 class ComisariaPrimeraCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = ComisariaPrimera
@@ -177,7 +195,6 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
         query = self.request.GET.get('q', '')
         items_per_page = self.request.GET.get('items_per_page', 10)
         
-        # Asegurarse de que items_per_page sea un número válido
         try:
             items_per_page = int(items_per_page)
         except ValueError:
@@ -225,18 +242,18 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
     def query_in_comisaria(self, comisaria, query):
         query_lower = query.lower()
         return (
-        (query_lower in comisaria.comisaria_nombre.lower() if comisaria.comisaria_nombre else False) or
-        (query_lower in comisaria.cuarto.cuarto.lower() if comisaria.cuarto.cuarto else False) or
-        (query_lower in comisaria.codigo.codigo.lower() if comisaria.codigo.codigo else False) or
-        (query_lower in comisaria.movil_patrulla.lower() if comisaria.movil_patrulla else False) or
-        (query_lower in comisaria.a_cargo.lower() if comisaria.a_cargo else False) or
-        (query_lower in comisaria.secundante.lower() if comisaria.secundante else False) or
-        (query_lower in comisaria.lugar_codigo.lower() if comisaria.lugar_codigo else False) or
-        (query_lower in comisaria.descripcion.lower() if comisaria.descripcion else False) or
-        (query_lower in comisaria.instituciones_intervinientes.lower() if comisaria.instituciones_intervinientes else False) or
-        (query_lower in comisaria.tareas_judiciales.lower() if comisaria.tareas_judiciales else False) or
-        (query_lower in comisaria.fecha_hora.strftime('%Y-%m-%d %H:%M:%S').lower() if comisaria.fecha_hora else False)
-    )
+            (query_lower in comisaria.comisaria_nombre.lower() if comisaria.comisaria_nombre else False) or
+            (query_lower in comisaria.cuarto.cuarto.lower() if comisaria.cuarto and comisaria.cuarto.cuarto else False) or
+            (query_lower in comisaria.codigo.codigo.lower() if comisaria.codigo and comisaria.codigo.codigo else False) or
+            (query_lower in comisaria.movil_patrulla.lower() if comisaria.movil_patrulla else False) or
+            (query_lower in comisaria.a_cargo.lower() if comisaria.a_cargo else False) or
+            (query_lower in comisaria.secundante.lower() if comisaria.secundante else False) or
+            (query_lower in comisaria.lugar_codigo.lower() if comisaria.lugar_codigo else False) or
+            (query_lower in comisaria.descripcion.lower() if comisaria.descripcion else False) or
+            (query_lower in comisaria.instituciones_intervinientes.lower() if comisaria.instituciones_intervinientes else False) or
+            (query_lower in comisaria.tareas_judiciales.lower() if comisaria.tareas_judiciales else False) or
+            (query_lower in comisaria.fecha_hora.strftime('%Y-%m-%d %H:%M:%S').lower() if comisaria.fecha_hora else False)
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
