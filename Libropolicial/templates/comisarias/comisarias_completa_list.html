@@ -36,9 +36,6 @@
         margin-right: 0;
     }
     /*  */
-    .selected {
-        background-color: #d1e7dd !important; /* Cambia este color al que desees */
-    }
 </style>
 <script src="https://kit.fontawesome.com/b929cb1411.js" crossorigin="anonymous"></script>
 
@@ -74,7 +71,7 @@
                     <td class="py-1 px-2">{{ comisaria.a_cargo|default_if_none:'' }}</td>
                     <td class="py-1 px-2">{{ comisaria.secundante|default_if_none:'' }}</td>
                     <td class="py-1 px-2">{{ comisaria.lugar_codigo|default_if_none:'' }}</td>
-                    <td class="py-1 px-2"><button @click="descripcion = '{{ comisaria.descripcion }}'; showModal = true" class=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ver</button></td>
+                    <td class="py-1 px-2"><button @click="descripcion = '{{ comisaria.descripcion }}'; showModal = true" class=" bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-[#009999]">Ver</button></td>
                     <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.instituciones_intervinientes }}</p></td>
                     <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.tareas_judiciales }}</p></td>
                     <td class="py-1 px-2">{{ comisaria.created_at }}</td>
@@ -139,7 +136,7 @@
                     "sSortDescending": ": activar para ordenar la columna de manera descendente"
                 }
             },
-            pageLength: 5,
+            /* pageLength: 5, */
             fixedHeader: true
         });
         $('#myTable tbody').on('click', 'tr', function() {
