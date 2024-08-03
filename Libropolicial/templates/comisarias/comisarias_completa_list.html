@@ -9,16 +9,35 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-    
-    .dt-layout-row{font-size: 13px;}
+    h1{
+        font-family: 'Roboto Slab', serif;
+    }
+    .dt-layout-row{
+        font-size: 13px;
+    }
     #dt-search-0{
         border-radius: 6px;
     }
     #dt-length-0{
         border-radius: 6px;
     }
-    h1{
-        font-family: 'Roboto Slab', serif;
+    /* cambio de posicion buscador y selector de registros */
+    .dt-layout-row {
+        display: flex;
+    }
+    div.dt-container div.dt-layout-row div.dt-layout-cell.dt-layout-end {
+        order: 1;
+        justify-content: flex-start;
+        margin-left: 0;
+    }
+    div.dt-container div.dt-layout-row div.dt-layout-cell.dt-layout-start {
+        order: 2;
+        justify-content: flex-end;
+        margin-right: 0;
+    }
+    /*  */
+    .selected {
+        background-color: #d1e7dd !important; /* Cambia este color al que desees */
     }
 </style>
 <script src="https://kit.fontawesome.com/b929cb1411.js" crossorigin="anonymous"></script>
@@ -120,7 +139,11 @@
                     "sSortDescending": ": activar para ordenar la columna de manera descendente"
                 }
             },
-            pageLength: 5
+            pageLength: 5,
+            fixedHeader: true
+        });
+        $('#myTable tbody').on('click', 'tr', function() {
+            $(this).toggleClass('selected');
         });
     });
 </script>
