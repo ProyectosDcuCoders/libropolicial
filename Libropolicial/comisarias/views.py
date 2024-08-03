@@ -20,7 +20,26 @@ from django.utils.dateparse import parse_datetime
 from datetime import datetime
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .utils import user_is_in_group
+from django.template.loader import render_to_string
+from django.shortcuts import render, redirect
 
+from django.shortcuts import render, redirect
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import JsonResponse
+from django.utils import timezone
+from django.core.serializers import serialize
+from .models import ComisariaPrimera
+
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import redirect
+from django.utils import timezone
+from .models import ComisariaPrimera
+from django.contrib import messages
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 
 def user_is_in_group(user, group_name):
     return user.groups.filter(name=group_name).exists()
@@ -57,10 +76,10 @@ class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView
         return redirect('no_permission')
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().order_by('-fecha_hora')  # Ordenar por fecha_hora en orden descendente
         search_query = self.request.GET.get('q', '')
         if search_query:
-            queryset = queryset.filter(cuarto__icontains=search_query)
+            queryset = queryset.filter(cuarto__cuarto__icontains=search_query)
         for comisaria in queryset:
             if timezone.is_naive(comisaria.fecha_hora):
                 comisaria.fecha_hora = timezone.make_aware(comisaria.fecha_hora, timezone.get_current_timezone())
@@ -69,26 +88,13 @@ class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        notification = self.request.session.pop('comisarias_notification', None)
-        if notification:
-            messages.add_message(self.request, messages.WARNING, f"Notificación: {notification['description']}, Solicitante: {notification['solicitante']}")
-        context['messages'] = messages.get_messages(self.request)
+        context['is_jefessuperiores'] = self.request.user.groups.filter(name='jefessuperiores').exists()
+        context['query'] = self.request.GET.get('q', '')
+        context['paginate_by'] = self.request.GET.get('paginate_by', self.paginate_by)
         return context
 
-    def get(self, request, *args, **kwargs):
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            self.object_list = self.get_queryset()
-            paginator = Paginator(self.object_list, self.request.GET.get('paginate_by', 10))
-            page = self.request.GET.get('page')
-            page_obj = paginator.get_page(page)
-            data = serialize('json', page_obj)
-            return JsonResponse({
-                'data': data,
-                'page': page_obj.number,
-                'num_pages': paginator.num_pages,
-            }, safe=False)
-        return super().get(request, *args, **kwargs)
 
+    
 class ComisariaPrimeraCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = ComisariaPrimera
     form_class = ComisariaPrimeraForm
