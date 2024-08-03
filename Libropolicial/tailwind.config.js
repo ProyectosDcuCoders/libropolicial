@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',  // Agrega esta línea
   content: [
     // Indica las rutas donde Tailwind buscará los archivos HTML
     './templates/**/*.html',
