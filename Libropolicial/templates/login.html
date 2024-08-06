@@ -18,14 +18,14 @@
                 <h1 class="text-2xl font-bold mb-4">Iniciar Sesión</h1>
                 <form method="post" class="space-y-4">
                     {% csrf_token %}
-                <div>
-                    {{ form.username.label_tag }}
-                    {{ form.username }}
-                </div>
-                <div>
-                    {{ form.password.label_tag }}
-                    {{ form.password }}
-                </div>
+                    <div>
+                        <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Ingrese usuario</label>
+                        {{ form.username }}
+                    </div>
+                    <div>
+                        <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Ingrese contraseña</label>
+                        {{ form.password }}
+                    </div>
                     <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ingresar</button>
                 </form>
             </div>

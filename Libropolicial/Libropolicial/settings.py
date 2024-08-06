@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'compartido',
     'comisarias',
     'comisariasriogrande',
     'comisariastolhuin',
@@ -43,9 +44,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'comisarias.middleware.NoCacheMiddleware',  # Añadir este middleware
-    'comisarias.middleware.RedirectAuthenticatedUserMiddleware',  # Añadir este middleware
-    'comisarias.middleware.InactivityLogoutMiddleware',  # Añadir este middleware
+    'compartido.middleware.NoCacheMiddleware',
+    'compartido.middleware.RedirectAuthenticatedUserMiddleware',
+    'compartido.middleware.InactivityLogoutMiddleware',
+    # 'comisarias.middleware.NoCacheMiddleware',  Añadir este middleware
+    # 'comisarias.middleware.RedirectAuthenticatedUserMiddleware',  Añadir este middleware
+     # 'comisarias.middleware.InactivityLogoutMiddleware', Añadir este middleware
 ]
 
 ROOT_URLCONF = 'Libropolicial.urls'
