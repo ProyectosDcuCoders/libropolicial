@@ -4,7 +4,7 @@ from django.utils import timezone
 
 # Modelo para códigos policiales
 class CodigoPolicialUSH(models.Model):
-    codigo = models.CharField(max_length=10)  # Campo de texto para almacenar un código policial, con una longitud máxima de 10 caracteres
+    codigo = models.CharField(max_length=10)  # Campo de texto para almacenar un código policial, con una longitud máxima de 3 caracteres
 
     def __str__(self):
         return self.codigo  # Método para devolver el código como una cadena
@@ -37,7 +37,6 @@ class BaseComisaria(models.Model):
     instituciones_intervinientes = models.TextField(null=True, blank=True)  # Campo de texto largo para instituciones intervinientes, permite nulos y valores en blanco
     tareas_judiciales = models.TextField(null=True, blank=True)  # Campo de texto largo para tareas judiciales, permite nulos y valores en blanco
     estado = models.BooleanField(default=True)  # Campo booleano para el estado, valor predeterminado True
-    resolucion_codigo = models.TextField(null=True, blank=True)  # Campo de texto para la resolución del código, permite nulos y valores en blanco
     created_at = models.DateTimeField(auto_now_add=True)  # Campo de fecha y hora de creación, se establece automáticamente al crear
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)  # Relación de clave foránea con User, elimina en cascada
     updated_at = models.DateTimeField(auto_now=True)  # Campo de fecha y hora de actualización, se actualiza automáticamente
@@ -46,23 +45,27 @@ class BaseComisaria(models.Model):
     class Meta:
         abstract = True  # Define que este modelo es abstracto y no se creará una tabla en la base de datos
 
-# Modelos específicos para cada comisaría, heredan de BaseComisaria
+# Modelo específico para ComisariaPrimera, hereda de BaseComisaria
 class ComisariaPrimera(BaseComisaria):
-    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_primera_created_records')
-    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_primera_updated_records')
+    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_primera_created_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
+    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_primera_updated_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
 
+# Modelo específico para ComisariaSegunda, hereda de BaseComisaria
 class ComisariaSegunda(BaseComisaria):
-    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_segunda_created_records')
-    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_segunda_updated_records')
+    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_segunda_created_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
+    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_segunda_updated_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
 
+# Modelo específico para ComisariaTercera, hereda de BaseComisaria
 class ComisariaTercera(BaseComisaria):
-    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_tercera_created_records')
-    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_tercera_updated_records')
+    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_tercera_created_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
+    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_tercera_updated_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
 
+# Modelo específico para ComisariaCuarta, hereda de BaseComisaria
 class ComisariaCuarta(BaseComisaria):
-    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_cuarta_created_records')
-    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_cuarta_updated_records')
+    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_cuarta_created_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
+    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_cuarta_updated_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
 
+# Modelo específico para ComisariaQuinta, hereda de BaseComisaria
 class ComisariaQuinta(BaseComisaria):
-    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_quinta_created_records')
-    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_quinta_updated_records')
+    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_quinta_created_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado
+    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='comisaria_quinta_updated_records')  # Clave foránea con User, permite nulos, elimina en cascada, nombre relacionado

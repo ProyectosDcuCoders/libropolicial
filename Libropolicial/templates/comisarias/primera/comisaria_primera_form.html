@@ -24,9 +24,26 @@
                 {{ form.codigo }}
             </div>
             <div class="sm:col-span-1">
-                <label for="{{ form.movil_patrulla.id_for_label }}" class="block text-gray-700">{{ form.movil_patrulla.label }}</label>
-                <input type="text" name="{{ form.movil_patrulla.name }}" id="{{ form.movil_patrulla.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.movil_patrulla.value|default_if_none:'' }}">
+                <!-- Etiqueta para el campo de formulario 'movil_patrulla' -->
+                <!-- 'for' se enlaza con el ID del campo para accesibilidad -->
+                <label for="{{ form.movil_patrulla.id_for_label }}" class="block text-gray-700">
+                    <!-- form en una plantilla, haces referencia a una instancia de este formulario, que contiene campos y sus atributos. Muestra el texto de la etiqueta definida en el formulario -->
+                    {{ form.movil_patrulla.label }}
+                </label>
+                
+                <!-- Campo de entrada de texto para 'movil_patrulla' -->
+                <!-- 'type="text"' define que es un campo de texto -->
+                <!-- 'name' define el nombre del campo en el formulario, necesario para el envío de datos -->
+                <!-- 'id' se usa para enlazar con la etiqueta, mejorando la accesibilidad -->
+                <!-- 'class' aplica estilos con Tailwind CSS para apariencia y comportamiento -->
+                <!-- 'value' establece el valor actual del campo, utilizando un valor predeterminado si es None -->
+                <input type="text" 
+                       name="{{ form.movil_patrulla.name }}" 
+                       id="{{ form.movil_patrulla.id_for_label }}" 
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" 
+                       value="{{ form.movil_patrulla.value|default_if_none:'' }}">
             </div>
+            
             <div class="sm:col-span-1">
                 <label for="{{ form.a_cargo.id_for_label }}" class="block text-gray-700">{{ form.a_cargo.label }}</label>
                 <input type="text" name="{{ form.a_cargo.name }}" id="{{ form.a_cargo.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.a_cargo.value|default_if_none:'' }}">
@@ -35,8 +52,24 @@
                 <label for="{{ form.secundante.id_for_label }}" class="block text-gray-700">{{ form.secundante.label }}</label>
                 <input type="text" name="{{ form.secundante.name }}" id="{{ form.secundante.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.secundante.value|default_if_none:'' }}">
             </div>
+            <div class="sm:col-span-1 relative" x-data="{ showDropdown: false }">
+                <label for="codigossecundarios" class="block text-gray-700">{{ form.codigossecundarios.label }}</label>
+                <div @click="showDropdown = !showDropdown" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
+                    Seleccionar códigos secundarios
+                </div>
+                <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4" style="display: none;">
+                    <div class="grid grid-cols-4 gap-2">
+                        {% for codigo in form.codigossecundarios.field.queryset %}
+                        <label class="flex items-center p-2 hover:bg-gray-100">
+                            <input type="checkbox" name="codigossecundarios" value="{{ codigo.id }}" class="form-checkbox" {% if codigo in form.codigossecundarios.value %}checked{% endif %}>
+                            <span class="ml-2">{{ codigo }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
             <div class="sm:col-span-1">
-                <label for="{{ form.estado.id_for_label }}" class="block text-gray-700">{{ form.estado.label }}</label>
+                <label for="{{ form.estado.id_for_label }}" class="block text-gray-700">Estado del código</label>
                 {{ form.estado }}
             </div>
             <div class="sm:col-span-3">

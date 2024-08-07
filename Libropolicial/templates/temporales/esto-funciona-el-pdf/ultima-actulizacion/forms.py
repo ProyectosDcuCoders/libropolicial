@@ -18,7 +18,7 @@ class BaseComisariaForm(forms.ModelForm):
     )
 
     class Meta:
-        fields = ['cuarto', 'fecha_hora', 'codigo', 'codigossecundarios', 'movil_patrulla', 'a_cargo', 'secundante', 'lugar_codigo', 'descripcion', 'instituciones_intervinientes', 'tareas_judiciales', 'estado', 'resolucion_codigo']
+        fields = ['cuarto', 'fecha_hora', 'codigo', 'codigossecundarios', 'movil_patrulla', 'a_cargo', 'secundante', 'lugar_codigo', 'descripcion', 'instituciones_intervinientes', 'tareas_judiciales', 'estado']
         widgets = {
             'fecha_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
