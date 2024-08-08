@@ -16,34 +16,15 @@
                 <label for="fecha_hora" class="block text-gray-700">Fecha y hora</label>
                 <input type="datetime-local" id="fecha_hora" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" required value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}" disabled>
                 <input type="hidden" name="fecha_hora" value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}">
-                <!--<input type="datetime-local" id="fecha_hora" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" required value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}" disabled>
-                <input type="hidden" name="fecha_hora" value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}">-->
             </div>
             <div class="sm:col-span-1">
                 <label for="{{ form.codigo.id_for_label }}" class="block text-gray-700">Codigo Principal</label>
                 {{ form.codigo }}
             </div>
             <div class="sm:col-span-1">
-                <!-- Etiqueta para el campo de formulario 'movil_patrulla' -->
-                <!-- 'for' se enlaza con el ID del campo para accesibilidad -->
-                <label for="{{ form.movil_patrulla.id_for_label }}" class="block text-gray-700">
-                    <!-- form en una plantilla, haces referencia a una instancia de este formulario, que contiene campos y sus atributos. Muestra el texto de la etiqueta definida en el formulario -->
-                    {{ form.movil_patrulla.label }}
-                </label>
-                
-                <!-- Campo de entrada de texto para 'movil_patrulla' -->
-                <!-- 'type="text"' define que es un campo de texto -->
-                <!-- 'name' define el nombre del campo en el formulario, necesario para el envío de datos -->
-                <!-- 'id' se usa para enlazar con la etiqueta, mejorando la accesibilidad -->
-                <!-- 'class' aplica estilos con Tailwind CSS para apariencia y comportamiento -->
-                <!-- 'value' establece el valor actual del campo, utilizando un valor predeterminado si es None -->
-                <input type="text" 
-                       name="{{ form.movil_patrulla.name }}" 
-                       id="{{ form.movil_patrulla.id_for_label }}" 
-                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" 
-                       value="{{ form.movil_patrulla.value|default_if_none:'' }}">
+                <label for="{{ form.movil_patrulla.id_for_label }}" class="block text-gray-700">{{ form.movil_patrulla.label }}</label>
+                <input type="text" name="{{ form.movil_patrulla.name }}" id="{{ form.movil_patrulla.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.movil_patrulla.value|default_if_none:'' }}">
             </div>
-            
             <div class="sm:col-span-1">
                 <label for="{{ form.a_cargo.id_for_label }}" class="block text-gray-700">{{ form.a_cargo.label }}</label>
                 <input type="text" name="{{ form.a_cargo.name }}" id="{{ form.a_cargo.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.a_cargo.value|default_if_none:'' }}">
@@ -53,15 +34,15 @@
                 <input type="text" name="{{ form.secundante.name }}" id="{{ form.secundante.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.secundante.value|default_if_none:'' }}">
             </div>
             <div class="sm:col-span-1 relative" x-data="{ showDropdown: false }">
-                <label for="codigossecundarios" class="block text-gray-700">{{ form.codigossecundarios.label }}</label>
+                <label for="codigos_secundarios" class="block text-gray-700">{{ form.codigos_secundarios.label }}</label>
                 <div @click="showDropdown = !showDropdown" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
                     Seleccionar códigos secundarios
                 </div>
                 <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4" style="display: none;">
                     <div class="grid grid-cols-4 gap-2">
-                        {% for codigo in form.codigossecundarios.field.queryset %}
+                        {% for codigo in form.codigos_secundarios.field.queryset %}
                         <label class="flex items-center p-2 hover:bg-gray-100">
-                            <input type="checkbox" name="codigossecundarios" value="{{ codigo.id }}" class="form-checkbox" {% if codigo in form.codigossecundarios.value %}checked{% endif %}>
+                            <input type="checkbox" name="codigos_secundarios" value="{{ codigo.id }}" class="form-checkbox" {% if codigo in form.codigos_secundarios.value %}checked{% endif %}>
                             <span class="ml-2">{{ codigo }}</span>
                         </label>
                         {% endfor %}
@@ -69,8 +50,12 @@
                 </div>
             </div>
             <div class="sm:col-span-1">
-                <label for="{{ form.estado.id_for_label }}" class="block text-gray-700">Estado del código</label>
-                {{ form.estado }}
+                <label for="{{ form.estado.id_for_label }}" class="block mb-3 text-gray-700">Estado del código</label>
+                <label class="relative flex items-center cursor-pointer">
+                    {{ form.estado }}
+                    <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600 hover:peer-checked:bg-indigo-700"></div>
+                    <span id="estado-text" class="ml-3 text-sm font-medium text-gray-600">Activo</span>
+                </label>
             </div>
             <div class="sm:col-span-3">
                 <label for="{{ form.lugar_codigo.id_for_label }}" class="block text-gray-700">{{ form.lugar_codigo.label }}</label>

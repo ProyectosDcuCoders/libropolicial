@@ -1,50 +1,29 @@
 from datetime import datetime
+from io import BytesIO
 from django.http import JsonResponse, HttpResponse, HttpRequest, FileResponse
 from django.core.serializers import serialize
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, TemplateView
 from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
+from django.db import models
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta
-from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, CustomLoginForm
-from compartido.utils import user_is_in_group
-from io import BytesIO
 from reportlab.lib.units import inch
-from django.db import models
+from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, ResolucionCodigo
+from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, ResolucionCodigoForm, CustomLoginForm
+from compartido.utils import user_is_in_group
 
-from django.views.generic.edit import UpdateView
-from django.utils import timezone
-from datetime import datetime
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
-from .models import ComisariaPrimera, ResolucionCodigo
-from .forms import ComisariaPrimeraForm, ResolucionCodigoForm
-from django.views.generic import ListView, CreateView, UpdateView
-from django.urls import reverse_lazy
-
-from django.views.generic import ListView, CreateView, UpdateView
-from django.urls import reverse_lazy
-from django.utils import timezone
-from django.shortcuts import redirect
-from .models import ComisariaPrimera, ResolucionCodigo
-from .forms import ComisariaPrimeraForm, ResolucionCodigoForm
-
-# views.py
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
-from django.utils.decorators import method_decorator
 
 @login_required
 def sign_comisaria_primera(request, pk):
@@ -58,7 +37,6 @@ def sign_comisaria_primera(request, pk):
     return redirect(reverse('comisaria_primera_list'))
 
 # views.py
-from django.utils import timezone
 
 class ComisariaPrimeraListView(LoginRequiredMixin, ListView):
     model = ComisariaPrimera
@@ -92,7 +70,10 @@ class ComisariaPrimeraCreateView(CreateView):
     success_url = reverse_lazy('comisaria_primera_list')
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        self.object = form.save(commit=False)
+        self.object.created_by = self.request.user
+        self.object.save()
+        form.save_m2m()  # Para guardar los códigos secundarios
         return super().form_valid(form)
 
 class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -118,8 +99,13 @@ class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.instance.updated_by = self.request.user
+        self.object = form.save(commit=False)
+        self.object.updated_by = self.request.user
+        self.object.save()
+        form.save_m2m()  # Para guardar los códigos secundarios
         return super().form_valid(form)
+
+    
 
 class ComisariaPrimeraResolveView(UpdateView):
     model = ResolucionCodigo

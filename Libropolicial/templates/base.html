@@ -24,6 +24,18 @@
             width: 300px;
             margin-bottom: 5px;
         }
+        /* Animación de parpadeo en rojo tenue */
+        @keyframes blink {
+            50% {
+                background-color: #fed7d7; /* bg-red-200 */
+                color: black; /* Texto en color oscuro */
+            }
+        }
+        .blink-red {
+            animation: blink 1s infinite;
+            background-color: #f56565; /* bg-red-500 */
+            color: black; /* Texto en color oscuro */
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -106,6 +118,28 @@
                     },
                 },
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const estadoCheckbox = document.querySelector('input[name="estado"]');
+            const estadoText = document.getElementById('estado-text');
+    
+            estadoCheckbox.addEventListener('change', function() {
+                if (estadoCheckbox.checked) {
+                    estadoText.textContent = 'Activo';
+                } else {
+                    estadoText.textContent = 'Finalizado';
+                }
+            });
+    
+            // Inicializar el texto basado en el estado actual del checkbox
+            if (estadoCheckbox.checked) {
+                estadoText.textContent = 'Activo';
+            } else {
+                estadoText.textContent = 'Finalizado';
+            }
         });
     </script>
 </body>

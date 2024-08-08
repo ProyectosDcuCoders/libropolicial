@@ -31,9 +31,9 @@
                     <th class="px-2 py-2 bg-gray-600 border border-gray-600">Instituciones Intervinientes</th>
                     <th class="px-2 py-2 bg-gray-600 border border-gray-600">Tareas Judiciales</th>
                     <th class="px-2 py-2 bg-gray-600 border border-gray-600">Estado del codigo</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600">Ingresado por Usuario</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600">Editado por Usuario</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600">Creado por Usuario</th>
                     <th class="px-2 py-2 bg-gray-600 border border-gray-600">Primer Registro</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600">Editado por Usuario</th>                 
                     <th class="px-2 py-2 bg-gray-600 border border-gray-600">Ultima Actualización</th>
                     <th class="px-2 py-2 bg-gray-600 border border-gray-600">Acciones</th>
                 </tr>
@@ -53,10 +53,12 @@
                     </td>
                     <td class="bg-gray-300 border border-gray-300 px-2 py-2">{{ record.instituciones_intervinientes|default_if_none:'' }}</td>
                     <td class="bg-gray-300 border border-gray-300 px-2 py-2">{{ record.tareas_judiciales|default_if_none:'' }}</td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 {% if record.estado %}bg-red-500 text-white{% endif %}">{{ record.estado|yesno:"Activo,Finalizado" }}</td>
+                    <td class="bg-gray-300 border text-gray-950 border-gray-300 px-2 py-2 {% if record.estado %}blink-red{% endif %}">
+                        {{ record.estado|yesno:"Activo,Finalizado" }}
+                    </td>                    
                     <td class="bg-gray-300 border border-gray-300 px-2 py-2">{{ record.created_by.get_full_name|default:record.created_by.username }}</td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2">{% if record.updated_by %}{{ record.updated_by.get_full_name|default:record.updated_by.username }}{% else %}{% endif %}</td>
                     <td class="bg-gray-300 border border-gray-300 px-2 py-2">{{ record.created_at|date:"d/m/Y H:i:s" }}</td>
+                    <td class="bg-gray-300 border border-gray-300 px-2 py-2">{% if record.updated_by %}{{ record.updated_by.get_full_name|default:record.updated_by.username }}{% else %}{% endif %}</td>                   
                     <td class="bg-gray-300 border border-gray-300 px-2 py-2">{% if record.updated_at != record.created_at %}{{ record.updated_at|date:"d/m/Y H:i:s" }}{% endif %}</td>
                     <td class="bg-gray-300 border border-gray-300 px-2 py-2">
                         {% if record.estado or record.fecha_hora.date == today %}
@@ -67,10 +69,7 @@
                             <a href="{% url 'comisaria_primera_sign' record.pk %}" class="bg-purple-500 text-white py-1 px-4 rounded hover:bg-purple-700 block text-center">Firmar</a>
                         {% endif %}
                     </td>
-                    
-                    
-                    
-                                      
+                                                        
                 </tr>
                 {% endfor %}
             </tbody>

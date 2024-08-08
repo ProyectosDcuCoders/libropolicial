@@ -10,18 +10,20 @@ class BaseComisariaForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'})
     )
 
-    codigossecundarios = forms.ModelMultipleChoiceField(
+    codigos_secundarios = forms.ModelMultipleChoiceField(
         queryset=CodigosSecundarios.objects.all(),
         required=False,
         label='Códigos Secundarios',
         widget=forms.CheckboxSelectMultiple()
     )
 
-
     class Meta:
         fields = ['cuarto', 'fecha_hora', 'codigo', 'codigos_secundarios', 'movil_patrulla', 'a_cargo', 'secundante', 'lugar_codigo', 'descripcion', 'instituciones_intervinientes', 'tareas_judiciales', 'estado']
         widgets = {
             'fecha_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'estado': forms.CheckboxInput(attrs={
+                'class': 'sr-only peer'
+            }),
         }
 
 class ComisariaPrimeraForm(BaseComisariaForm):
