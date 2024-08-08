@@ -25,7 +25,6 @@ from django.views.generic.edit import UpdateView
 from django.utils import timezone
 from datetime import datetime
 
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from .models import ComisariaPrimera, ResolucionCodigo

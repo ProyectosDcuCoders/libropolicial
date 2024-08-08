@@ -1,4 +1,3 @@
-# models.py
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
@@ -25,7 +24,7 @@ class BaseComisaria(models.Model):
     cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, on_delete=models.CASCADE)
     fecha_hora = models.DateTimeField(default=timezone.now)
     codigo = models.ForeignKey(CodigoPolicialUSH, null=True, blank=True, on_delete=models.SET_NULL)
-    codigos_secundarios = models.ManyToManyField(CodigosSecundarios,null=True, blank=True)
+    codigos_secundarios = models.ManyToManyField(CodigosSecundarios, blank=True)  # Removido null=True
     movil_patrulla = models.CharField(max_length=255, null=True, blank=True)
     a_cargo = models.CharField(max_length=255, null=True, blank=True)
     secundante = models.CharField(max_length=255, null=True, blank=True)
