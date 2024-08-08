@@ -1,4 +1,4 @@
-# comisarias/urls.py
+# urls.py
 
 from django.urls import path
 from .views import (
@@ -6,21 +6,22 @@ from .views import (
     generate_comisaria_segunda_pdf_view, generate_comisaria_segunda_pdf_download,
     generate_comisaria_tercera_pdf_view, generate_comisaria_tercera_pdf_download,
     generate_comisaria_cuarta_pdf_view, generate_comisaria_cuarta_pdf_download,
-    generate_comisaria_quinta_pdf_view, generate_comisaria_quinta_pdf_download,
+    generate_comisaria_quinta_pdf_view, generate_comisaria_quinta_pdf_download,sign_comisaria_primera,
     ComisariaPrimeraListView, ComisariaSegundaListView, ComisariaTerceraListView,
     ComisariaCuartaListView, ComisariaQuintaListView, ComisariaPrimeraCreateView,
     ComisariaSegundaCreateView, ComisariaTerceraCreateView, ComisariaCuartaCreateView,
     ComisariaQuintaCreateView, ComisariasCompletaListView, ComisariaPrimeraUpdateView,
-    ComisariaSegundaUpdateView, ComisariaPrimeraResolveView  # Añadir la nueva vista aquí
+    ComisariaSegundaUpdateView, ComisariaPrimeraResolveView
 )
 
 urlpatterns = [
-   path('primera/', ComisariaPrimeraListView.as_view(), name='comisaria_primera_list'),
-    path('primera/nuevo/', ComisariaPrimeraCreateView.as_view(), name='comisaria_primera_create'),
-    path('primera/editar/<int:pk>/', ComisariaPrimeraUpdateView.as_view(), name='comisaria_primera_edit'),
+    path('primera/', ComisariaPrimeraListView.as_view(), name='comisaria_primera_list'),
+    path('primera/create/', ComisariaPrimeraCreateView.as_view(), name='comisaria_primera_create'),
+    path('primera/edit/<int:pk>/', ComisariaPrimeraUpdateView.as_view(), name='comisaria_primera_edit'),
     path('primera/constancia/<int:pk>/', ComisariaPrimeraResolveView.as_view(), name='comisaria_primera_resolve'),
-    path('primera/reporte/', generate_comisaria_primera_pdf_view, name='generate_comisaria_primera_pdf_view'),
+    path('primera/reporte/view/', generate_comisaria_primera_pdf_view, name='generate_comisaria_primera_pdf_view'),
     path('primera/reporte/download/', generate_comisaria_primera_pdf_download, name='generate_comisaria_primera_pdf_download'),
+    path('primera/firmar/<int:pk>/', sign_comisaria_primera, name='comisaria_primera_sign'),
 
     path('segunda/', ComisariaSegundaListView.as_view(), name='comisaria_segunda_list'),
     path('segunda/nuevo/', ComisariaSegundaCreateView.as_view(), name='comisaria_segunda_create'),

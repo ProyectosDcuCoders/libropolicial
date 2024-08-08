@@ -75,7 +75,7 @@ ASGI_APPLICATION = 'Libropolicial.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Utiliza el backend MySQL
-        'NAME': 'librodeguardia',  # Nombre de la base de datos
+        'NAME': 'policiatdf',  # Nombre de la base de datos
         'USER': 'root',  # Usuario de la base de datos
         'PASSWORD': '',  # Contraseña de la base de datos
         'HOST': 'localhost',  # Host de la base de datos
@@ -135,5 +135,21 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/Argentina/Buenos_Aires'
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'generate-daily-pdf': {
+        'task': 'comisarias.tasks.generate_daily_pdf',
+        'schedule': crontab(minute=59, hour=23),  # Se ejecuta a las 23:59 todos los días
     },
 }

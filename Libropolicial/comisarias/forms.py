@@ -1,6 +1,6 @@
 from Libropolicial.forms import CustomLoginForm
 from django import forms
-from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, CodigoPolicialUSH, CodigosSecundarios
+from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, CodigoPolicialUSH, CodigosSecundarios, ResolucionCodigo
 
 class BaseComisariaForm(forms.ModelForm):
     codigo = forms.ModelChoiceField(
@@ -17,8 +17,9 @@ class BaseComisariaForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple()
     )
 
+
     class Meta:
-        fields = ['cuarto', 'fecha_hora', 'codigo', 'codigossecundarios', 'movil_patrulla', 'a_cargo', 'secundante', 'lugar_codigo', 'descripcion', 'instituciones_intervinientes', 'tareas_judiciales', 'estado', 'resolucion_codigo']
+        fields = ['cuarto', 'fecha_hora', 'codigo', 'codigos_secundarios', 'movil_patrulla', 'a_cargo', 'secundante', 'lugar_codigo', 'descripcion', 'instituciones_intervinientes', 'tareas_judiciales', 'estado']
         widgets = {
             'fecha_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
@@ -42,3 +43,8 @@ class ComisariaCuartaForm(BaseComisariaForm):
 class ComisariaQuintaForm(BaseComisariaForm):
     class Meta(BaseComisariaForm.Meta):
         model = ComisariaQuinta
+
+class ResolucionCodigoForm(forms.ModelForm):
+    class Meta:
+        model = ResolucionCodigo
+        fields = ['resolucion_codigo']
