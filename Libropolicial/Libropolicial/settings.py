@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'comisariastolhuin',  # Aplicación de comisarías de Tolhuin
     'divisioncomunicaciones',  # Aplicación de la división de comunicaciones
     'channels',  # Soporte para canales (WebSockets)
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -151,5 +152,24 @@ CELERY_BEAT_SCHEDULE = {
     'generate-daily-pdf': {
         'task': 'comisarias.tasks.generate_daily_pdf',
         'schedule': crontab(minute=59, hour=23),  # Se ejecuta a las 23:59 todos los días
+    },
+}
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': [
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'Undo', 'Redo']},
+            {'name': 'editing', 'items': ['Find', 'Replace', 'SelectAll', 'Scayt']},
+            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', 'RemoveFormat']},
+            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', 'Outdent', 'Indent', 'Blockquote', 'CreateDiv', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'BidiLtr', 'BidiRtl', 'Language']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert', 'items': ['Table', 'HorizontalRule', 'SpecialChar']},
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'document', 'items': ['Source']}
+        ],
+        'height': 300,
+        'width': 'auto',
     },
 }

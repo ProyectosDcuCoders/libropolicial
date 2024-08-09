@@ -14,6 +14,12 @@ class CodigosSecundarios(models.Model):
     def __str__(self):
         return self.codigo
 
+class DependenciasSecundarias(models.Model):
+    dependencia = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.dependencia
+
 class CuartoGuardiaUSH(models.Model):
     cuarto = models.CharField(max_length=1)
 
@@ -24,7 +30,8 @@ class BaseComisaria(models.Model):
     cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, on_delete=models.CASCADE)
     fecha_hora = models.DateTimeField(default=timezone.now)
     codigo = models.ForeignKey(CodigoPolicialUSH, null=True, blank=True, on_delete=models.SET_NULL)
-    codigos_secundarios = models.ManyToManyField(CodigosSecundarios, blank=True)  # Removido null=True
+    codigos_secundarios = models.ManyToManyField(CodigosSecundarios, blank=True)
+    dependencias_secundarias = models.ManyToManyField(DependenciasSecundarias, blank=True)
     movil_patrulla = models.CharField(max_length=255, null=True, blank=True)
     a_cargo = models.CharField(max_length=255, null=True, blank=True)
     secundante = models.CharField(max_length=255, null=True, blank=True)

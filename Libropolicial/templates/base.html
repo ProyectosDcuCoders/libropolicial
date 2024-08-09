@@ -37,6 +37,10 @@
             color: black; /* Texto en color oscuro */
         }
     </style>
+     <!-- CKEditor media -->
+     {% block extrahead %}
+        {{ form.media }}
+     {% endblock %}
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
     <header class="flex justify-between items-center bg-slate-900 text-white p-4">

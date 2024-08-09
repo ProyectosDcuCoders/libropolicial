@@ -2,6 +2,10 @@
 
 {% block title %}Registrar en Comisaría Primera{% endblock %}
 
+{% block extrahead %}
+    {{ form.media }}
+{% endblock %}
+
 {% block content %}
 <div class="container mx-auto mt-4 p-4">
     <h1 class="text-2xl font-bold mb-4 text-center">Registrar en Comisaría Primera</h1>
@@ -63,7 +67,7 @@
             </div>
             <div class="sm:col-span-3">
                 <label for="{{ form.descripcion.id_for_label }}" class="block text-gray-700">{{ form.descripcion.label }}</label>
-                <textarea name="{{ form.descripcion.name }}" id="{{ form.descripcion.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3">{{ form.descripcion.value|default_if_none:'' }}</textarea>
+                {{ form.descripcion }}
             </div>
             <div class="sm:col-span-3">
                 <label for="{{ form.instituciones_intervinientes.id_for_label }}" class="block text-gray-700">{{ form.instituciones_intervinientes.label }}</label>

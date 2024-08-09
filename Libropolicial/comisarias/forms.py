@@ -1,4 +1,5 @@
 from Libropolicial.forms import CustomLoginForm
+from ckeditor.widgets import CKEditorWidget
 from django import forms
 from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, CodigoPolicialUSH, CodigosSecundarios, ResolucionCodigo
 
@@ -17,14 +18,18 @@ class BaseComisariaForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple()
     )
 
+    descripcion = forms.CharField(
+        widget=CKEditorWidget(attrs={'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+        label='Descripción'
+    )
+
     class Meta:
         fields = ['cuarto', 'fecha_hora', 'codigo', 'codigos_secundarios', 'movil_patrulla', 'a_cargo', 'secundante', 'lugar_codigo', 'descripcion', 'instituciones_intervinientes', 'tareas_judiciales', 'estado']
         widgets = {
             'fecha_hora': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'estado': forms.CheckboxInput(attrs={
-                'class': 'sr-only peer'
-            }),
+            'estado': forms.CheckboxInput(attrs={'class': 'sr-only peer'}),
         }
+
 
 class ComisariaPrimeraForm(BaseComisariaForm):
     class Meta(BaseComisariaForm.Meta):

@@ -274,22 +274,15 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
         context['paginate_by'] = self.request.GET.get('items_per_page', 10)
         return context
 
-# views.py
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.http import HttpResponse, FileResponse
+from datetime import datetime
+from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta
+from django.db import models
 
 def generate_pdf_content(request, comisaria_model, add_signature=False):
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
-
-    def draw_header(canvas):
-        canvas.setFont("Helvetica-Bold", 12)
-        title = f"Libro de Guardia {comisaria_model._meta.verbose_name.title()}"
-        text_width = canvas.stringWidth(title, "Helvetica-Bold", 12)
-        canvas.drawString((width - text_width) / 2, height - 30, title)
-
-    p.setFont("Helvetica", 8)
-    y = height - 50
-
     now = datetime.now()
     start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
     end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
@@ -298,158 +291,36 @@ def generate_pdf_content(request, comisaria_model, add_signature=False):
         models.Q(updated_at__range=(start_of_day, end_of_day))
     )
 
-    draw_header(p)
-
-    if not registros.exists():
-        p.drawString(100, y, "No hay registros para hoy.")
+    template = get_template('comisarias/comisarias_pdf_template.html')
+    context = {
+        'registros': registros,
+        'comisaria_name': comisaria_model._meta.verbose_name.title(),
+        'add_signature': add_signature,
+        'username': request.user.get_full_name(),
+        'now': now
+    }
+    html = template.render(context)
+    response = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
+    if not pdf.err:
+        return response.getvalue()
     else:
-        y -= 20
+        return None
 
-    for registro in registros:
-        p.setFillColorRGB(0.2, 0.2, 0.2)
-        p.setFont("Helvetica-Bold", 9)
-
-        p.drawString(50, y, "Fecha y hora:")
-        p.setFont("Helvetica", 8)
-        p.drawString(112, y, f"{registro.fecha_hora.strftime('%d-%m-%Y %H:%M:%S') if registro.fecha_hora else ''}")
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(230, y, "Código:")
-        p.setFont("Helvetica", 8)
-        p.drawString(267, y, f"{registro.codigo.codigo if registro.codigo else ''}")
-
-        y -= 15
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(50, y, "Guardia:")
-        p.setFont("Helvetica", 8)
-        p.drawString(90, y, f"{registro.cuarto.cuarto if registro.cuarto else ''}")
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(230, y, "Móvil Patrulla:")
-        p.setFont("Helvetica", 8)
-        p.drawString(295, y, f"{registro.movil_patrulla if registro.movil_patrulla else ''}")
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(320, y, "A Cargo:")
-        p.setFont("Helvetica", 8)
-        p.drawString(362, y, f"{registro.a_cargo if registro.a_cargo else ''}")
-
-        y -= 15
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(50, y, "Secundante:")
-        p.setFont("Helvetica", 8)
-        p.drawString(107, y, f"{registro.secundante if registro.secundante else ''}")
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(230, y, "Lugar del Código:")
-        p.setFont("Helvetica", 8)
-        p.drawString(310, y, f"{registro.lugar_codigo if registro.lugar_codigo else ''}")
-
-        y -= 15
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(50, y, "Descripción:")
-        p.setFont("Helvetica", 8)
-        y = split_text(p, f"{registro.descripcion if registro.descripcion else ''}", 108, y, 400, height, draw_header)
-        y -= 10
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(50, y, "Instituciones Intervinientes:")
-        p.setFont("Helvetica", 8)
-        y = split_text(p, f"{registro.instituciones_intervinientes if registro.instituciones_intervinientes else ''}", 172, y, 400, height, draw_header)
-        y -= 10
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(50, y, "Tareas Judiciales:")
-        p.setFont("Helvetica", 8)
-        y = split_text(p, f"{registro.tareas_judiciales if registro.tareas_judiciales else ''}", 130, y, 400, height, draw_header)
-        y -= 20
-
-        p.setFont("Helvetica-Bold", 9)
-        p.drawString(50, y, "Firmas:")
-        p.setFont("Helvetica", 8)
-        p.drawString(95, y, f"{registro.firmas if registro.firmas else ''}")
-
-        y -= 20
-
-        p.line(50, y, width - 50, y)
-        y -= 20
-
-        if y < 100:
-            p.showPage()
-            draw_header(p)
-            p.setFont("Helvetica", 8)
-            y = height - 50
-
-    if add_signature:
-        draw_footer(p, request, now, comisaria_model, width)
-
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    return buffer
-
-
-# Función para dividir el texto en múltiples líneas que se ajusten a un ancho dado
-def split_text(canvas, text, x, y, max_width, height, draw_header):
-    lines = []
-    words = text.split()
-    current_line = []
-    current_width = 0
-    for word in words:
-        word_width = canvas.stringWidth(word, "Helvetica", 8)
-        if current_width + word_width <= max_width:
-            current_line.append(word)
-            current_width += word_width + canvas.stringWidth(" ", "Helvetica", 8)
-        else:
-            lines.append(" ".join(current_line))
-            current_line = [word]
-            current_width = word_width + canvas.stringWidth(" ", "Helvetica", 8)
-            y -= 0  # Mueve a la siguiente línea
-        if y < 50:  # Verifica si se ha excedido la altura de la página
-            canvas.showPage()
-            draw_header(canvas)  # Dibuja el encabezado en una nueva página
-            canvas.setFont("Helvetica", 8)
-            y = height - 50
-    if current_line:
-        lines.append(" ".join(current_line))
-    for line in lines:
-        canvas.drawString(x, y, line)
-        y -= 10
-    return y
-
-# Función para dibujar el pie de página en el PDF
-def draw_footer(canvas, request, now, comisaria_model, width):
-    username = request.user.first_name
-    now_str = now.strftime('%d-%m-%Y %H:%M:%S')
-    comisaria_name = comisaria_model._meta.verbose_name.title()
-
-    canvas.setFont("Helvetica-Bold", 8)
-    canvas.setFillColorRGB(0.5, 0.5, 0.5, alpha=0.5)
-    text = f"{comisaria_name}. Descargado por: {username}. Fecha y hora: {now_str}"
-    text_width = canvas.stringWidth(text, "Helvetica-Bold", 8)
-    canvas.drawString((width - text_width) / 2, 30, text)
-
-# Función para generar el PDF y devolverlo en una respuesta HTTP
 def generate_pdf(request, comisaria_model, filename, add_signature=False):
-    buffer = generate_pdf_content(request, comisaria_model, add_signature)
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="{filename}"'
-    return response
+    pdf_content = generate_pdf_content(request, comisaria_model, add_signature)
+    if pdf_content:
+        response = HttpResponse(pdf_content, content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="{filename}"'
+        return response
+    else:
+        return HttpResponse('Error al generar el PDF', status=500)
 
-# Función para ver el PDF en el navegador
-def view_pdf(request, comisaria_model, template_name):
-    return render(request, template_name, {'model_name': comisaria_model._meta.model_name})
-
-# Función para generar el contenido del PDF y devolverlo en una respuesta de archivo
 def view_pdf_content(request, comisaria_model):
     buffer = generate_pdf_content(request, comisaria_model)
-    response = FileResponse(buffer, content_type='application/pdf')
+    response = FileResponse(BytesIO(buffer), content_type='application/pdf')
     return response
 
-# views.py
 def generate_comisaria_primera_pdf_view(request):
     return view_pdf_content(request, ComisariaPrimera)
 
@@ -459,7 +330,7 @@ def generate_comisaria_primera_pdf_download(request):
     filename = f"parte-diario-{now.strftime('%d-%m-%Y')}.pdf"
     return generate_pdf(request, ComisariaPrimera, filename, add_signature=add_signature)
 
-# Repite para las demás comisarías
+# Repite las siguientes funciones para las demás comisarías...
 def generate_comisaria_segunda_pdf_view(request):
     return view_pdf_content(request, ComisariaSegunda)
 
@@ -468,6 +339,9 @@ def generate_comisaria_segunda_pdf_download(request):
     now = datetime.now()
     filename = f"parte-diario-{now.strftime('%d-%m-%Y_%H-%M-%S')}.pdf"
     return generate_pdf(request, ComisariaSegunda, filename, add_signature=add_signature)
+
+# Continúa con las demás funciones para las comisarías tercera, cuarta y quinta.
+
 
 def generate_comisaria_tercera_pdf_view(request):
     return view_pdf_content(request, ComisariaTercera)

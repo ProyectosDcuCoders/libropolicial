@@ -1,45 +1,44 @@
 from datetime import datetime
+from io import BytesIO
 from django.http import JsonResponse, HttpResponse, HttpRequest, FileResponse
 from django.core.serializers import serialize
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, TemplateView
 from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
+from django.db import models
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta
-from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, CustomLoginForm
-from compartido.utils import user_is_in_group
-from io import BytesIO
 from reportlab.lib.units import inch
+from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, ResolucionCodigo
+from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, ResolucionCodigoForm, CustomLoginForm
+from compartido.utils import user_is_in_group
 
-from django.views.generic.edit import UpdateView
-from django.utils import timezone
-from datetime import datetime
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
-from .models import ComisariaPrimera, ResolucionCodigo
-from .forms import ComisariaPrimeraForm, ResolucionCodigoForm
-from django.views.generic import ListView, CreateView, UpdateView
-from django.urls import reverse_lazy
+@login_required
+def sign_comisaria_primera(request, pk):
+    comisaria = get_object_or_404(ComisariaPrimera, pk=pk)
+    user_full_name = request.user.get_full_name() or request.user.username
+    if comisaria.firmas:
+        comisaria.firmas += f", {user_full_name}"
+    else:
+        comisaria.firmas = user_full_name
+    comisaria.save(update_fields=['firmas'])  # Solo actualiza el campo firmas
+    return redirect(reverse('comisaria_primera_list'))
 
-from django.views.generic import ListView, CreateView, UpdateView
-from django.urls import reverse_lazy
-from django.utils import timezone
-from django.shortcuts import redirect
-from .models import ComisariaPrimera, ResolucionCodigo
-from .forms import ComisariaPrimeraForm, ResolucionCodigoForm
+# views.py
 
-class ComisariaPrimeraListView(ListView):
+class ComisariaPrimeraListView(LoginRequiredMixin, ListView):
     model = ComisariaPrimera
     template_name = 'comisarias/primera/comisaria_primera_list.html'
     context_object_name = 'records'
@@ -62,6 +61,8 @@ class ComisariaPrimeraListView(ListView):
         context['resolveId'] = None  # Inicializa resolveId en None
         return context
 
+
+
 class ComisariaPrimeraCreateView(CreateView):
     model = ComisariaPrimera
     form_class = ComisariaPrimeraForm
@@ -69,7 +70,10 @@ class ComisariaPrimeraCreateView(CreateView):
     success_url = reverse_lazy('comisaria_primera_list')
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        self.object = form.save(commit=False)
+        self.object.created_by = self.request.user
+        self.object.save()
+        form.save_m2m()  # Para guardar los códigos secundarios
         return super().form_valid(form)
 
 class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -95,8 +99,13 @@ class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.instance.updated_by = self.request.user
+        self.object = form.save(commit=False)
+        self.object.updated_by = self.request.user
+        self.object.save()
+        form.save_m2m()  # Para guardar los códigos secundarios
         return super().form_valid(form)
+
+    
 
 class ComisariaPrimeraResolveView(UpdateView):
     model = ResolucionCodigo
@@ -265,13 +274,15 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
         context['paginate_by'] = self.request.GET.get('items_per_page', 10)
         return context
 
-# Función para generar el contenido del PDF
+# views.py
+
+import html2text
+
 def generate_pdf_content(request, comisaria_model, add_signature=False):
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=A4)
     width, height = A4
 
-    # Dibuja el encabezado del PDF
     def draw_header(canvas):
         canvas.setFont("Helvetica-Bold", 12)
         title = f"Libro de Guardia {comisaria_model._meta.verbose_name.title()}"
@@ -281,13 +292,15 @@ def generate_pdf_content(request, comisaria_model, add_signature=False):
     p.setFont("Helvetica", 8)
     y = height - 50
 
-    # Define el rango de fechas para el día actual
     now = datetime.now()
     start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
     end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
-    registros = comisaria_model.objects.filter(created_at__range=(start_of_day, end_of_day))
+    registros = comisaria_model.objects.filter(
+        models.Q(created_at__range=(start_of_day, end_of_day)) |
+        models.Q(updated_at__range=(start_of_day, end_of_day))
+    )
 
-    draw_header(p)  # Dibuja el encabezado al comienzo de la primera página
+    draw_header(p)
 
     if not registros.exists():
         p.drawString(100, y, "No hay registros para hoy.")
@@ -295,11 +308,9 @@ def generate_pdf_content(request, comisaria_model, add_signature=False):
         y -= 20
 
     for registro in registros:
-        # Definir el color oscuro y el tamaño de la fuente para los títulos
         p.setFillColorRGB(0.2, 0.2, 0.2)
         p.setFont("Helvetica-Bold", 9)
 
-        # Fecha y hora del código
         p.drawString(50, y, "Fecha y hora:")
         p.setFont("Helvetica", 8)
         p.drawString(112, y, f"{registro.fecha_hora.strftime('%d-%m-%Y %H:%M:%S') if registro.fecha_hora else ''}")
@@ -340,10 +351,13 @@ def generate_pdf_content(request, comisaria_model, add_signature=False):
 
         y -= 15
 
+        # Convertir HTML a texto plano
+        descripcion_text = html2text.html2text(registro.descripcion) if registro.descripcion else ''
+
         p.setFont("Helvetica-Bold", 9)
         p.drawString(50, y, "Descripción:")
         p.setFont("Helvetica", 8)
-        y = split_text(p, f"{registro.descripcion if registro.descripcion else ''}", 108, y, 400, height, draw_header)
+        y = split_text(p, descripcion_text.strip(), 108, y, 400, height, draw_header)
         y -= 10
 
         p.setFont("Helvetica-Bold", 9)
@@ -358,12 +372,19 @@ def generate_pdf_content(request, comisaria_model, add_signature=False):
         y = split_text(p, f"{registro.tareas_judiciales if registro.tareas_judiciales else ''}", 130, y, 400, height, draw_header)
         y -= 20
 
-        p.line(50, y, width - 50, y)  # Dibujar línea horizontal de margen a margen
+        p.setFont("Helvetica-Bold", 9)
+        p.drawString(50, y, "Firmas:")
+        p.setFont("Helvetica", 8)
+        p.drawString(95, y, f"{registro.firmas if registro.firmas else ''}")
+
+        y -= 20
+
+        p.line(50, y, width - 50, y)
         y -= 20
 
         if y < 100:
             p.showPage()
-            draw_header(p)  # Dibuja el encabezado en una nueva página
+            draw_header(p)
             p.setFont("Helvetica", 8)
             y = height - 50
 
@@ -374,6 +395,8 @@ def generate_pdf_content(request, comisaria_model, add_signature=False):
     p.save()
     buffer.seek(0)
     return buffer
+
+
 
 # Función para dividir el texto en múltiples líneas que se ajusten a un ancho dado
 def split_text(canvas, text, x, y, max_width, height, draw_header):
@@ -432,7 +455,7 @@ def view_pdf_content(request, comisaria_model):
     response = FileResponse(buffer, content_type='application/pdf')
     return response
 
-# Funciones para generar y ver PDFs para cada comisaría
+# views.py
 def generate_comisaria_primera_pdf_view(request):
     return view_pdf_content(request, ComisariaPrimera)
 
@@ -442,6 +465,7 @@ def generate_comisaria_primera_pdf_download(request):
     filename = f"parte-diario-{now.strftime('%d-%m-%Y')}.pdf"
     return generate_pdf(request, ComisariaPrimera, filename, add_signature=add_signature)
 
+# Repite para las demás comisarías
 def generate_comisaria_segunda_pdf_view(request):
     return view_pdf_content(request, ComisariaSegunda)
 
