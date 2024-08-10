@@ -27,7 +27,7 @@
         .text-white {
             color: #ffffff;
         }
-        /* Estilos para el buscador y margen inferior   */
+        /* Estilos para el buscador y margen inferior */
         .dataTables_filter input {
             width: 300px;
             margin-bottom: 5px;
@@ -43,30 +43,6 @@
             animation: blink 1s infinite;
             background-color: #f56565; /* bg-red-500 */
             color: black; /* Texto en color oscuro */
-        }
-
-        /* Estilos personalizados para Leaflet en modo oscuro */
-        .dark .leaflet-control-geocoder-form input {
-            color: #000000; /* Color de texto negro */
-            background-color: #ffffff; /* Fondo blanco */
-        }
-
-        /* Asegurarse de que el texto del popup también sea visible en modo oscuro */
-        .dark .leaflet-popup-content {
-            color: #ffffff; /* Color de texto blanco */
-        }
-
-        .dark .leaflet-control-geocoder-alternatives a {
-            color: #ffffff; /* Color de texto blanco para las alternativas del geocoder */
-        }
-
-        .dark .leaflet-control-geocoder-button {
-            background-color: #1a202c; /* Fondo acorde al tema oscuro */
-            color: #ffffff; /* Color del ícono del botón */
-        }
-
-        .dark .leaflet-control-geocoder-icon {
-            filter: invert(1); /* Invertir el color del ícono en modo oscuro */
         }
     </style>
 
@@ -230,14 +206,6 @@
     </script>
 
     <script>
-        // Deshabilitar el botón de retroceso del navegador
-        history.pushState(null, null, location.href);
-        window.addEventListener('popstate', function () {
-            history.pushState(null, null, location.href);
-        });
-    </script>
-
-    <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Obtén las coordenadas iniciales
             var initialLat = {{ form.instance.latitude|default:"-54.8019" }};
@@ -246,18 +214,11 @@
             // Inicializa el mapa en las coordenadas iniciales
             var map = L.map('map').setView([initialLat, initialLng], 10); // Coordenadas iniciales para Tierra del Fuego, Argentina
         
-            // Define capas de mapas
-            var lightLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            // Carga la capa del mapa
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-
-            var darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> contributors'
-            });
-
-            // Añade la capa clara por defecto
-            lightLayer.addTo(map);
-            
+            }).addTo(map);
+        
             // Inicializa el marcador si las coordenadas existen
             var marker = null;
             if (initialLat && initialLng) {
@@ -285,15 +246,15 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data && data.display_name) {
-                            var popupContent = `<b style="color:#000000;">Dirección:</b> <span style="color:#000000;">${data.display_name}</span>`;
+                            var popupContent = `<b>Dirección:</b> ${data.display_name}`;
                             marker.bindPopup(popupContent).openPopup();
                         } else {
-                            marker.bindPopup("<span style='color:#000000;'>Dirección no disponible</span>").openPopup();
+                            marker.bindPopup("Dirección no disponible").openPopup();
                         }
                     })
                     .catch(error => {
                         console.error('Error en la geocodificación inversa:', error);
-                        marker.bindPopup("<span style='color:#000000;'>Error al obtener la dirección</span>").openPopup();
+                        marker.bindPopup("Error al obtener la dirección").openPopup();
                     });
             });
         
@@ -328,18 +289,10 @@
                 document.getElementById('id_latitude').value = latlng.lat;
                 document.getElementById('id_longitude').value = latlng.lng;
         
-                marker.bindPopup(`<b style="color:#000000;">${e.geocode.name}</b>`).openPopup();
+                marker.bindPopup(e.geocode.name).openPopup();
             }).addTo(map);
-
-            // Control de capas para cambiar entre modo claro y oscuro
-            var baseMaps = {
-                "Claro": lightLayer,
-                "Oscuro": darkLayer
-            };
-            L.control.layers(baseMaps).addTo(map);
         });
     </script>
-
     <script>
         window.onload = function () {
             // Verifica si el historial es soportado
@@ -356,7 +309,7 @@
             }
         };
     </script>
-    
+
     <script>
         window.history.pushState(null, null, window.location.href);
         window.onpopstate = function() {
@@ -365,8 +318,7 @@
     </script>
     
     
+    
+    
 </body>
 </html>
-
-
-

@@ -1,15 +1,15 @@
+// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class',  // Agrega esta línea
+  darkMode: 'class', // Usa la clase "dark" para habilitar el modo oscuro
   content: [
-    // Indica las rutas donde Tailwind buscará los archivos HTML
     './templates/**/*.html',
     './**/templates/**/*.html',
     './comisarias/templates/**/*.html',
     './divisioncomunicaciones/templates/**/*.html',
     './divisioncomunicaciones/**/*.html',
     './comisarias/**/*.html',
-    './static/**/*.css',  // También puede incluir CSS estático si es necesario
+    './static/**/*.css',
   ],
   theme: {
     extend: {},

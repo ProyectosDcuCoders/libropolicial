@@ -19,7 +19,7 @@ from django.db import models
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
-from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, ResolucionCodigo
+from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, ResolucionCodigo,CodigoPolicialUSH
 from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, ResolucionCodigoForm, CustomLoginForm
 from compartido.utils import user_is_in_group
 
@@ -35,6 +35,55 @@ def sign_comisaria_primera(request, pk):
         comisaria.firmas = user_full_name
     comisaria.save(update_fields=['firmas'])  # Solo actualiza el campo firmas
     return redirect(reverse('comisaria_primera_list'))
+
+# Función para firmar en Comisaria Segunda
+@login_required
+def sign_comisaria_segunda(request, pk):
+    comisaria = get_object_or_404(ComisariaSegunda, pk=pk)
+    user_full_name = request.user.get_full_name() or request.user.username
+    if comisaria.firmas:
+        comisaria.firmas += f", {user_full_name}"
+    else:
+        comisaria.firmas = user_full_name
+    comisaria.save(update_fields=['firmas'])  # Solo actualiza el campo firmas
+    return redirect(reverse('comisaria_segunda_list'))
+
+# Función para firmar en Comisaria Tercera
+@login_required
+def sign_comisaria_tercera(request, pk):
+    comisaria = get_object_or_404(ComisariaTercera, pk=pk)
+    user_full_name = request.user.get_full_name() or request.user.username
+    if comisaria.firmas:
+        comisaria.firmas += f", {user_full_name}"
+    else:
+        comisaria.firmas = user_full_name
+    comisaria.save(update_fields=['firmas'])  # Solo actualiza el campo firmas
+    return redirect(reverse('comisaria_tercera_list'))
+
+# Función para firmar en Comisaria Cuarta
+@login_required
+def sign_comisaria_cuarta(request, pk):
+    comisaria = get_object_or_404(ComisariaCuarta, pk=pk)
+    user_full_name = request.user.get_full_name() or request.user.username
+    if comisaria.firmas:
+        comisaria.firmas += f", {user_full_name}"
+    else:
+        comisaria.firmas = user_full_name
+    comisaria.save(update_fields=['firmas'])  # Solo actualiza el campo firmas
+    return redirect(reverse('comisaria_cuarta_list'))
+
+# Función para firmar en Comisaria Quinta
+@login_required
+def sign_comisaria_quinta(request, pk):
+    comisaria = get_object_or_404(ComisariaQuinta, pk=pk)
+    user_full_name = request.user.get_full_name() or request.user.username
+    if comisaria.firmas:
+        comisaria.firmas += f", {user_full_name}"
+    else:
+        comisaria.firmas = user_full_name
+    comisaria.save(update_fields=['firmas'])  # Solo actualiza el campo firmas
+    return redirect(reverse('comisaria_quinta_list'))
+
 
 # views.py
 
@@ -69,11 +118,29 @@ class ComisariaPrimeraCreateView(CreateView):
     template_name = 'comisarias/primera/comisaria_primera_form.html'
     success_url = reverse_lazy('comisaria_primera_list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['codigos_policiales'] = CodigoPolicialUSH.objects.all()
+        return context
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.created_by = self.request.user
+        self.object.updated_by = None
+        self.object.updated_at = None
+
+        latitude = self.request.POST.get('latitude').replace(',', '.')
+        longitude = self.request.POST.get('longitude').replace(',', '.')
+
+        self.object.latitude = float(latitude) if latitude else None
+        self.object.longitude = float(longitude) if longitude else None
+
         self.object.save()
-        form.save_m2m()  # Para guardar los códigos secundarios
+        form.save_m2m()
+
+        # Eliminar el historial de la sesión del navegador para evitar la carga del formulario al presionar "Atrás"
+        self.request.session.pop('codigo_registrado', None)
+        
         return super().form_valid(form)
 
 class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -92,20 +159,34 @@ class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
         obj = self.get_object()
         now = timezone.now()
 
-        # Verifica si la fecha del registro es el mismo día o si el estado es activo
         if obj.fecha_hora.date() != now.date() and not obj.estado:
             return redirect('comisaria_primera_list')
 
         return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['latitude'] = self.object.latitude
+        context['longitude'] = self.object.longitude
+        return context
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.updated_by = self.request.user
+        self.object.updated_at = timezone.now()
+
+        latitude = self.request.POST.get('latitude').replace(',', '.')
+        longitude = self.request.POST.get('longitude').replace(',', '.')
+
+        self.object.latitude = float(latitude) if latitude else None
+        self.object.longitude = float(longitude) if longitude else None
+
         self.object.save()
-        form.save_m2m()  # Para guardar los códigos secundarios
+        form.save_m2m()
+
         return super().form_valid(form)
 
-    
+
 
 class ComisariaPrimeraResolveView(UpdateView):
     model = ResolucionCodigo
@@ -132,15 +213,28 @@ class ComisariaPrimeraResolveView(UpdateView):
 # Vistas de listado y creación para ComisariaSegunda, ComisariaTercera, ComisariaCuarta, y ComisariaQuinta
 # Siguen el mismo patrón que ComisariaPrimera
 
-class ComisariaSegundaListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class ComisariaSegundaListView(LoginRequiredMixin, ListView):
     model = ComisariaSegunda
     template_name = 'comisarias/segunda/comisaria_segunda_list.html'
+    context_object_name = 'records'
 
-    def test_func(self):
-        return user_is_in_group(self.request.user, 'comisariasegunda')
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by('-fecha_hora')
+        search_query = self.request.GET.get('q', '')
+        if search_query:
+            queryset = queryset.filter(cuarto__cuarto__icontains=search_query)
+        for comisaria in queryset:
+            if timezone.is_naive(comisaria.fecha_hora):
+                comisaria.fecha_hora = timezone.make_aware(comisaria.fecha_hora, timezone.get_current_timezone())
+            comisaria.fecha_hora = timezone.localtime(comisaria.fecha_hora)
+        return queryset
 
-    def handle_no_permission(self):
-        return redirect('no_permission')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_jefessuperiores'] = self.request.user.groups.filter(name='jefessuperiores').exists()
+        context['today'] = timezone.now().date()
+        context['resolveId'] = None  # Inicializa resolveId en None
+        return context
 
 class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = ComisariaSegunda
@@ -154,6 +248,31 @@ class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
     def handle_no_permission(self):
         return redirect('no_permission')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['codigos_policiales'] = CodigoPolicialUSH.objects.all()
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.created_by = self.request.user
+        self.object.updated_by = None
+        self.object.updated_at = None
+
+        latitude = self.request.POST.get('latitude').replace(',', '.')
+        longitude = self.request.POST.get('longitude').replace(',', '.')
+
+        self.object.latitude = float(latitude) if latitude else None
+        self.object.longitude = float(longitude) if longitude else None
+
+        self.object.save()
+        form.save_m2m()
+
+        # Eliminar el historial de la sesión del navegador para evitar la carga del formulario al presionar "Atrás"
+        self.request.session.pop('codigo_registrado', None)
+        
+        return super().form_valid(form)
+
 class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ComisariaSegunda
     form_class = ComisariaSegundaForm
@@ -165,6 +284,41 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
 
     def handle_no_permission(self):
         return redirect('no_permission')
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        now = timezone.now()
+
+        if obj.fecha_hora.date() != now.date() and not obj.estado:
+            return redirect('comisaria_segunda_list')
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['latitude'] = self.object.latitude
+        context['longitude'] = self.object.longitude
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.updated_by = self.request.user
+        self.object.updated_at = timezone.now()
+
+        latitude = self.request.POST.get('latitude').replace(',', '.')
+        longitude = self.request.POST.get('longitude').replace(',', '.')
+
+        self.object.latitude = float(latitude) if latitude else None
+        self.object.longitude = float(longitude) if longitude else None
+
+        self.object.save()
+        form.save_m2m()
+
+        return super().form_valid(form)
+
+    
+
+
 
 class ComisariaTerceraListView(LoginRequiredMixin, ListView):
     model = ComisariaTercera

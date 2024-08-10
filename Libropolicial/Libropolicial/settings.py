@@ -68,7 +68,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Libropolicial.wsgi.application'
-ASGI_APPLICATION = 'Libropolicial.asgi.application'
+#ASGI_APPLICATION = 'Libropolicial.asgi.application'
 
 # Base de datos
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

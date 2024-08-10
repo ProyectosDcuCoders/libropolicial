@@ -1,10 +1,12 @@
+#comisarial/urls.py
 from django.urls import path
 from .views import (
     generate_comisaria_primera_pdf_view, generate_comisaria_primera_pdf_download,
     generate_comisaria_segunda_pdf_view, generate_comisaria_segunda_pdf_download,
     generate_comisaria_tercera_pdf_view, generate_comisaria_tercera_pdf_download,
     generate_comisaria_cuarta_pdf_view, generate_comisaria_cuarta_pdf_download,
-    generate_comisaria_quinta_pdf_view, generate_comisaria_quinta_pdf_download, sign_comisaria_primera,
+    generate_comisaria_quinta_pdf_view, generate_comisaria_quinta_pdf_download,
+    sign_comisaria_primera, sign_comisaria_segunda,
     ComisariaPrimeraListView, ComisariaSegundaListView, ComisariaTerceraListView,
     ComisariaCuartaListView, ComisariaQuintaListView, ComisariaPrimeraCreateView,
     ComisariaSegundaCreateView, ComisariaTerceraCreateView, ComisariaCuartaCreateView,
@@ -26,6 +28,7 @@ urlpatterns = [
     path('segunda/editar/<int:pk>/', ComisariaSegundaUpdateView.as_view(), name='comisaria_segunda_edit'),
     path('segunda/reporte/', generate_comisaria_segunda_pdf_view, name='generate_comisaria_segunda_pdf_view'),
     path('segunda/reporte/download/', generate_comisaria_segunda_pdf_download, name='generate_comisaria_segunda_pdf_download'),
+    path('segunda/firmar/<int:pk>/', sign_comisaria_segunda, name='comisaria_segunda_sign'),
 
     path('tercera/', ComisariaTerceraListView.as_view(), name='comisaria_tercera_list'),
     path('tercera/nuevo/', ComisariaTerceraCreateView.as_view(), name='comisaria_tercera_create'),

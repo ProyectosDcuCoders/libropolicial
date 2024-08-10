@@ -41,6 +41,8 @@ class BaseComisaria(models.Model):
     tareas_judiciales = models.TextField(null=True, blank=True)
     estado = models.BooleanField(default=True)
     firmas = models.TextField(null=True, blank=True)
+    latitude = models.FloatField(null=True, blank=True)  # Campo para la latitud
+    longitude = models.FloatField(null=True, blank=True) 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='%(class)s_created_records')
     updated_at = models.DateTimeField(auto_now=True)

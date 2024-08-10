@@ -1,3 +1,5 @@
+#compartido/middleware.py
+
 # Importa MiddlewareMixin para crear middlewares compatibles con versiones anteriores de Django
 from django.utils.deprecation import MiddlewareMixin
 # Importa redirect para redirigir a los usuarios a una URL específica
@@ -7,16 +9,17 @@ from django.utils import timezone
 # Importa timedelta para trabajar con diferencias de tiempo
 from datetime import timedelta
 
-# Middleware que deshabilita la caché para todas las respuestas
+
+
 class NoCacheMiddleware(MiddlewareMixin):
-    # Método que procesa la respuesta para modificar las cabeceras HTTP relacionadas con la caché
     def process_response(self, request, response):
-        # Establece las cabeceras HTTP para evitar el almacenamiento en caché
+        # Deshabilita la caché en los navegadores
         response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
         response['Pragma'] = 'no-cache'
         response['Expires'] = '0'
-        # Devuelve la respuesta modificada
         return response
+
+
 
 # Middleware que redirige a los usuarios autenticados lejos de ciertas URLs restringidas
 class RedirectAuthenticatedUserMiddleware(MiddlewareMixin):
