@@ -21,15 +21,12 @@ class NoCacheMiddleware(MiddlewareMixin):
 
 
 
-# Middleware que redirige a los usuarios autenticados lejos de ciertas URLs restringidas
+# Middleware que redirige a los usuarios autenticados a sus vistas específicas según su grupo
 class RedirectAuthenticatedUserMiddleware(MiddlewareMixin):
-    # Método que procesa la solicitud para comprobar si el usuario autenticado debe ser redirigido
     def process_request(self, request):
         # Define las URLs restringidas donde no deben estar los usuarios autenticados
         restricted_urls = ['/', '/login/', '/no-permission/']
-        # Comprueba si el usuario está autenticado y si la solicitud es para una URL restringida
         if request.user.is_authenticated and request.path in restricted_urls:
-            # Redirige al usuario a una vista específica según su grupo
             if request.user.groups.filter(name='comisariaprimera').exists():
                 return redirect('comisaria_primera_list')
             elif request.user.groups.filter(name='comisariasegunda').exists():
@@ -37,10 +34,9 @@ class RedirectAuthenticatedUserMiddleware(MiddlewareMixin):
             elif request.user.groups.filter(name='divisioncomunicaciones').exists():
                 return redirect('divisioncomunicaciones_list')
             else:
-                # Si el usuario no pertenece a ninguno de los grupos anteriores, redirige a 'no_permission'
                 return redirect('no_permission')
-        # Si no hay redirección, devuelve None para permitir que el proceso continúe
         return None
+
 
 # Middleware que cierra la sesión de los usuarios después de un período de inactividad
 class InactivityLogoutMiddleware(MiddlewareMixin):

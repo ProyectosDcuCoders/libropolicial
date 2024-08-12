@@ -12,17 +12,38 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Libropolicial.settings')
 django.setup()
 
 # Importa los modelos necesarios
-from comisarias.models import CodigoPolicialUSH, CodigosSecundarios, CuartoGuardiaUSH, DependenciasSecundarias
+from comisarias.models import (
+    CodigoPolicialUSH, CodigosSecundarios, CuartoGuardiaUSH, DependenciasSecundarias, 
+    SolicitanteCodigo, ServiciosEmergencia, InstitucionesHospitalarias, 
+    DependenciasMunicipales, DependenciasProvinciales
+)
 
 # Función principal para poblar la base de datos
 def run():
     # Lista de códigos policiales y secundarios a insertar en la base de datos
     codigos = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34']
     codigos_secundarios = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34']
+    
     # Lista de cuartos de guardia a insertar en la base de datos
     cuartos = ['A', 'B', 'C', 'D']
-
+    
+    # Lista de dependencias secundarias
     dependencias_secundarias = ['C.G. y F.Nº1U.', 'C.G. y F.Nº2U.', 'D.P.C.U', 'D.S.E.U']
+
+    # Lista de solicitantes de código
+    solicitantes_codigo = ['D.C.U', 'Particular', 'Comisaria', 'Otro']
+
+    # Lista de servicios de emergencia
+    servicios_emergencia = ['Bomberos 2 de Abril', 'Bomberos Zona Norte', 'Bomberos Zona Centro']
+
+    # Lista de instituciones hospitalarias
+    instituciones_hospitalarias = ['H.R.U', 'Clinica San Jorge', 'Bahia Salud']
+
+    # Lista de dependencias municipales
+    dependencias_municipales = ['Transito Municipal', 'Habilitaciones Comerciales']
+
+    # Lista de dependencias provinciales
+    dependencias_provinciales = ['Camuzzi Gas Ushuaia', 'D.P.E', 'Transporte Provincial']
 
     # Inserta cada código en la base de datos si no existe
     for codigo in codigos:
@@ -39,6 +60,26 @@ def run():
     # Inserta cada dependencia secundaria en la base de datos si no existe
     for dependencia in dependencias_secundarias:
         DependenciasSecundarias.objects.get_or_create(dependencia=dependencia)
+
+    # Inserta cada solicitante de código en la base de datos si no existe
+    for solicitante in solicitantes_codigo:
+        SolicitanteCodigo.objects.get_or_create(codigo=solicitante)
+
+    # Inserta cada servicio de emergencia en la base de datos si no existe
+    for servicio in servicios_emergencia:
+        ServiciosEmergencia.objects.get_or_create(nombre=servicio)
+
+    # Inserta cada institución hospitalaria en la base de datos si no existe
+    for institucion in instituciones_hospitalarias:
+        InstitucionesHospitalarias.objects.get_or_create(nombre=institucion)
+
+    # Inserta cada dependencia municipal en la base de datos si no existe
+    for dependencia in dependencias_municipales:
+        DependenciasMunicipales.objects.get_or_create(nombre=dependencia)
+
+    # Inserta cada dependencia provincial en la base de datos si no existe
+    for dependencia in dependencias_provinciales:
+        DependenciasProvinciales.objects.get_or_create(nombre=dependencia)
 
     print('Successfully seeded the database for comisarias')
 

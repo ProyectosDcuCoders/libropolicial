@@ -47,6 +47,8 @@ MIDDLEWARE = [
     # 'comisarias.middleware.NoCacheMiddleware',  # Añadir este middleware si es necesario
     # 'comisarias.middleware.RedirectAuthenticatedUserMiddleware',  # Añadir este middleware si es necesario
     # 'comisarias.middleware.InactivityLogoutMiddleware',  # Añadir este middleware si es necesario
+   
+
 ]
 
 ROOT_URLCONF = 'Libropolicial.urls'

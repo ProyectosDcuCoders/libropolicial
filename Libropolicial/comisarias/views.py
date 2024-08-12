@@ -19,7 +19,7 @@ from django.db import models
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
-from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, ResolucionCodigo,CodigoPolicialUSH
+from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, DependenciasSecundarias, ResolucionCodigo,CodigoPolicialUSH, DetalleServicioEmergencia, DetalleInstitucionHospitalaria,DetalleDependenciaMunicipal, DetalleDependenciaProvincial
 from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, ResolucionCodigoForm, CustomLoginForm
 from compartido.utils import user_is_in_group
 
@@ -87,10 +87,16 @@ def sign_comisaria_quinta(request, pk):
 
 # views.py
 
-class ComisariaPrimeraListView(LoginRequiredMixin, ListView):
+class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = ComisariaPrimera
     template_name = 'comisarias/primera/comisaria_primera_list.html'
     context_object_name = 'records'
+
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariaprimera')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by('-fecha_hora')
@@ -110,18 +116,31 @@ class ComisariaPrimeraListView(LoginRequiredMixin, ListView):
         context['resolveId'] = None  # Inicializa resolveId en None
         return context
 
+   
 
-
-class ComisariaPrimeraCreateView(CreateView):
+class ComisariaPrimeraCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = ComisariaPrimera
     form_class = ComisariaPrimeraForm
     template_name = 'comisarias/primera/comisaria_primera_form.html'
     success_url = reverse_lazy('comisaria_primera_list')
 
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariaprimera')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['codigos_policiales'] = CodigoPolicialUSH.objects.all()
+        context['dependencias_secundarias'] = DependenciasSecundarias.objects.all()
         return context
+
+    #def test_func(self):
+        #return self.request.user.is_authenticated and user_is_in_group(self.request.user, 'comisariaprimera')
+    
+    #def handle_no_permission(self):
+        #return redirect('no_permission')
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -138,10 +157,53 @@ class ComisariaPrimeraCreateView(CreateView):
         self.object.save()
         form.save_m2m()
 
-        # Eliminar el historial de la sesión del navegador para evitar la carga del formulario al presionar "Atrás"
-        self.request.session.pop('codigo_registrado', None)
-        
+        # Guardar los detalles adicionales para cada servicio de emergencia
+        for servicio in form.cleaned_data['servicios_emergencia']:
+            numero_movil = self.request.POST.get(f'numero_movil_{servicio.id}')
+            nombre_a_cargo = self.request.POST.get(f'nombre_a_cargo_{servicio.id}')
+            DetalleServicioEmergencia.objects.create(
+                servicio_emergencia=servicio,
+                comisaria_primera=self.object,
+                numero_movil=numero_movil,
+                nombre_a_cargo=nombre_a_cargo
+            )
+
+        # Guardar los detalles adicionales para cada institución hospitalaria
+        for institucion in form.cleaned_data['instituciones_hospitalarias']:
+            numero_movil = self.request.POST.get(f'numero_movil_{institucion.id}')
+            nombre_a_cargo = self.request.POST.get(f'nombre_a_cargo_{institucion.id}')
+            DetalleInstitucionHospitalaria.objects.create(
+                institucion_hospitalaria=institucion,
+                comisaria_primera=self.object,
+                numero_movil=numero_movil,
+                nombre_a_cargo=nombre_a_cargo
+            )
+
+        # Guardar los detalles adicionales para cada dependencia municipal
+        for dependencia_municipal in form.cleaned_data['dependencias_municipales']:
+            numero_movil = self.request.POST.get(f'numero_movil_{dependencia_municipal.id}')
+            nombre_a_cargo = self.request.POST.get(f'nombre_a_cargo_{dependencia_municipal.id}')
+            DetalleDependenciaMunicipal.objects.create(
+                dependencia_municipal=dependencia_municipal,
+                comisaria_primera=self.object,
+                numero_movil=numero_movil,
+                nombre_a_cargo=nombre_a_cargo
+            )
+
+        # Guardar los detalles adicionales para cada dependencia provincial
+        for dependencia_provincial in form.cleaned_data['dependencias_provinciales']:
+            numero_movil = self.request.POST.get(f'numero_movil_{dependencia_provincial.id}')
+            nombre_a_cargo = self.request.POST.get(f'nombre_a_cargo_{dependencia_provincial.id}')
+            DetalleDependenciaProvincial.objects.create(
+                dependencia_provincial=dependencia_provincial,
+                comisaria_primera=self.object,
+                numero_movil=numero_movil,
+                nombre_a_cargo=nombre_a_cargo
+            )
+
         return super().form_valid(form)
+
+
 
 class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ComisariaPrimera
@@ -213,10 +275,17 @@ class ComisariaPrimeraResolveView(UpdateView):
 # Vistas de listado y creación para ComisariaSegunda, ComisariaTercera, ComisariaCuarta, y ComisariaQuinta
 # Siguen el mismo patrón que ComisariaPrimera
 
-class ComisariaSegundaListView(LoginRequiredMixin, ListView):
+class ComisariaSegundaListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = ComisariaSegunda
     template_name = 'comisarias/segunda/comisaria_segunda_list.html'
     context_object_name = 'records'
+
+    def test_func(self):
+        return user_is_in_group(self.request.user, 'comisariasegunda')
+
+    def handle_no_permission(self):
+        return redirect('no_permission')
+    
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by('-fecha_hora')
@@ -233,8 +302,12 @@ class ComisariaSegundaListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['is_jefessuperiores'] = self.request.user.groups.filter(name='jefessuperiores').exists()
         context['today'] = timezone.now().date()
-        context['resolveId'] = None  # Inicializa resolveId en None
+        context['resolveId'] = None
         return context
+
+   
+    
+
 
 class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = ComisariaSegunda
@@ -251,7 +324,15 @@ class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['codigos_policiales'] = CodigoPolicialUSH.objects.all()
+        context['dependencias_secundarias'] = DependenciasSecundarias.objects.all()
         return context
+
+    #def test_func(self):
+       # return self.request.user.is_authenticated and user_is_in_group(self.request.user, 'comisariasegunda')
+
+    #def handle_no_permission(self):
+        #return redirect('no_permission')
+
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -268,10 +349,56 @@ class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
         self.object.save()
         form.save_m2m()
 
-        # Eliminar el historial de la sesión del navegador para evitar la carga del formulario al presionar "Atrás"
-        self.request.session.pop('codigo_registrado', None)
-        
+        # Guardar los detalles adicionales para cada servicio de emergencia
+        for servicio in form.cleaned_data['servicios_emergencia']:
+            numero_movil = self.request.POST.get(f'numero_movil_{servicio.id}')
+            nombre_a_cargo = self.request.POST.get(f'nombre_a_cargo_{servicio.id}')
+            DetalleServicioEmergencia.objects.create(
+                servicio_emergencia=servicio,
+                comisaria_segunda=self.object,
+                numero_movil=numero_movil,
+                nombre_a_cargo=nombre_a_cargo
+            )
+
+        # Guardar los detalles adicionales para cada institución hospitalaria
+        for institucion in form.cleaned_data['instituciones_hospitalarias']:
+            numero_movil = self.request.POST.get(f'numero_movil_{institucion.id}')
+            nombre_a_cargo = self.request.POST.get(f'nombre_a_cargo_{institucion.id}')
+            DetalleInstitucionHospitalaria.objects.create(
+                institucion_hospitalaria=institucion,
+                comisaria_segunda=self.object,
+                numero_movil=numero_movil,
+                nombre_a_cargo=nombre_a_cargo
+            )
+
+        # Guardar los detalles adicionales para cada dependencia municipal
+        for dependencia_municipal in form.cleaned_data['dependencias_municipales']:
+            numero_movil = self.request.POST.get(f'numero_movil_{dependencia_municipal.id}')
+            nombre_a_cargo = self.request.POST.get(f'nombre_a_cargo_{dependencia_municipal.id}')
+            DetalleDependenciaMunicipal.objects.create(
+                dependencia_municipal=dependencia_municipal,
+                comisaria_segunda=self.object,
+                numero_movil=numero_movil,
+                nombre_a_cargo=nombre_a_cargo
+            )
+
+        # Guardar los detalles adicionales para cada dependencia provincial
+        for dependencia_provincial in form.cleaned_data['dependencias_provinciales']:
+            numero_movil = self.request.POST.get(f'numero_movil_{dependencia_provincial.id}')
+            nombre_a_cargo = self.request.POST.get(f'nombre_a_cargo_{dependencia_provincial.id}')
+            DetalleDependenciaProvincial.objects.create(
+                dependencia_provincial=dependencia_provincial,
+                comisaria_segunda=self.object,
+                numero_movil=numero_movil,
+                nombre_a_cargo=nombre_a_cargo
+            )
+
         return super().form_valid(form)
+
+
+
+
+
 
 class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ComisariaSegunda
