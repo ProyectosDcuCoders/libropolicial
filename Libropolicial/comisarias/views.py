@@ -24,7 +24,6 @@ from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraF
 from compartido.utils import user_is_in_group
 
 
-
 @login_required
 def sign_comisaria_primera(request, pk):
     comisaria = get_object_or_404(ComisariaPrimera, pk=pk)
