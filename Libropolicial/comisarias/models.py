@@ -118,8 +118,8 @@ class DetalleServicioEmergencia(models.Model):
     comisaria_tercera = models.ForeignKey(ComisariaTercera, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_servicio_emergencia')
     comisaria_cuarta = models.ForeignKey(ComisariaCuarta, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_servicio_emergencia')
     comisaria_quinta = models.ForeignKey(ComisariaQuinta, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_servicio_emergencia')
-    numero_movil = models.CharField(max_length=20, null=True, blank=True)
-    nombre_a_cargo = models.CharField(max_length=255, null=True, blank=True)
+    numero_movil_bomberos = models.CharField(max_length=20, null=True, blank=True)
+    nombre_a_cargo_bomberos = models.CharField(max_length=255, null=True, blank=True)
 
 
 # Clase para manejar los detalles adicionales de Instituciones Hospitalarias
@@ -130,8 +130,8 @@ class DetalleInstitucionHospitalaria(models.Model):
     comisaria_tercera = models.ForeignKey(ComisariaTercera, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_institucion_hospitalaria')
     comisaria_cuarta = models.ForeignKey(ComisariaCuarta, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_institucion_hospitalaria')
     comisaria_quinta = models.ForeignKey(ComisariaQuinta, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_institucion_hospitalaria')
-    numero_movil = models.CharField(max_length=20, null=True, blank=True)
-    nombre_a_cargo = models.CharField(max_length=255, null=True, blank=True)
+    numero_movil_hospital = models.CharField(max_length=20, null=True, blank=True)
+    nombre_a_cargo_hospital = models.CharField(max_length=255, null=True, blank=True)
 
 # Clase para manejar los detalles adicionales de Dependencias Municipales
 class DetalleDependenciaMunicipal(models.Model):
@@ -141,8 +141,8 @@ class DetalleDependenciaMunicipal(models.Model):
     comisaria_tercera = models.ForeignKey(ComisariaTercera, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_dependencia_municipal')
     comisaria_cuarta = models.ForeignKey(ComisariaCuarta, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_dependencia_municipal')
     comisaria_quinta = models.ForeignKey(ComisariaQuinta, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_dependencia_municipal')
-    numero_movil = models.CharField(max_length=20, null=True, blank=True)
-    nombre_a_cargo = models.CharField(max_length=255, null=True, blank=True)
+    numero_movil_municipal = models.CharField(max_length=20, null=True, blank=True)
+    nombre_a_cargo_municipal = models.CharField(max_length=255, null=True, blank=True)
 
 # Clase para manejar los detalles adicionales de Dependencias Provinciales
 class DetalleDependenciaProvincial(models.Model):
@@ -152,24 +152,7 @@ class DetalleDependenciaProvincial(models.Model):
     comisaria_tercera = models.ForeignKey(ComisariaTercera, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_dependencia_provincial')
     comisaria_cuarta = models.ForeignKey(ComisariaCuarta, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_dependencia_provincial')
     comisaria_quinta = models.ForeignKey(ComisariaQuinta, null=True, blank=True, on_delete=models.CASCADE, related_name='detalles_dependencia_provincial')
-    numero_movil = models.CharField(max_length=20, null=True, blank=True)
-    nombre_a_cargo = models.CharField(max_length=255, null=True, blank=True)
+    numero_movil_provincial = models.CharField(max_length=20, null=True, blank=True)
+    nombre_a_cargo_provincial = models.CharField(max_length=255, null=True, blank=True)
 
-
-# Clase para manejar las resoluciones de códigos
-
-class ResolucionCodigo(models.Model):
-    comisaria_primera = models.ForeignKey(ComisariaPrimera, null=True, blank=True, on_delete=models.CASCADE, related_name='resoluciones')
-    comisaria_segunda = models.ForeignKey(ComisariaSegunda, null=True, blank=True, on_delete=models.CASCADE, related_name='resoluciones')
-    comisaria_tercera = models.ForeignKey(ComisariaTercera, null=True, blank=True, on_delete=models.CASCADE, related_name='resoluciones')
-    comisaria_cuarta = models.ForeignKey(ComisariaCuarta, null=True, blank=True, on_delete=models.CASCADE, related_name='resoluciones')
-    comisaria_quinta = models.ForeignKey(ComisariaQuinta, null=True, blank=True, on_delete=models.CASCADE, related_name='resoluciones')
-    resolucion_codigo = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='resolucion_codigo_created')
-    updated_at = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='resolucion_codigo_updated')
-
-    def __str__(self):
-        return f"Resolucion {self.pk}"
 

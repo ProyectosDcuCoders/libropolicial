@@ -4,7 +4,7 @@ from ckeditor.widgets import CKEditorWidget
 from .models import (
     ComisariaPrimera, ComisariaSegunda, ComisariaTercera, 
     ComisariaCuarta, ComisariaQuinta, CodigoPolicialUSH, 
-    CodigosSecundarios, DependenciasSecundarias, ResolucionCodigo, CuartoGuardiaUSH,
+    CodigosSecundarios, DependenciasSecundarias, CuartoGuardiaUSH,
     InstitucionesHospitalarias, DependenciasMunicipales, DependenciasProvinciales,
     ServiciosEmergencia, DetalleServicioEmergencia, DetalleInstitucionHospitalaria,
     DetalleDependenciaMunicipal, DetalleDependenciaProvincial, SolicitanteCodigo
@@ -13,11 +13,11 @@ from .models import (
 class DetalleServicioEmergenciaForm(forms.ModelForm):
     class Meta:
         model = DetalleServicioEmergencia
-        fields = ['servicio_emergencia', 'numero_movil', 'nombre_a_cargo']
+        fields = ['servicio_emergencia', 'numero_movil_bomberos', 'nombre_a_cargo_bomberos']
         widgets = {
             'servicio_emergencia': forms.HiddenInput(),
-            'numero_movil': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
-            'nombre_a_cargo': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+            'numero_movil_bomberos': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+            'nombre_a_cargo_bomberos': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
         }
 
 
@@ -25,33 +25,33 @@ class DetalleServicioEmergenciaForm(forms.ModelForm):
 class DetalleInstitucionHospitalariaForm(forms.ModelForm):
     class Meta:
         model = DetalleInstitucionHospitalaria
-        fields = ['institucion_hospitalaria', 'numero_movil', 'nombre_a_cargo']
+        fields = ['institucion_hospitalaria', 'numero_movil_hospital', 'nombre_a_cargo_hospital']
         widgets = {
             'institucion_hospitalaria': forms.HiddenInput(),
-            'numero_movil': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
-            'nombre_a_cargo': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+            'numero_movil_hospital': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+            'nombre_a_cargo_hospital': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
         }
 
 # Formulario para DetalleDependenciaMunicipal
 class DetalleDependenciaMunicipalForm(forms.ModelForm):
     class Meta:
         model = DetalleDependenciaMunicipal
-        fields = ['dependencia_municipal', 'numero_movil', 'nombre_a_cargo']
+        fields = ['dependencia_municipal', 'numero_movil_municipal', 'nombre_a_cargo_municipal']
         widgets = {
             'dependencia_municipal': forms.HiddenInput(),
-            'numero_movil': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
-            'nombre_a_cargo': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+            'numero_movil_municipal': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+            'nombre_a_cargo_municipal': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
         }
 
 # Formulario para DetalleDependenciaProvincial
 class DetalleDependenciaProvincialForm(forms.ModelForm):
     class Meta:
         model = DetalleDependenciaProvincial
-        fields = ['dependencia_provincial', 'numero_movil', 'nombre_a_cargo']
+        fields = ['dependencia_provincial', 'numero_movil_provincial', 'nombre_a_cargo_provincial']
         widgets = {
             'dependencia_provincial': forms.HiddenInput(),
-            'numero_movil': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
-            'nombre_a_cargo': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+            'numero_movil_provincial': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
+            'nombre_a_cargo_provincial': forms.TextInput(attrs={'class': 'bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3'}),
         }
 
 
@@ -211,7 +211,3 @@ class ComisariaQuintaForm(BaseComisariaForm):
     class Meta(BaseComisariaForm.Meta):
         model = ComisariaQuinta
 
-class ResolucionCodigoForm(forms.ModelForm):
-    class Meta:
-        model = ResolucionCodigo
-        fields = ['resolucion_codigo']

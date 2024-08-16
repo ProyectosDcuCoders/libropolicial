@@ -1,4 +1,10 @@
 from pathlib import Path
+#from dotenv import load_dotenv
+import os
+
+# Carga las variables de entorno desde el archivo .env
+#env_path = Path(__file__).resolve().parent.parent / '.env'
+#load_dotenv(dotenv_path=env_path)
 
 # Construye rutas dentro del proyecto como BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -6,8 +12,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Configuraciones rápidas para el desarrollo - no adecuadas para producción
 # Ver https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
+
 # ADVERTENCIA DE SEGURIDAD: mantén la clave secreta utilizada en producción en secreto.
-SECRET_KEY = 'django-insecure-ds6h)mdg35#cm4ez5)**^%lwznbi2-4w#hth1oj2u8aq$zn*gm'
+#SECRET_KEY = os.getenv('SECRET_KEY')
+
+
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
+
+
 
 # ADVERTENCIA DE SEGURIDAD: no ejecutes con debug activado en producción.
 DEBUG = True
@@ -78,7 +90,7 @@ WSGI_APPLICATION = 'Libropolicial.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Utiliza el backend MySQL
-        'NAME': 'policiatdf',  # Nombre de la base de datos
+        'NAME': 'librodiario',  # Nombre de la base de datos
         'USER': 'root',  # Usuario de la base de datos
         'PASSWORD': '',  # Contraseña de la base de datos
         'HOST': 'localhost',  # Host de la base de datos
@@ -141,21 +153,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'America/Argentina/Buenos_Aires'
 
-from celery.schedules import crontab
-
-CELERY_BEAT_SCHEDULE = {
-    'generate-daily-pdf': {
-        'task': 'comisarias.tasks.generate_daily_pdf',
-        'schedule': crontab(minute=59, hour=23),  # Se ejecuta a las 23:59 todos los días
-    },
-}
 
 CKEDITOR_CONFIGS = {
     'default': {

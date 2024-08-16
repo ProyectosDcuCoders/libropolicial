@@ -98,12 +98,31 @@
                 {{ form.descripcion }}
             </div>
 
-            
+            <!-- Sección de Códigos Secundarios -->
+            <div class="sm:col-span-1 relative" x-data="{ showDropdown: false }">
+                <label for="codigos_secundarios" class="block text-gray-700 dark:text-gray-300">{{ form.codigos_secundarios.label }}</label>
+                <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
+                    Seleccionar códigos secundarios
+                </div>
+                <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
+                    <div class="grid grid-cols-4 gap-2">
+                        {% for codigo in form.codigos_secundarios.field.queryset %}
+                        <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <input type="checkbox" name="codigos_secundarios" value="{{ codigo.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" {% if codigo in form.instance.codigos_secundarios.all %}checked{% endif %}>
+                            <span class="ml-2 dark:text-gray-300">{{ codigo }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
 
-      <!-- Sección de Servicios de Emergencia -->
+<!-- Paso 1: Campo hidden para datos cargados -->
+<input type="hidden" id="selected-services-data" value='{{ detalle_servicios_emergencia|safe }}'>
+
+<!-- Paso 2: Ajuste del bloque de Alpine.js -->
 <div class="sm:col-span-1 relative" x-data="{
     showDropdown: false,
-    selectedServices: {{ detalle_servicios_emergencia }}
+    selectedServices: JSON.parse(document.getElementById('selected-services-data').value) || []
 }">
     <label for="servicios_emergencia" class="block text-gray-700 dark:text-gray-300">{{ form.servicios_emergencia.label }}</label>
     <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
@@ -114,14 +133,17 @@
             {% for servicio in form.servicios_emergencia.field.queryset %}
             <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                 <input type="checkbox" name="servicios_emergencia" value="{{ servicio.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                       @change="if ($event.target.checked) {
-                            if (!selectedServices.some(s => s.servicio_emergencia_id == {{ servicio.id }})) {
-                                selectedServices.push({id: null, servicio_emergencia_id: {{ servicio.id }}, numero_movil_bomberos: '', nombre_a_cargo_bomberos: ''});
-                            }
-                       } else {
-                            selectedServices = selectedServices.filter(s => s.servicio_emergencia_id != {{ servicio.id }});
-                       }"
-                       :checked="selectedServices.some(s => s.servicio_emergencia_id == {{ servicio.id }})">
+                       @change="if ($event.target.checked) { 
+                                    selectedServices.push({
+                                        id: '{{ servicio.id }}', 
+                                        nombre: '{{ servicio.nombre }}', 
+                                        numero_movil: '', 
+                                        nombre_a_cargo: ''
+                                    }); 
+                                } else { 
+                                    selectedServices = selectedServices.filter(s => s.id !== '{{ servicio.id }}'); 
+                                }"
+                       :checked="selectedServices.some(s => s.id == {{ servicio.id }})">
                 <span class="ml-2 dark:text-gray-300">{{ servicio }}</span>
             </label>
             {% endfor %}
@@ -130,23 +152,23 @@
 
     <!-- Campos visibles para detalles de servicios de emergencia -->
     <div class="sm:col-span-3 mt-6">
-        <template x-for="service in selectedServices" :key="service.servicio_emergencia_id">
+        <template x-for="service in selectedServices" :key="service.id">
             <div>
-                <label :for="'numero_movil_bomberos_' + service.servicio_emergencia_id" class="block text-gray-700 dark:text-gray-300">Número móvil Bomberil<span x-text="service.nombre"></span></label>
-                <input type="text" :name="'numero_movil_bomberos_' + service.servicio_emergencia_id" :id="'numero_movil_bomberos_' + service.servicio_emergencia_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="service.numero_movil_bomberos">
+                <label :for="'numero_movil_' + service.id" class="block text-gray-700 dark:text-gray-300">Número móvil para servicio <span x-text="service.nombre"></span></label>
+                <input type="text" :name="'numero_movil_' + service.id" :id="'numero_movil_' + service.id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2"
+                       x-model="service.numero_movil">
 
-                <label :for="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" class="block text-gray-700 dark:text-gray-300">Nombre a cargo Bomberil <span x-text="service.nombre"></span></label>
-                <input type="text" :name="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" :id="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="service.nombre_a_cargo_bomberos">
+                <label :for="'nombre_a_cargo_' + service.id" class="block text-gray-700 dark:text-gray-300">Nombre a cargo para servicio <span x-text="service.nombre"></span></label>
+                <input type="text" :name="'nombre_a_cargo_' + service.id" :id="'nombre_a_cargo_' + service.id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2"
+                       x-model="service.nombre_a_cargo">
             </div>
         </template>
     </div>
 </div>
 
-<!-- Sección de Instituciones Hospitalarias -->
-<div class="sm:col-span-1 relative" x-data="{
-    showDropdown: false,
-    selectedInstituciones: {{ detalle_instituciones_hospitalarias }}
-}">
+
+
+<div class="sm:col-span-1 relative" x-data="{ showDropdown: false, selectedInstituciones: [] }">
     <label for="instituciones_hospitalarias" class="block text-gray-700 dark:text-gray-300">{{ form.instituciones_hospitalarias.label }}</label>
     <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
         Seleccionar instituciones hospitalarias
@@ -156,14 +178,7 @@
             {% for institucion in form.instituciones_hospitalarias.field.queryset %}
             <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                 <input type="checkbox" name="instituciones_hospitalarias" value="{{ institucion.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                       @change="if ($event.target.checked) {
-                            if (!selectedInstituciones.some(i => i.institucion_hospitalaria_id == {{ institucion.id }})) {
-                                selectedInstituciones.push({id: null, institucion_hospitalaria_id: {{ institucion.id }}, numero_movil_hospital: '', nombre_a_cargo_hospital: ''});
-                            }
-                       } else {
-                            selectedInstituciones = selectedInstituciones.filter(i => i.institucion_hospitalaria_id != {{ institucion.id }});
-                       }"
-                       :checked="selectedInstituciones.some(i => i.institucion_hospitalaria_id == {{ institucion.id }})">
+                       @change="if ($event.target.checked) { selectedInstituciones.push({id: '{{ institucion.id }}', nombre: '{{ institucion.nombre }}'}); } else { selectedInstituciones = selectedInstituciones.filter(i => i.id !== '{{ institucion.id }}'); }">
                 <span class="ml-2 dark:text-gray-300">{{ institucion }}</span>
             </label>
             {% endfor %}
@@ -172,23 +187,20 @@
 
     <!-- Campos visibles para detalles de instituciones hospitalarias -->
     <div class="sm:col-span-3 mt-6">
-        <template x-for="institucion in selectedInstituciones" :key="institucion.institucion_hospitalaria_id">
+        <template x-for="institucion in selectedInstituciones" :key="institucion.id">
             <div>
-                <label :for="'numero_movil_hospital_' + institucion.institucion_hospitalaria_id" class="block text-gray-700 dark:text-gray-300">Movil Ambulancia<span x-text="institucion.nombre"></span></label>
-                <input type="text" :name="'numero_movil_hospital_' + institucion.institucion_hospitalaria_id" :id="'numero_movil_hospital_' + institucion.institucion_hospitalaria_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="institucion.numero_movil_hospital">
+                <label :for="'numero_movil_' + institucion.id" class="block text-gray-700 dark:text-gray-300">Número móvil para institución <span x-text="institucion.nombre"></span></label>
+                <input type="text" :name="'numero_movil_' + institucion.id" :id="'numero_movil_' + institucion.id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2">
 
-                <label :for="'nombre_a_cargo_hospital_' + institucion.institucion_hospitalaria_id" class="block text-gray-700 dark:text-gray-300">Personal a Cargo <span x-text="institucion.nombre"></span></label>
-                <input type="text" :name="'nombre_a_cargo_hospital_' + institucion.institucion_hospitalaria_id" :id="'nombre_a_cargo_hospital_' + institucion.institucion_hospitalaria_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="institucion.nombre_a_cargo_hospital">
+                <label :for="'nombre_a_cargo_' + institucion.id" class="block text-gray-700 dark:text-gray-300">Nombre a cargo para institución <span x-text="institucion.nombre"></span></label>
+                <input type="text" :name="'nombre_a_cargo_' + institucion.id" :id="'nombre_a_cargo_' + institucion.id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2">
             </div>
         </template>
     </div>
 </div>
 
-<!-- Sección de Dependencias Municipales -->
-<div class="sm:col-span-1 relative" x-data="{
-    showDropdown: false,
-    selectedDependenciasMunicipales: {{ detalle_dependencias_municipales }}
-}">
+<!-- Repetir similar para dependencias municipales -->
+<div class="sm:col-span-1 relative" x-data="{ showDropdown: false, selectedDependenciasMunicipales: [] }">
     <label for="dependencias_municipales" class="block text-gray-700 dark:text-gray-300">{{ form.dependencias_municipales.label }}</label>
     <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
         Seleccionar dependencias municipales
@@ -198,14 +210,7 @@
             {% for dependencia in form.dependencias_municipales.field.queryset %}
             <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                 <input type="checkbox" name="dependencias_municipales" value="{{ dependencia.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                       @change="if ($event.target.checked) {
-                            if (!selectedDependenciasMunicipales.some(d => d.dependencia_municipal_id == {{ dependencia.id }})) {
-                                selectedDependenciasMunicipales.push({id: null, dependencia_municipal_id: {{ dependencia.id }}, numero_movil_municipal: '', nombre_a_cargo_municipal: ''});
-                            }
-                       } else {
-                            selectedDependenciasMunicipales = selectedDependenciasMunicipales.filter(d => d.dependencia_municipal_id != {{ dependencia.id }});
-                       }"
-                       :checked="selectedDependenciasMunicipales.some(d => d.dependencia_municipal_id == {{ dependencia.id }})">
+                       @change="if ($event.target.checked) { selectedDependenciasMunicipales.push({id: '{{ dependencia.id }}', nombre: '{{ dependencia.nombre }}'}); } else { selectedDependenciasMunicipales = selectedDependenciasMunicipales.filter(d => d.id !== '{{ dependencia.id }}'); }">
                 <span class="ml-2 dark:text-gray-300">{{ dependencia }}</span>
             </label>
             {% endfor %}
@@ -214,23 +219,20 @@
 
     <!-- Campos visibles para detalles de dependencias municipales -->
     <div class="sm:col-span-3 mt-6">
-        <template x-for="dependencia in selectedDependenciasMunicipales" :key="dependencia.dependencia_municipal_id">
+        <template x-for="dependencia in selectedDependenciasMunicipales" :key="dependencia.id">
             <div>
-                <label :for="'numero_movil_municipal_' + dependencia.dependencia_municipal_id" class="block text-gray-700 dark:text-gray-300">Número móvil Municipal <span x-text="dependencia.nombre"></span></label>
-                <input type="text" :name="'numero_movil_municipal_' + dependencia.dependencia_municipal_id" :id="'numero_movil_municipal_' + dependencia.dependencia_municipal_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="dependencia.numero_movil_municipal">
+                <label :for="'numero_movil_' + dependencia.id" class="block text-gray-700 dark:text-gray-300">Número móvil para dependencia <span x-text="dependencia.nombre"></span></label>
+                <input type="text" :name="'numero_movil_' + dependencia.id" :id="'numero_movil_' + dependencia.id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2">
 
-                <label :for="'nombre_a_cargo_municipal_' + dependencia.dependencia_municipal_id" class="block text-gray-700 dark:text-gray-300">Personal a Cargo<span x-text="dependencia.nombre"></span></label>
-                <input type="text" :name="'nombre_a_cargo_municipal_' + dependencia.dependencia_municipal_id" :id="'nombre_a_cargo_municipal_' + dependencia.dependencia_municipal_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="dependencia.nombre_a_cargo_municipal">
+                <label :for="'nombre_a_cargo_' + dependencia.id" class="block text-gray-700 dark:text-gray-300">Nombre a cargo para dependencia <span x-text="dependencia.nombre"></span></label>
+                <input type="text" :name="'nombre_a_cargo_' + dependencia.id" :id="'nombre_a_cargo_' + dependencia.id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2">
             </div>
         </template>
     </div>
 </div>
 
-<!-- Sección de Dependencias Provinciales -->
-<div class="sm:col-span-1 relative" x-data="{
-    showDropdown: false,
-    selectedDependenciasProvinciales: {{ detalle_dependencias_provinciales }}
-}">
+<!-- Repetir similar para dependencias provinciales -->
+<div class="sm:col-span-1 relative" x-data="{ showDropdown: false, selectedDependenciasProvinciales: [] }">
     <label for="dependencias_provinciales" class="block text-gray-700 dark:text-gray-300">{{ form.dependencias_provinciales.label }}</label>
     <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
         Seleccionar dependencias provinciales
@@ -240,14 +242,7 @@
             {% for dependencia in form.dependencias_provinciales.field.queryset %}
             <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                 <input type="checkbox" name="dependencias_provinciales" value="{{ dependencia.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                       @change="if ($event.target.checked) {
-                            if (!selectedDependenciasProvinciales.some(d => d.dependencia_provincial_id == {{ dependencia.id }})) {
-                                selectedDependenciasProvinciales.push({id: null, dependencia_provincial_id: {{ dependencia.id }}, numero_movil_provincial: '', nombre_a_cargo_provincial: ''});
-                            }
-                       } else {
-                            selectedDependenciasProvinciales = selectedDependenciasProvinciales.filter(d => d.dependencia_provincial_id != {{ dependencia.id }});
-                       }"
-                       :checked="selectedDependenciasProvinciales.some(d => d.dependencia_provincial_id == {{ dependencia.id }})">
+                       @change="if ($event.target.checked) { selectedDependenciasProvinciales.push({id: '{{ dependencia.id }}', nombre: '{{ dependencia.nombre }}'}); } else { selectedDependenciasProvinciales = selectedDependenciasProvinciales.filter(d => d.id !== '{{ dependencia.id }}'); }">
                 <span class="ml-2 dark:text-gray-300">{{ dependencia }}</span>
             </label>
             {% endfor %}
@@ -256,35 +251,18 @@
 
     <!-- Campos visibles para detalles de dependencias provinciales -->
     <div class="sm:col-span-3 mt-6">
-        <template x-for="dependencia in selectedDependenciasProvinciales" :key="dependencia.dependencia_provincial_id">
+        <template x-for="dependencia in selectedDependenciasProvinciales" :key="dependencia.id">
             <div>
-                <label :for="'numero_movil_provincial_' + dependencia.dependencia_provincial_id" class="block text-gray-700 dark:text-gray-300">Movil dependencia Provincial <span x-text="dependencia.nombre"></span></label>
-                <input type="text" :name="'numero_movil_provincial_' + dependencia.dependencia_provincial_id" :id="'numero_movil_provincial_' + dependencia.dependencia_provincial_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="dependencia.numero_movil_provincial">
+                <label :for="'numero_movil_' + dependencia.id" class="block text-gray-700 dark:text-gray-300">Número móvil para dependencia <span x-text="dependencia.nombre"></span></label>
+                <input type="text" :name="'numero_movil_' + dependencia.id" :id="'numero_movil_' + dependencia.id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2">
 
-                <label :for="'nombre_a_cargo_provincial_' + dependencia.dependencia_provincial_id" class="block text-gray-700 dark:text-gray-300">Personal a Cargo<span x-text="dependencia.nombre"></span></label>
-                <input type="text" :name="'nombre_a_cargo_provincial_' + dependencia.dependencia_provincial_id" :id="'nombre_a_cargo_provincial_' + dependencia.dependencia_provincial_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="dependencia.nombre_a_cargo_provincial">
+                <label :for="'nombre_a_cargo_' + dependencia.id" class="block text-gray-700 dark:text-gray-300">Nombre a cargo para dependencia <span x-text="dependencia.nombre"></span></label>
+                <input type="text" :name="'nombre_a_cargo_' + dependencia.id" :id="'nombre_a_cargo_' + dependencia.id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2">
             </div>
         </template>
     </div>
 </div>
 
-<!-- Sección de Códigos Secundarios -->
-<div class="sm:col-span-1 relative" x-data="{ showDropdown: false }">
-    <label for="codigos_secundarios" class="block text-gray-700 dark:text-gray-300">{{ form.codigos_secundarios.label }}</label>
-    <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
-        Seleccionar códigos secundarios
-    </div>
-    <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
-        <div class="grid grid-cols-4 gap-2">
-            {% for codigo in form.codigos_secundarios.field.queryset %}
-            <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                <input type="checkbox" name="codigos_secundarios" value="{{ codigo.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" {% if codigo in form.instance.codigos_secundarios.all %}checked{% endif %}>
-                <span class="ml-2 dark:text-gray-300">{{ codigo }}</span>
-            </label>
-            {% endfor %}
-        </div>
-    </div>
-</div>
 
             
             

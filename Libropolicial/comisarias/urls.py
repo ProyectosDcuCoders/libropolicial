@@ -11,14 +11,13 @@ from .views import (
     ComisariaCuartaListView, ComisariaQuintaListView, ComisariaPrimeraCreateView,
     ComisariaSegundaCreateView, ComisariaTerceraCreateView, ComisariaCuartaCreateView,
     ComisariaQuintaCreateView, ComisariasCompletaListView, ComisariaPrimeraUpdateView,
-    ComisariaSegundaUpdateView, ComisariaPrimeraResolveView
+    ComisariaSegundaUpdateView,
 )
 
 urlpatterns = [
     path('primera/', ComisariaPrimeraListView.as_view(), name='comisaria_primera_list'),
     path('primera/create/', ComisariaPrimeraCreateView.as_view(), name='comisaria_primera_create'),
     path('primera/edit/<int:pk>/', ComisariaPrimeraUpdateView.as_view(), name='comisaria_primera_edit'),
-    path('primera/constancia/<int:pk>/', ComisariaPrimeraResolveView.as_view(), name='comisaria_primera_resolve'),
     path('primera/reporte/view/', generate_comisaria_primera_pdf_view, name='generate_comisaria_primera_pdf_view'),
     path('primera/reporte/download/', generate_comisaria_primera_pdf_download, name='generate_comisaria_primera_pdf_download'),
     path('primera/firmar/<int:pk>/', sign_comisaria_primera, name='comisaria_primera_sign'),
