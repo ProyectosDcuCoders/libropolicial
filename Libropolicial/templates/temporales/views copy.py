@@ -714,7 +714,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from io import BytesIO
 from django.http import HttpResponse, FileResponse
-from datetime import datetime, timedelta
+from datetime import datetime
 from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta
 from django.db import models
 
@@ -765,39 +765,6 @@ def generate_comisaria_primera_pdf_download(request):
     now = datetime.now()
     filename = f"parte-diario-{now.strftime('%d-%m-%Y')}.pdf"
     return generate_pdf(request, ComisariaPrimera, filename, add_signature=add_signature)
-
-# Función para descargar el PDF del día anterior
-def generate_comisaria_primera_pdf_download_previous_day(request):
-    add_signature = 'signature' in request.GET
-    now = datetime.now()
-    previous_day = now - timedelta(days=1)
-    filename = f"parte-diario-{previous_day.strftime('%d-%m-%Y')}.pdf"
-    return generate_pdf_for_specific_date(request, ComisariaPrimera, previous_day, filename, add_signature=add_signature)
-
-def generate_pdf_for_specific_date(request, comisaria_model, specific_date, filename, add_signature=False):
-    start_of_day = specific_date.replace(hour=0, minute=0, second=0, microsecond=0)
-    end_of_day = specific_date.replace(hour=23, minute=59, second=59, microsecond=999999)
-    registros = comisaria_model.objects.filter(
-        models.Q(created_at__range=(start_of_day, end_of_day)) |
-        models.Q(updated_at__range=(start_of_day, end_of_day))
-    )
-
-    template = get_template('comisarias/comisarias_pdf_template.html')
-    context = {
-        'registros': registros,
-        'comisaria_name': comisaria_model._meta.verbose_name.title(),
-        'add_signature': add_signature,
-        'username': request.user.get_full_name(),
-        'now': specific_date
-    }
-    html = template.render(context)
-    response = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
-    if not pdf.err:
-        return HttpResponse(response.getvalue(), content_type='application/pdf', headers={'Content-Disposition': f'inline; filename="{filename}"'})
-    else:
-        return HttpResponse('Error al generar el PDF', status=500)
-
 
 # Repite las siguientes funciones para las demás comisarías...
 def generate_comisaria_segunda_pdf_view(request):

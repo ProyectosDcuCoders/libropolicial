@@ -20,7 +20,6 @@
     <script src="https://unpkg.com/htmx.org@1.4.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2" defer></script>
 
-    
     <style>
         .bg-red-500 {
             background-color: #f56565;
@@ -28,7 +27,7 @@
         .text-white {
             color: #ffffff;
         }
-        /* Estilos para el buscador y margen inferior   */
+        /* Estilos para el buscador y margen inferior */
         .dataTables_filter input {
             width: 300px;
             margin-bottom: 5px;
@@ -206,7 +205,6 @@
             }));
         });
     </script>
-    
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -229,8 +227,6 @@
             }
         });
     </script>
-
-   
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -351,24 +347,30 @@
             }
         };
     </script>
-    <script>
-        // Deshabilitar el botón de retroceso del navegador
-        history.pushState(null, null, location.href);
-        window.addEventListener('popstate', function () {
-            history.pushState(null, null, location.href);
-        });
-    </script>
-    
-    <script>
-        window.history.pushState(null, null, window.location.href);
-        window.onpopstate = function() {
-            window.history.pushState(null, null, window.location.href);
-        };
-    </script>
- 
-    
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Selecciona todos los campos de entrada en el formulario
+        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="datetime-local"], textarea');
+
+        inputs.forEach(input => {
+            // Previene el envío del formulario al presionar "Enter" en cualquier campo de entrada
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Evita el comportamiento por defecto de enviar el formulario
+                }
+            });
+        });
+
+        // Captura el evento de envío del formulario para verificar si el botón "Guardar" fue presionado
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+            const submitButton = document.activeElement; // El elemento que activó el envío
+            if (submitButton.type !== 'submit') {
+                event.preventDefault(); // Evita el envío si no es el botón "Guardar"
+            }
+        });
+    });
+</script>
+
 </html>
-
-
-

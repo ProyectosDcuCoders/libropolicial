@@ -16,9 +16,6 @@
         .registro {
             margin-bottom: 20px;
         }
-        .registro div {
-            margin-bottom: 5px;
-        }
         .line-separator {
             border-top: 2px solid #000;
             margin-top: 20px;
@@ -36,14 +33,15 @@
             margin-top: 50px;
             color: #555;
         }
-        .flex-container {
-            display: flex;
-            justify-content: space-between; /* Distribuye el espacio entre los elementos */
-            margin-bottom: 10px; /* Margen inferior entre las filas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
         }
-        .flex-item {
-            flex: 1;
-            margin-right: 20px; /* Añadir margen derecho entre los elementos */
+        th, td {
+            padding: 5px;
+            text-align: left;
+            border: 1px solid #000;
         }
     </style>
 </head>
@@ -52,24 +50,28 @@
     <div class="header">
         Libro de Guardia {{ comisaria_name }}
         <br>
-        Registros de comisaría - Hoy
+        
     </div>
 
     {% for registro in registros %}
     <div class="registro">
-        <div class="flex-container">
-            <div class="flex-item"><strong>Fecha y hora:</strong> {{ registro.fecha_hora|date:"d/m/Y H:i:s" }}</div>
-            <div class="flex-item"><strong>Código:</strong> {% if registro.codigo %}{{ registro.codigo.codigo }}{% else %}S/N{% endif %}</div>
-        </div>
-        <div class="flex-container">
-            <div class="flex-item"><strong>Guardia:</strong> {% if registro.cuarto %}{{ registro.cuarto.cuarto }}{% else %}N/A{% endif %}</div>
-            <div class="flex-item"><strong>Móvil Patrulla:</strong> {% if registro.movil_patrulla %}{{ registro.movil_patrulla }}{% else %}N/A{% endif %}</div>
-            <div class="flex-item"><strong>A Cargo:</strong> {% if registro.a_cargo %}{{ registro.a_cargo }}{% else %}N/A{% endif %}</div>
-        </div>
-        <div class="flex-container">
-            <div class="flex-item"><strong>Secundante:</strong> {% if registro.secundante %}{{ registro.secundante }}{% else %}N/A{% endif %}</div>
-            <div class="flex-item"><strong>Lugar del Código:</strong> {% if registro.lugar_codigo %}{{ registro.lugar_codigo }}{% else %}N/A{% endif %}</div>
-        </div>
+        <table>
+            <tr>
+                <td><strong>Estado del Código:</strong> {{ registro.estado|yesno:"Activo,Finalizado" }}</td>
+                <td><strong>Fecha y hora del Código:</strong> {{ registro.fecha_hora|date:"d/m/Y H:i:s" }}</td>
+                <td><strong>Última actualización del Código:</strong> {{ registro.updated_at|date:"d/m/Y H:i:s" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Código:</strong> {% if registro.codigo %}{{ registro.codigo.codigo }}{% else %}S/N{% endif %}</td>
+                <td><strong>Guardia:</strong> {% if registro.cuarto %}{{ registro.cuarto.cuarto }}{% else %}N/A{% endif %}</td>
+                <td><strong>Móvil Patrulla:</strong> {% if registro.movil_patrulla %}{{ registro.movil_patrulla }}{% else %}N/A{% endif %}</td>
+            </tr>
+            <tr>
+                <td><strong>A Cargo:</strong> {% if registro.a_cargo %}{{ registro.a_cargo }}{% else %}N/A{% endif %}</td>
+                <td><strong>Secundante:</strong> {% if registro.secundante %}{{ registro.secundante }}{% else %}N/A{% endif %}</td>
+                <td><strong>Lugar del Código:</strong> {% if registro.lugar_codigo %}{{ registro.lugar_codigo }}{% else %}N/A{% endif %}</td>
+            </tr>
+        </table>
         <div><strong>Descripción:</strong> {{ registro.descripcion|safe }}</div>
         <div><strong>Instituciones Intervinientes:</strong> {% if registro.instituciones_intervinientes %}{{ registro.instituciones_intervinientes }}{% else %}N/A{% endif %}</div>
         <div><strong>Tareas Judiciales:</strong> {% if registro.tareas_judiciales %}{{ registro.tareas_judiciales }}{% else %}N/A{% endif %}</div>
