@@ -62,7 +62,7 @@
             </thead>
             <tbody>
                 {% for comisaria in comisarias %}
-                <tr class="border-b">
+                <tr class="border-b text-black">
                     <td class="py-1 px-2 font-bold text-gray-700 bg-blue-100 ">{{ comisaria.comisaria_nombre }}</td>
                     <td class="py-1 px-2 text-center">{{ comisaria.cuarto.cuarto }}</td>
                     <td class="py-1 px-2">{{ comisaria.fecha_hora|date:"Y-m-d H:i" }}</td>
@@ -107,7 +107,7 @@
         </div>
     </div>
     <!-- VOLVER -->
-    <a href="/" class="mt-4 inline-block text-[13px] bg-[#111] text-white px-4 py-2 rounded hover:bg-gray-700 text-center">Volver a la página principal</a>
+    <a href="/" class="mt-4 inline-block text-[13px] bg-[#009999] text-white px-4 py-2 rounded hover:bg-gray-700 text-center">Volver a la página principal</a>
 </div>
 <!-- DATATABLE CONFIG -->
 <script>

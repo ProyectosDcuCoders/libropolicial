@@ -1,6 +1,6 @@
 /* static/css/tailwind.css */
 
-/* ! tailwindcss v3.4.7 | MIT License | https://tailwindcss.com */
+/* ! tailwindcss v3.4.10 | MIT License | https://tailwindcss.com */
 
 /*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
@@ -939,10 +939,6 @@ video {
   width: 1.5rem;
 }
 
-.w-\[40\%\] {
-  width: 40%;
-}
-
 .w-auto {
   width: auto;
 }
@@ -1296,6 +1292,11 @@ video {
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
+.bg-\[\#00b3b3\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 179 179 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#111\] {
   --tw-bg-opacity: 1;
   background-color: rgb(17 17 17 / var(--tw-bg-opacity));
@@ -1446,18 +1447,9 @@ video {
   background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 
-.bg-\[\#006666\] {
+.bg-\[\#009999\] {
   --tw-bg-opacity: 1;
-  background-color: rgb(0 102 102 / var(--tw-bg-opacity));
-}
-
-.bg-\[\] {
-  background-color: ;
-}
-
-.bg-\[\#00b3b3\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 179 179 / var(--tw-bg-opacity));
+  background-color: rgb(0 153 153 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-50 {
@@ -1764,6 +1756,11 @@ video {
   color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
+.text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
+}
+
 .text-slate-700 {
   --tw-text-opacity: 1;
   color: rgb(51 65 85 / var(--tw-text-opacity));
@@ -1914,11 +1911,6 @@ video {
   left: 4px;
 }
 
-.after\:top-0::after {
-  content: var(--tw-content);
-  top: 0px;
-}
-
 .after\:top-0\.5::after {
   content: var(--tw-content);
   top: 0.125rem;
@@ -1961,6 +1953,11 @@ video {
 .after\:content-\[\'\'\]::after {
   --tw-content: '';
   content: var(--tw-content);
+}
+
+.hover\:bg-\[\#009999\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 153 153 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-blue-700:hover {
@@ -2016,16 +2013,6 @@ video {
 .hover\:bg-yellow-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(161 98 7 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#006666\]:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 102 102 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#009999\]:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 153 153 / var(--tw-bg-opacity));
 }
 
 .hover\:font-bold:hover {
@@ -2295,11 +2282,5 @@ video {
   .lg\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .xl\:w-\[35\%\] {
-    width: 35%;
   }
 }
