@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build:tailwind": "cross-env NODE_OPTIONS=--max-old-space-size=4096 npx tailwindcss -i ./static/css/tailwind.css -o ./static/css/output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -10,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^10.4.19",
+    "cross-env": "^7.0.3",
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.6"
   },

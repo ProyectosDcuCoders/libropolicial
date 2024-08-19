@@ -1,15 +1,24 @@
+# libropolicial/urls.py
+
 from django.contrib import admin
 from django.urls import path, include
-from comisarias.views import CustomLoginView, HomeView, no_permission
-from django.contrib.auth.views import LogoutView
 
+# Define las rutas (URL patterns) principales para el proyecto
 urlpatterns = [
+    # Ruta para la interfaz de administración de Django
     path('admin/', admin.site.urls),
+
+    # Incluye las rutas definidas en 'compartido.urls'
+    path('', include('compartido.urls')),
+
+    # Incluye las rutas definidas en 'comisarias.urls'
     path('comisarias/', include('comisarias.urls')),
+
+    # Incluye las rutas definidas en 'comisariasriogrande.urls'
     path('comisarias/', include('comisariasriogrande.urls')),
+
+    # Incluye las rutas definidas en 'divisioncomunicaciones.urls'
     path('divisioncomunicaciones/', include('divisioncomunicaciones.urls')),
-    path('', HomeView.as_view(), name='home'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
-    path('login/', CustomLoginView.as_view(), name='login'),
-    path('no-permission/', no_permission, name='no_permission'),
+
+    # Puedes incluir otras aplicaciones de la misma manera
 ]

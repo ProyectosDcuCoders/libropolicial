@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Comisaría Segunda - Lista de Codigos{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-4 p-4">
+    <h1 class="text-2xl font-bold mb-4 text-center">Comisaria Segunda lista de codigos</h1>
+
+    <div class="flex justify-between mb-4">
+        <a href="{% url 'comisaria_segunda_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar guardia</a>
+        <a href="{% url 'comisarias_completa_list' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Libro general</a>
+    </div>
+
+    <table class="min-w-full bg-white border border-gray-200">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">Guardia</th>
+                <th class="px-4 py-2">Código</th>
+                <th class="px-4 py-2">Móvil Patrulla</th>
+                <th class="px-4 py-2">A Cargo</th>
+                <th class="px-4 py-2">Secundante</th>
+                <th class="px-4 py-2">Nombre de la Víctima</th>
+                <th class="px-4 py-2">DNI</th>
+                <th class="px-4 py-2">Sexo</th>
+                <th class="px-4 py-2">Estado Civil</th>
+                <th class="px-4 py-2">Domicilio</th>
+                <th class="px-4 py-2">Trabajo</th>
+                <th class="px-4 py-2">Descripción</th>
+                <th class="px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comisaria in object_list %}
+            <tr class="bg-gray-100 border-b">
+                <td class="px-4 py-2">{{ comisaria.cuarto }}</td>
+                <td class="py-2 px-4">
+                    {% for codigo in comisaria.codigo.all %}
+                        {{ codigo.codigo }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td class="px-4 py-2">{{ comisaria.movil_patrulla }}</td>
+                <td class="px-4 py-2">{{ comisaria.a_cargo }}</td>
+                <td class="px-4 py-2">{{ comisaria.secundante }}</td>
+                <td class="px-4 py-2">{{ comisaria.nombre_victima }}</td>
+                <td class="px-4 py-2">{{ comisaria.dni }}</td>
+                <td class="px-4 py-2">{{ comisaria.sexo|yesno:"Hombre,Mujer" }}</td>
+                <td class="px-4 py-2">{{ comisaria.estado_civil }}</td>
+                <td class="px-4 py-2">{{ comisaria.domicilio }}</td>
+                <td class="px-4 py-2">{{ comisaria.trabajo }}</td>
+                <td class="px-4 py-2">{{ comisaria.descripcion }}</td>
+                <td class="px-4 py-2">
+                    <a href="{% url 'comisaria_segunda_edit' comisaria.id %}" class="bg-slate-800 text-white px-2 p-3 rounded hover:bg-yellow-700">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

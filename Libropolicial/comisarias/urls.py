@@ -1,53 +1,49 @@
+#comisarial/urls.py
 from django.urls import path
 from .views import (
-    generate_comisaria_primera_pdf, view_comisaria_primera_pdf,
-    generate_comisaria_segunda_pdf, view_comisaria_segunda_pdf,
-    generate_comisaria_tercera_pdf, view_comisaria_tercera_pdf,
-    generate_comisaria_cuarta_pdf, view_comisaria_cuarta_pdf,
-    generate_comisaria_quinta_pdf, view_comisaria_quinta_pdf,
+    generate_comisaria_primera_pdf_view, generate_comisaria_primera_pdf_download,
+    generate_comisaria_segunda_pdf_view, generate_comisaria_segunda_pdf_download,
+    generate_comisaria_tercera_pdf_view, generate_comisaria_tercera_pdf_download,
+    generate_comisaria_cuarta_pdf_view, generate_comisaria_cuarta_pdf_download,
+    generate_comisaria_quinta_pdf_view, generate_comisaria_quinta_pdf_download,
+    sign_comisaria_primera, sign_comisaria_segunda,
     ComisariaPrimeraListView, ComisariaSegundaListView, ComisariaTerceraListView,
     ComisariaCuartaListView, ComisariaQuintaListView, ComisariaPrimeraCreateView,
     ComisariaSegundaCreateView, ComisariaTerceraCreateView, ComisariaCuartaCreateView,
     ComisariaQuintaCreateView, ComisariasCompletaListView, ComisariaPrimeraUpdateView,
-    ComisariaSegundaUpdateView, no_permission
+    ComisariaSegundaUpdateView, generate_comisaria_primera_pdf_download_previous_day  # <-- Asegúrate de incluir esta línea
 )
 
 urlpatterns = [
-    path('primera/', ComisariaPrimeraListView.as_view(), name='comisaria_primera_list'),
-    path('primera/nuevo/', ComisariaPrimeraCreateView.as_view(), name='comisaria_primera_create'),
-    path('primera/editar/<int:pk>/', ComisariaPrimeraUpdateView.as_view(), name='comisaria_primera_edit'),
+     path('primera/', ComisariaPrimeraListView.as_view(), name='comisaria_primera_list'),
+    path('primera/create/', ComisariaPrimeraCreateView.as_view(), name='comisaria_primera_create'),
+    path('primera/edit/<int:pk>/', ComisariaPrimeraUpdateView.as_view(), name='comisaria_primera_edit'),
+    path('primera/reporte/view/', generate_comisaria_primera_pdf_view, name='generate_comisaria_primera_pdf_view'),
+    path('primera/reporte/download/', generate_comisaria_primera_pdf_download, name='generate_comisaria_primera_pdf_download'),
+    path('comisarias/primera/descargar-dia-anterior/', generate_comisaria_primera_pdf_download_previous_day, name='generate_comisaria_primera_pdf_download_previous_day'),  # <-- Esta es la ruta que debes agregar
+    path('primera/firmar/<int:pk>/', sign_comisaria_primera, name='comisaria_primera_sign'),
 
     path('segunda/', ComisariaSegundaListView.as_view(), name='comisaria_segunda_list'),
     path('segunda/nuevo/', ComisariaSegundaCreateView.as_view(), name='comisaria_segunda_create'),
     path('segunda/editar/<int:pk>/', ComisariaSegundaUpdateView.as_view(), name='comisaria_segunda_edit'),
+    path('segunda/reporte/', generate_comisaria_segunda_pdf_view, name='generate_comisaria_segunda_pdf_view'),
+    path('segunda/reporte/download/', generate_comisaria_segunda_pdf_download, name='generate_comisaria_segunda_pdf_download'),
+    path('segunda/firmar/<int:pk>/', sign_comisaria_segunda, name='comisaria_segunda_sign'),
 
     path('tercera/', ComisariaTerceraListView.as_view(), name='comisaria_tercera_list'),
-    path('cuarta/', ComisariaCuartaListView.as_view(), name='comisaria_cuarta_list'),
-    path('quinta/', ComisariaQuintaListView.as_view(), name='comisaria_quinta_list'),
-    
-   
     path('tercera/nuevo/', ComisariaTerceraCreateView.as_view(), name='comisaria_tercera_create'),
+    path('tercera/reporte/', generate_comisaria_tercera_pdf_view, name='generate_comisaria_tercera_pdf_view'),
+    path('tercera/reporte/download/', generate_comisaria_tercera_pdf_download, name='generate_comisaria_tercera_pdf_download'),
+
+    path('cuarta/', ComisariaCuartaListView.as_view(), name='comisaria_cuarta_list'),
     path('cuarta/nuevo/', ComisariaCuartaCreateView.as_view(), name='comisaria_cuarta_create'),
+    path('cuarta/reporte/', generate_comisaria_cuarta_pdf_view, name='generate_comisaria_cuarta_pdf_view'),
+    path('cuarta/reporte/download/', generate_comisaria_cuarta_pdf_download, name='generate_comisaria_cuarta_pdf_download'),
+
+    path('quinta/', ComisariaQuintaListView.as_view(), name='comisaria_quinta_list'),
     path('quinta/nuevo/', ComisariaQuintaCreateView.as_view(), name='comisaria_quinta_create'),
+    path('quinta/reporte/', generate_comisaria_quinta_pdf_view, name='generate_comisaria_quinta_pdf_view'),
+    path('quinta/reporte/download/', generate_comisaria_quinta_pdf_download, name='generate_comisaria_quinta_pdf_download'),
 
-    
-    
     path('completas/', ComisariasCompletaListView.as_view(), name='comisarias_completa_list'),
-
-    # Rutas para Comisaria Primera
-    path('comisaria/primera/reporte/', view_comisaria_primera_pdf, name='view_comisaria_primera_pdf'),
-    path('comisaria/primera/reporte/download/', generate_comisaria_primera_pdf, name='generate_comisaria_primera_pdf'),
-
-    # Rutas para otras comisarias (similar a Comisaria Primera)
-    path('comisaria/segunda/reporte/', view_comisaria_segunda_pdf, name='view_comisaria_segunda_pdf'),
-    path('comisaria/segunda/reporte/download/', generate_comisaria_segunda_pdf, name='generate_comisaria_segunda_pdf'),
-
-    path('comisaria/tercera/reporte/', view_comisaria_tercera_pdf, name='view_comisaria_tercera_pdf'),
-    path('comisaria/tercera/reporte/download/', generate_comisaria_tercera_pdf, name='generate_comisaria_tercera_pdf'),
-
-    path('comisaria/cuarta/reporte/', view_comisaria_cuarta_pdf, name='view_comisaria_cuarta_pdf'),
-    path('comisaria/cuarta/reporte/download/', generate_comisaria_cuarta_pdf, name='generate_comisaria_cuarta_pdf'),
-
-    path('comisaria/quinta/reporte/', view_comisaria_quinta_pdf, name='view_comisaria_quinta_pdf'),
-    path('comisaria/quinta/reporte/download/', generate_comisaria_quinta_pdf, name='generate_comisaria_quinta_pdf'),
 ]

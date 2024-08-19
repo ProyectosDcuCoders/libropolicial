@@ -1,59 +1,74 @@
-
 from pathlib import Path
+#from dotenv import load_dotenv
+import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Carga las variables de entorno desde el archivo .env
+#env_path = Path(__file__).resolve().parent.parent / '.env'
+#load_dotenv(dotenv_path=env_path)
+
+# Construye rutas dentro del proyecto como BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Configuraciones rápidas para el desarrollo - no adecuadas para producción
+# Ver https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ds6h)mdg35#cm4ez5)**^%lwznbi2-4w#hth1oj2u8aq$zn*gm'
+# ADVERTENCIA DE SEGURIDAD: mantén la clave secreta utilizada en producción en secreto.
+#SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
+
+
+
+# ADVERTENCIA DE SEGURIDAD: no ejecutes con debug activado en producción.
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-# Application definition
+# Definición de la aplicación
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'comisarias',
-    'comisariasriogrande',
-    'comisariastolhuin',
-    'divisioncomunicaciones',
-    'channels',
-    
+    'django.contrib.admin',  # Admin de Django
+    'django.contrib.auth',  # Sistema de autenticación
+    'django.contrib.contenttypes',  # Framework de tipos de contenido
+    'django.contrib.sessions',  # Soporte para sesiones
+    'django.contrib.messages',  # Framework de mensajes
+    'django.contrib.staticfiles',  # Manejo de archivos estáticos
+    'compartido',  # Aplicación compartida
+    'comisarias',  # Aplicación de comisarías
+    'comisariasriogrande',  # Aplicación de comisarías de Rio Grande
+    'comisariastolhuin',  # Aplicación de comisarías de Tolhuin
+    'divisioncomunicaciones',  # Aplicación de la división de comunicaciones
+    'channels',  # Soporte para canales (WebSockets)
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'comisarias.middleware.NoCacheMiddleware',  # Añadir este middleware
-    'comisarias.middleware.RedirectAuthenticatedUserMiddleware',  # Añadir este middleware
-    'comisarias.middleware.InactivityLogoutMiddleware',  # Añadir este middleware
+    'django.middleware.security.SecurityMiddleware',  # Middleware de seguridad
+    'django.contrib.sessions.middleware.SessionMiddleware',  # Middleware de sesiones
+    'django.middleware.locale.LocaleMiddleware',  # Middleware de localización
+    'django.middleware.common.CommonMiddleware',  # Middleware común
+    'django.middleware.csrf.CsrfViewMiddleware',  # Middleware de CSRF
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Middleware de autenticación
+    'django.contrib.messages.middleware.MessageMiddleware',  # Middleware de mensajes
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Middleware de protección contra clickjacking
+    'compartido.middleware.NoCacheMiddleware',  # Middleware personalizado para no caché
+    'compartido.middleware.RedirectAuthenticatedUserMiddleware',  # Middleware personalizado para redirigir usuarios autenticados
+    'compartido.middleware.InactivityLogoutMiddleware',  # Middleware personalizado para cerrar sesión por inactividad
+    # 'comisarias.middleware.NoCacheMiddleware',  # Añadir este middleware si es necesario
+    # 'comisarias.middleware.RedirectAuthenticatedUserMiddleware',  # Añadir este middleware si es necesario
+    # 'comisarias.middleware.InactivityLogoutMiddleware',  # Añadir este middleware si es necesario
+   
+
 ]
 
 ROOT_URLCONF = 'Libropolicial.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Añadir la ruta de la carpeta templates
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',  # Backend de plantillas de Django
+        'DIRS': [BASE_DIR / 'templates'],  # Añadir la ruta de la carpeta de plantillas
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,25 +82,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Libropolicial.wsgi.application'
-ASGI_APPLICATION = 'Libropolicial.asgi.application'
+#ASGI_APPLICATION = 'Libropolicial.asgi.application'
 
-# Database
+# Base de datos
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'librodeguardia',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.mysql',  # Utiliza el backend MySQL
+        'NAME': 'librodiario',  # Nombre de la base de datos
+        'USER': 'root',  # Usuario de la base de datos
+        'PASSWORD': '',  # Contraseña de la base de datos
+        'HOST': 'localhost',  # Host de la base de datos
+        'PORT': '3306',  # Puerto de la base de datos
     }
 }
 
-
-
-# Password validation
+# Validación de contraseñas
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -96,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
@@ -104,41 +116,60 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
+# Internacionalización
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'es-ar'  # Cambiado a 'es' para establecer el idioma en español
+LANGUAGE_CODE = 'es-ar'  # Código de idioma para español de Argentina
 
-TIME_ZONE = 'America/Argentina/Buenos_Aires'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'  # Zona horaria
 
-USE_TZ = False
-USE_I18N = True
-USE_L10N = True
+USE_TZ = False  # Desactiva el uso de la zona horaria UTC
+USE_I18N = True  # Habilita la internacionalización
+USE_L10N = True  # Habilita la localización
 
-
-# Static files (CSS, JavaScript, Images)
+# Archivos estáticos (CSS, JavaScript, Imágenes)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-#STATIC_URL = 'static/'
-STATIC_URL = '/static/'
+STATIC_URL = '/static/'  # URL para archivos estáticos
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "static",  # Directorio de archivos estáticos
 ]
 
-# Default primary key field type
+# Tipo de campo de clave primaria predeterminado
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Login URL configuration
-LOGIN_URL = 'login'  # Añadido para especificar la URL de inicio de sesión
+# Configuración de URL de inicio de sesión
+LOGIN_URL = 'login'  # URL de inicio de sesión
 
+# Configuración del motor de sesiones
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-
+# Configuración de canales (WebSockets)
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
+
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': [
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'Undo', 'Redo']},
+            {'name': 'editing', 'items': ['Find', 'Replace', 'SelectAll', 'Scayt']},
+            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', 'RemoveFormat']},
+            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', 'Outdent', 'Indent', 'Blockquote', 'CreateDiv', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'BidiLtr', 'BidiRtl', 'Language']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert', 'items': ['Table', 'HorizontalRule', 'SpecialChar']},
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'document', 'items': ['Source']}
+        ],
+        'height': 300,
+        'width': 'auto',
     },
 }

@@ -1,100 +1,12 @@
-{% extends "base.html" %}
+<!-- libropolicial/templates/comisarias/segunda/comisaria_segunda_form.html -->
+{% extends "formulariobase/formulario_general.html" %}
+{% block back_button %}
+<a href="{% url 'comisaria_segunda_list' %}" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 text-center">Regresar al listado de Codigos</a>
+{% endblock %}
+
 
 {% block title %}Registrar en Comisaría Segunda{% endblock %}
 
-{% block content %}
-<div class="flex justify-center items-center min-h-screen bg-gray-100" x-data="{ showModal: false, showDropdown: false }">
-    <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-5xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4 text-center">Registrar en Comisaría Segunda</h1>
-        <form method="post">
-            {% csrf_token %}
-            <div class="grid gap-4 sm:grid-cols-3">
-                <div class="sm:col-span-2">
-                    <label for="{{ form.cuarto.id_for_label }}">{{ form.cuarto.label }}</label>
-                    {{ form.cuarto }}
-                </div>
-                <div class="sm:col-span-1 relative">
-                    <label for="{{ form.codigo.id_for_label }}">{{ form.codigo.label }}</label>
-                    <div @click="showDropdown = !showDropdown" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
-                        Seleccionar códigos
-                    </div>
-                    <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4" style="display: none;">
-                        <div class="grid grid-cols-5 gap-2">
-                            {% for choice in form.codigo.field.queryset %}
-                            <label class="flex items-center p-2 hover:bg-gray-100">
-                                <input type="checkbox" name="{{ form.codigo.name }}" value="{{ choice.pk }}" class="form-checkbox" {% if choice.pk in form.codigo.value %}checked{% endif %}>
-                                <span class="ml-2">{{ choice }}</span>
-                            </label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="sm:col-span-1">
-                    <label for="{{ form.movil_patrulla.id_for_label }}">{{ form.movil_patrulla.label }}</label>
-                    <input type="text" name="{{ form.movil_patrulla.name }}" id="{{ form.movil_patrulla.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.movil_patrulla.value }}">
-                </div>
-                <div class="sm:col-span-1">
-                    <label for="{{ form.a_cargo.id_for_label }}">{{ form.a_cargo.label }}</label>
-                    <input type="text" name="{{ form.a_cargo.name }}" id="{{ form.a_cargo.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.a_cargo.value }}">
-                </div>
-                <div class="sm:col-span-1">
-                    <label for="{{ form.secundante.id_for_label }}">{{ form.secundante.label }}</label>
-                    <input type="text" name="{{ form.secundante.name }}" id="{{ form.secundante.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.secundante.value }}">
-                </div>
-                <div class="sm:col-span-1">
-                    <label for="{{ form.nombre_victima.id_for_label }}">{{ form.nombre_victima.label }}</label>
-                    <input type="text" name="{{ form.nombre_victima.name }}" id="{{ form.nombre_victima.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.nombre_victima.value }}">
-                </div>
-                <div class="sm:col-span-1">
-                    <label for="{{ form.dni.id_for_label }}">{{ form.dni.label }}</label>
-                    <input type="number" name="{{ form.dni.name }}" id="{{ form.dni.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.dni.value }}">
-                </div>
-                <!-- Botón para abrir el modal -->
-                <div class="sm:col-span-3">
-                    <button type="button" @click="showModal = true" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Datos Personas</button>
-                </div>
-                <div class="sm:col-span-3">
-                    <label for="{{ form.descripcion.id_for_label }}">{{ form.descripcion.label }}</label>
-                    <textarea name="{{ form.descripcion.name }}" id="{{ form.descripcion.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3">{{ form.descripcion.value }}</textarea>
-                </div>
-                <div class="sm:col-span-3">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Guardar</button>
-                </div>
-            </div>
-        
-        <a href="{% url 'comisaria_primera_list' %}" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 w-full text-center">Volver a la lista</a>
-    </div>
-
-    <!-- Modal -->
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50" x-show="showModal">
-        <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-lg">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Datos de la Persona</h2>
-                <button @click="showModal = false" class="text-gray-500 hover:text-gray-700">&times;</button>
-            </div>
-            <div class="grid gap-4 sm:grid-cols-1">
-                <div class="sm:col-span-1">
-                    <label for="{{ form.sexo.id_for_label }}">{{ form.sexo.label }}</label>
-                    <input type="checkbox" name="{{ form.sexo.name }}" id="{{ form.sexo.id_for_label }}" class="form-checkbox mt-1 block" {% if form.sexo.value %}checked{% endif %}>
-                </div>
-                <div class="sm:col-span-1">
-                    <label for="{{ form.estado_civil.id_for_label }}">{{ form.estado_civil.label }}</label>
-                    <input type="text" name="{{ form.estado_civil.name }}" id="{{ form.estado_civil.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.estado_civil.value }}">
-                </div>
-                <div class="sm:col-span-1">
-                    <label for="{{ form.domicilio.id_for_label }}">{{ form.domicilio.label }}</label>
-                    <input type="text" name="{{ form.domicilio.name }}" id="{{ form.domicilio.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.domicilio.value }}">
-                </div>
-                <div class="sm:col-span-1">
-                    <label for="{{ form.trabajo.id_for_label }}">{{ form.trabajo.label }}</label>
-                    <input type="text" name="{{ form.trabajo.name }}" id="{{ form.trabajo.id_for_label }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.trabajo.value }}">
-                </div>
-                <div class="sm:col-span-1 flex justify-end">
-                    <button type="button" @click="showModal = false" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-  </form>
-</div>
+{% block green_button %}
+<a href="{% url 'comisaria_segunda_list' %}" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 w-full text-center">Volver a la lista</a>
 {% endblock %}
