@@ -72,8 +72,7 @@
                     <td class="py-1 px-2">{{ comisaria.secundante|default_if_none:'' }}</td>
                     <td class="py-1 px-2">{{ comisaria.lugar_codigo|default_if_none:'' }}</td>
                     <td class="py-1 px-2">
-                        <!-- <button @click="descripcion = '{{ comisaria.descripcion }}'; showModal = true" class=" bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-[#009999]">Ver</button> -->
-                        <button @click="descripcion = '{{ comisaria.descripcion|escapejs }}'; showModal = true" class="bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-[#009999]">Ver</button>
+                        <button @click="descripcion = '{{ comisaria.descripcion }}'; showModal = true" class=" bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-[#009999]">Ver</button>
                     </td>
                     <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.instituciones_intervinientes }}</p></td>
                     <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.tareas_judiciales }}</p></td>
@@ -139,14 +138,11 @@
                     "sSortDescending": ": activar para ordenar la columna de manera descendente"
                 }
             },
-            /* pageLength: -1, */
+            /* pageLength: 5, */
             fixedHeader: true
         });
         $('#myTable tbody').on('click', 'tr', function() {
-            // Elimina la clase 'selected' de todas las filas
-            $('#myTable tbody tr').removeClass('selected');
-            // Agrega la clase 'selected' solo a la fila actual
-            $(this).addClass('selected');
+            $(this).toggleClass('selected');
         });
     });
 </script>

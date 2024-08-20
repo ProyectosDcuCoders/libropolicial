@@ -635,16 +635,11 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
     template_name = 'comisarias/comisarias_completa_list.html'
     context_object_name = 'comisarias'
 
-    # Obtiene el conjunto de consultas combinado de todas las comisarías, con paginación y búsqueda
+    # Obtiene el conjunto de consultas combinado de todas las comisarías
     def get_queryset(self):
+
         query = self.request.GET.get('q', '')
-        items_per_page = self.request.GET.get('items_per_page', 10)
-        
-        try:
-            items_per_page = int(items_per_page)
-        except ValueError:
-            items_per_page = 10
-        
+    
         combined_list = []
 
         comisarias_primera = ComisariaPrimera.objects.select_related('cuarto').all()
@@ -673,16 +668,7 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
 
         combined_list = sorted(combined_list, key=lambda x: x.created_at, reverse=True)
 
-        paginator = Paginator(combined_list, items_per_page)
-        page = self.request.GET.get('page')
-        try:
-            comisarias = paginator.page(page)
-        except PageNotAnInteger:
-            comisarias = paginator.page(1)
-        except EmptyPage:
-            comisarias = paginator.page(paginator.num_pages)
-
-        return comisarias
+        return combined_list
 
     # Verifica si la consulta coincide con algún campo de la comisaría
     def query_in_comisaria(self, comisaria, query):
