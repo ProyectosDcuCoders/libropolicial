@@ -347,6 +347,74 @@
             }
         };
     </script>
+
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('pdf');
+        const form = document.getElementById('upload-form');
+    
+        // Evitar el comportamiento por defecto de arrastrar y soltar
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, preventDefaults, false);
+        });
+    
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    
+        // Resaltar el área cuando se arrastra algo sobre ella
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, () => {
+                dropzone.classList.add('bg-gray-200');
+            }, false);
+        });
+    
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, () => {
+                dropzone.classList.remove('bg-gray-200');
+            }, false);
+        });
+    
+        // Manejar el evento de soltar
+        dropzone.addEventListener('drop', (e) => {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+    
+            // Solo acepta un archivo PDF
+            if (files.length > 0 && files[0].type === 'application/pdf') {
+                fileInput.files = files; // Asigna el archivo al input
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event); // Dispara el evento de cambio
+    
+                // Mostrar una confirmación visual de que el archivo está listo para ser enviado
+                dropzone.innerHTML = `<p class="text-sm text-gray-500"><span class="font-semibold">Archivo seleccionado:</span> ${files[0].name}</p>`;
+            } else {
+                alert('Por favor, suba un archivo PDF.');
+            }
+        });
+    
+        // Evitar que el formulario redirija y muestre el mensaje de éxito en la misma página
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+    
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            }).then(response => response.text())
+              .then(html => {
+                  document.body.innerHTML = html;
+              }).catch(error => console.error('Error:', error));
+        });
+    </script>
+    
+
+    
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -372,5 +440,6 @@
         });
     });
 </script>
+
 
 </html>

@@ -4,6 +4,16 @@ from django.utils import timezone
 
 # Clases relacionadas con los códigos y dependencias
 
+
+class UploadedPDF(models.Model):
+    file = models.FileField(upload_to='pdfs/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.file.name
+
+
 class CodigoPolicialUSH(models.Model):
     codigo = models.CharField(max_length=10)
 
