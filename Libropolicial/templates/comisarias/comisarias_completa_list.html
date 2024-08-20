@@ -36,6 +36,36 @@
         margin-right: 0;
     }
     /*  */
+    /* Estilos para el modo oscuro */
+.dark .dataTables_wrapper {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.dark .dataTables_wrapper .dataTables_paginate .paginate_button {
+    background-color: #444;
+    color: #e0e0e0;
+}
+
+.dark .dataTables_wrapper .dataTables_filter input {
+    background-color: #333;
+    color: #e0e0e0;
+    border: 1px solid #555;
+}
+
+.dark .dataTables_wrapper .dataTables_info {
+    color: #e0e0e0;
+}
+
+.dark .dataTables_wrapper .dataTables_header {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+.dark .dataTables_wrapper .dataTables_body {
+    background-color: #2d2d2d;
+}
+
 </style>
 <script src="https://kit.fontawesome.com/b929cb1411.js" crossorigin="anonymous"></script>
 
@@ -96,7 +126,7 @@
                                 Descripción
                             </h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500" x-text="descripcion"></p>
+                                <p class="text-sm text-gray-500" x-html="descripcion"></p>
                             </div>
                         </div>
                     </div>
@@ -142,12 +172,32 @@
             /* pageLength: -1, */
             fixedHeader: true
         });
+        // Maneja la selección y deselección de filas
         $('#myTable tbody').on('click', 'tr', function() {
-            // Elimina la clase 'selected' de todas las filas
-            $('#myTable tbody tr').removeClass('selected');
-            // Agrega la clase 'selected' solo a la fila actual
-            $(this).addClass('selected');
+        // Verifica si la fila clickeada ya está seleccionada
+            if ($(this).hasClass('selected')) {
+                // Deselecciona la fila si ya estaba seleccionada
+                $(this).removeClass('selected');
+            } else {
+                // Deselecciona cualquier otra fila previamente seleccionada
+                $('#myTable tbody tr.selected').removeClass('selected');
+                
+                // Marca la fila clickeada como seleccionada
+                $(this).addClass('selected');
+            }
         });
+        /* ESC */
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape') {
+                $('#myTable tbody tr.selected').removeClass('selected');
+            }
+        });
+        /*  */
+        // Aplica estilos de modo oscuro si está activo
+        const isDarkMode = document.documentElement.classList.contains('dark');
+            if (isDarkMode) {
+                $('.dataTables_wrapper').addClass('dark');
+            }
     });
 </script>
 
