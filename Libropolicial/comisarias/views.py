@@ -797,6 +797,36 @@ def generate_pdf_for_specific_date(request, comisaria_model, specific_date, file
         return HttpResponse(response.getvalue(), content_type='application/pdf', headers={'Content-Disposition': f'inline; filename="{filename}"'})
     else:
         return HttpResponse('Error al generar el PDF', status=500)
+    
+
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
+from django.urls import reverse
+from .models import UploadedPDF
+
+def subir_pdf(request):
+    if request.method == 'POST':
+        # Verifica si el archivo 'pdf' está presente en la solicitud
+        if 'pdf' in request.FILES:
+            pdf = request.FILES['pdf']
+            fs = FileSystemStorage()
+            filename = fs.save(pdf.name, pdf)
+            uploaded_file_url = fs.url(filename)
+            
+            # Guardar en la base de datos
+            new_pdf = UploadedPDF(file=filename, uploaded_by=request.user)
+            new_pdf.save()
+
+            return render(request, 'comisarias/subir_pdf.html', {'success': 'Archivo subido exitosamente.'})
+        else:
+            # Si no se ha subido ningún archivo, muestra un mensaje de error
+            return render(request, 'comisarias/subir_pdf.html', {'error': 'No se seleccionó ningún archivo.'})
+
+    return render(request, 'comisarias/subir_pdf.html')
+
+
+
+
 
 
 # Repite las siguientes funciones para las demás comisarías...
