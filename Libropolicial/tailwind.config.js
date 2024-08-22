@@ -20,7 +20,11 @@ module.exports = {
       '2xl': '1536px',
       'xs': {'min': '440px', 'max': '640px'}, // Breakpoint personalizado
     },
-    extend: {},
+    extend: {
+      colors: {
+        prueba: '#00cccc', // Nuevo color personalizado
+      },
+    },
   },
   plugins: [],
 }

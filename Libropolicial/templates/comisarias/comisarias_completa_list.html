@@ -7,7 +7,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
-
+<!-- <script src="https://cdn.tailwindcss.com"></script> -->
 <style>
     h1{
         font-family: 'Roboto Slab', serif;
@@ -65,7 +65,9 @@
 .dark .dataTables_wrapper .dataTables_body {
     background-color: #2d2d2d;
 }
-
+#myTable tbody tr:hover {
+    color: black;
+}
 </style>
 <script src="https://kit.fontawesome.com/b929cb1411.js" crossorigin="anonymous"></script>
 
@@ -73,7 +75,7 @@
 <div class="mx-auto mt-4 p-4" x-data="{ showModal: false, descripcion: '' }">
     <h1 class="text-2xl font-bold mb-4 text-center">Registros Completos de Comisarías</h1>
     <div class="overflow-x-auto">
-        <table id="myTable" class="display w-full bg-white text-[13px] rounded-tl-lg rounded-tr-lg">
+        <table id="myTable" class="display w-full  text-[13px] border-2 border-white rounded-tl-lg rounded-tr-lg">
             <thead class="bg-[#111] text-white text-[16px]">
                 <tr class="">
                     <th class="px-4 py-4 rounded-tl-lg">Cria.</th>
@@ -92,8 +94,8 @@
             </thead>
             <tbody>
                 {% for comisaria in comisarias %}
-                <tr class="border-b text-black">
-                    <td class="py-1 px-2 font-bold text-gray-700 bg-blue-100 ">{{ comisaria.comisaria_nombre }}</td>
+                <tr class="border-b ">
+                    <td class="py-1 px-2 font-bold text-black">{{ comisaria.comisaria_nombre }}</td>
                     <td class="py-1 px-2 text-center">{{ comisaria.cuarto.cuarto }}</td>
                     <td class="py-1 px-2">{{ comisaria.fecha_hora|date:"Y-m-d H:i" }}</td>
                     <td class="py-1 px-2"><p class="text-center">{{ comisaria.codigo.codigo }}</p></td>
@@ -103,7 +105,7 @@
                     <td class="py-1 px-2">{{ comisaria.lugar_codigo|default_if_none:'' }}</td>
                     <td class="py-1 px-2">
                         <!-- <button @click="descripcion = '{{ comisaria.descripcion }}'; showModal = true" class=" bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-[#009999]">Ver</button> -->
-                        <button @click="descripcion = '{{ comisaria.descripcion|escapejs }}'; showModal = true" class="bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-[#009999]">Ver</button>
+                        <button @click="descripcion = '{{ comisaria.descripcion|escapejs }}'; showModal = true" class="bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-gray-700">Ver</button>
                     </td>
                     <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.instituciones_intervinientes }}</p></td>
                     <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.tareas_judiciales }}</p></td>
@@ -140,7 +142,8 @@
         </div>
     </div>
     <!-- VOLVER -->
-    <a href="/" class="mt-4 inline-block text-[13px] bg-[#009999] text-white px-4 py-2 rounded hover:bg-gray-700 text-center">Volver a la página principal</a>
+    <a href="/" class="mt-4 inline-block text-[13px] bg-prueba hover:bg-prueba text-white px-4 py-2 rounded text-center">Volver a la página principal</a>
+    
 </div>
 <!-- DATATABLE CONFIG -->
 <script>
@@ -200,5 +203,4 @@
             }
     });
 </script>
-
 {% endblock %}
