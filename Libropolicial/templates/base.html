@@ -19,7 +19,9 @@
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://unpkg.com/htmx.org@1.4.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2" defer></script>
-    
+    <!-- icono pestaña -->
+    <link rel="shortcut icon" href="{% static 'comisarias/images/fabico.ico' %}" type="image/x-icon">
+
     <style>
         .bg-red-500 {
             background-color: #f56565;
@@ -76,9 +78,12 @@
     {% endblock %}
 </head>
 
-<body class="bg-gray-100 flex flex-col min-h-screen dark:bg-gray-900 dark:text-white">
-    <header class="flex justify-between items-center bg-slate-900 text-white p-4">
-        <h1 class="text-3xl">Libro Policial</h1>
+<body class="bg-gray-100 flex flex-col min-h-screen dark:bg-gray-800 dark:text-white">
+    <header class="flex justify-between items-center bg-black text-white p-2">
+        <div class="flex items-center">
+            <img class="mr-4" src="{% static 'comisarias/images/fabico.ico' %}" alt="" style="max-height: 60px;">
+            <h1 class="text-3xl">Libro Policial</h1>
+        </div>
         <nav class="flex items-center space-x-4">
             <!-- Añade aquí el interruptor de modo oscuro -->
             <button id="theme-toggle" class="focus:outline-none">
@@ -96,7 +101,7 @@
                 <li class="text-white font-semibold">{{ user.get_full_name|default:user.username }}</li>
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="pb-1 px-3 rounded-md border-2 border-white hover:bg-white hover:text-black hover:font-bold">Cerrar Sesión</button>
+                    <button type="submit" class="pb-1 px-3 mt-1 rounded-md border-2 border-white hover:bg-white hover:text-black hover:font-bold">Cerrar Sesión</button>
                 </form>
             </ul>
             {% endif %}
@@ -121,8 +126,11 @@
         {% endblock %}
         
     </main>
-    <footer class="bg-slate-900 text-white text-center p-4 mt-auto w-full">
-        <p>&copy; 2024 Policia de la Provincia de Tierra del Fuego.</p>
+    <footer class="bg-black text-white text-center p-2 mt-auto mx-auto w-full">
+        <div class="flex items-center justify-center mx-auto gap-x-1">
+            <img class="pr-4" src="{% static 'comisarias/images/fabico.ico' %}" alt="" style="max-height: 40px;">
+            <p class="ml-2">&copy; 2024 Policia de la Provincia de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
+        </div>
     </footer>
 
     <script>
