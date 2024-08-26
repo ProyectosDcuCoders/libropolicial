@@ -3,24 +3,13 @@
 {% block title %}Subir PDF{% endblock %}
 
 {% block content %}
-<style>
-    .joberFirma{
-        border: 1px solid rgb(210, 208, 208);
-    }
-    .joberFirma:hover{
-        background-color: #e6e6e6;
-    }
-</style>
-<div class="flex justify-end">
-    <a class="joberFirma p-2 rounded-lg font-semibold  border-2 border-black flex items-center shadow-md" target="_blank"
-        href="https://firmar.gob.ar/firmador/#/">
-        <span class="mr-2">Firma Digital:</span>
-        <img class="" style="width: 200px;" src="https://firmar.gob.ar/firmador/resources/imgs/argentinagob.svg" alt="">
-    </a>
-</div>
+<!-- Contenedor principal con flex para alinear y centrar los dos bloques -->
+<div class="max-w-7xl mx-auto mt-10 p-4 flex space-x-8 justify-center">
+    
     <!-- Dropzone -->
-    <div class="max-w-xl mx-auto mt-10 p-4 bg-gray-100 rounded-lg shadow-lg">
+    <div class="max-w-3xl w-full p-8 bg-gray-100 rounded-lg shadow-lg">
         <h1 class="text-2xl font-bold mb-4 text-center">Subir PDF</h1>
+
         <form id="upload-form" action="{% url 'subir_pdf' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="flex items-center justify-center w-full mb-4">
@@ -40,6 +29,13 @@
 
         <!-- Aquí se mostrará el mensaje de éxito o error -->
         <div id="message-container"></div>
+    </div>
+
+    <!-- Botón Firma Digital Gobierno -->
+    <div class="max-w-3xl w-full p-8 bg-gray-100 rounded-lg shadow-lg flex items-center justify-center">
+        <a href="https://firmar.gob.ar/firmador/#/" target="_blank" class="bg-indigo-500 text-white px-8 py-4 rounded-lg text-center hover:bg-indigo-700 w-full">
+            Firma Digital Gobierno
+        </a>
     </div>
 </div>
 {% endblock %}
