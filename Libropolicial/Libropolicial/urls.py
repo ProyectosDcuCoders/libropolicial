@@ -1,7 +1,7 @@
-# libropolicial/urls.py
-
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 # Define las rutas (URL patterns) principales para el proyecto
 urlpatterns = [
@@ -22,3 +22,7 @@ urlpatterns = [
 
     # Puedes incluir otras aplicaciones de la misma manera
 ]
+
+# Configuración para servir archivos cargados por los usuarios
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

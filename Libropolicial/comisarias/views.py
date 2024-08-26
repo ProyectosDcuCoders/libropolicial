@@ -799,31 +799,40 @@ def generate_pdf_for_specific_date(request, comisaria_model, specific_date, file
         return HttpResponse('Error al generar el PDF', status=500)
     
 
-from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
-from django.urls import reverse
 from .models import UploadedPDF
+import os
 
 def subir_pdf(request):
     if request.method == 'POST':
-        # Verifica si el archivo 'pdf' está presente en la solicitud
         if 'pdf' in request.FILES:
             pdf = request.FILES['pdf']
-            fs = FileSystemStorage()
-            filename = fs.save(pdf.name, pdf)
-            uploaded_file_url = fs.url(filename)
             
-            # Guardar en la base de datos
-            new_pdf = UploadedPDF(file=filename, uploaded_by=request.user)
+            # Especifica la ruta donde se guardarán los archivos
+            folder = 'partespdf/'
+            fs = FileSystemStorage(location=folder)
+            filename = fs.save(pdf.name, pdf)
+            
+            # Guardar en la base de datos solo el nombre del archivo
+            new_pdf = UploadedPDF(file=os.path.join(folder, filename), uploaded_by=request.user)
             new_pdf.save()
 
-            return render(request, 'comisarias/subir_pdf.html', {'success': 'Archivo subido exitosamente.'})
+            # Respuesta en formato JSON
+            return JsonResponse({'success': 'El archivo PDF se ha subido correctamente.'})
         else:
-            # Si no se ha subido ningún archivo, muestra un mensaje de error
-            return render(request, 'comisarias/subir_pdf.html', {'error': 'No se seleccionó ningún archivo.'})
-
+            return JsonResponse({'error': 'No se seleccionó ningún archivo.'})
     return render(request, 'comisarias/subir_pdf.html')
 
+
+
+
+from django.shortcuts import render
+from .models import UploadedPDF
+
+def ver_pdfs(request):
+    pdfs = UploadedPDF.objects.all()
+    return render(request, 'comisarias/ver_pdfs.html', {'pdfs': pdfs})
 
 
 
