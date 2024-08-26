@@ -12,6 +12,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.19",
     "cross-env": "^7.0.3",
+    "cross-spawn": "^7.0.3",
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.6"
   },
@@ -32,7 +33,6 @@
     "color-convert": "^2.0.1",
     "color-name": "^1.1.4",
     "commander": "^4.1.1",
-    "cross-spawn": "^7.0.3",
     "cssesc": "^3.0.0",
     "didyoumean": "^1.2.2",
     "dlv": "^1.1.3",

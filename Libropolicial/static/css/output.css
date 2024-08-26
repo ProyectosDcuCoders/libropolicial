@@ -1997,11 +1997,6 @@ video {
   left: 4px;
 }
 
-.after\:top-0::after {
-  content: var(--tw-content);
-  top: 0px;
-}
-
 .after\:top-0\.5::after {
   content: var(--tw-content);
   top: 0.125rem;
