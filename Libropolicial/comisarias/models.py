@@ -6,12 +6,12 @@ from django.utils import timezone
 
 
 class UploadedPDF(models.Model):
-    file = models.FileField(upload_to='pdfs/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    file = models.FileField(upload_to='partespdf/')
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.file.name
+    def filename(self):
+        return self.file.name.split('/')[-1]
 
 
 class CodigoPolicialUSH(models.Model):

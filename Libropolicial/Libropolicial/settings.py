@@ -135,6 +135,16 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",  # Directorio de archivos estáticos
 ]
 
+# url de firma https://firmar.gob.ar/firmador/#/
+
+import os
+
+# ... otras configuraciones
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 # Tipo de campo de clave primaria predeterminado
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

@@ -362,6 +362,7 @@
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('pdf');
         const form = document.getElementById('upload-form');
+        const messageContainer = document.getElementById('message-container');
     
         // Evitar el comportamiento por defecto de arrastrar y soltar
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -375,16 +376,12 @@
     
         // Resaltar el área cuando se arrastra algo sobre ella
         ['dragenter', 'dragover'].forEach(eventName => {
-            dropzone.addEventListener(eventName, () => {
-                dropzone.classList.add('bg-gray-200');
-            }, false);
-        });
+            dropzone.classList.add('bg-gray-200');
+        }, false);
     
         ['dragleave', 'drop'].forEach(eventName => {
-            dropzone.addEventListener(eventName, () => {
-                dropzone.classList.remove('bg-gray-200');
-            }, false);
-        });
+            dropzone.classList.remove('bg-gray-200');
+        }, false);
     
         // Manejar el evento de soltar
         dropzone.addEventListener('drop', (e) => {
@@ -404,10 +401,17 @@
             }
         });
     
-        // Evitar que el formulario redirija y muestre el mensaje de éxito en la misma página
+        // Manejar el envío del formulario
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+    
+            if (fileInput.files.length === 0) {
+                alert('Por favor, seleccione un archivo antes de enviar.');
+                return;
+            }
+    
             const formData = new FormData(form);
+            formData.append('pdf', fileInput.files[0]); // Asegúrate de que el archivo se incluye en la solicitud
     
             fetch(form.action, {
                 method: form.method,
@@ -415,14 +419,32 @@
                 headers: {
                     'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                 }
-            }).then(response => response.text())
-              .then(html => {
-                  document.body.innerHTML = html;
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      // Mostrar mensaje de éxito y resetear el formulario
+                      messageContainer.innerHTML = `<div class="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">${data.success}</div>`;
+                      setTimeout(() => messageContainer.innerHTML = '', 5000); // Desaparece el mensaje después de 5 segundos
+                      form.reset();
+                      dropzone.innerHTML = `
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Haga clic para subir</span> o arrastre y suelte</p>
+                            <p class="text-xs text-gray-500">PDF (MAX. 10MB)</p>
+                        </div>
+                        <input id="pdf" name="pdf" type="file" class="hidden" accept="application/pdf" />
+                      `;
+                  } else if (data.error) {
+                      // Mostrar mensaje de error
+                      messageContainer.innerHTML = `<div class="mt-4 p-4 bg-red-100 text-red-800 rounded-lg">${data.error}</div>`;
+                      setTimeout(() => messageContainer.innerHTML = '', 5000); // Desaparece el mensaje después de 5 segundos
+                  }
               }).catch(error => console.error('Error:', error));
         });
     </script>
     
-
     
 </body>
 <script>
