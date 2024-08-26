@@ -96,13 +96,13 @@
                 </svg>
             </button>
 
-            <!-- Puedes agregar aquí el nombre del usuario autenticado  https://firmar.gob.ar/firmador/#/-->
+            <!-- Puedes agregar aquí el nombre del usuario autenticado -->
             {% if user.is_authenticated %}
             <ul class="flex space-x-4 items-center">
                 <li class="text-white font-semibold">{{ user.get_full_name|default:user.username }}</li>
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="pb-1 px-3 mt-1 rounded-md border-2 border-white hover:bg-white hover:text-black hover:font-bold">Cerrar Sesión</button>
+                    <button type="submit" class="pb-1 px-3 mt-1 rounded-md border-2 border-white hover:bg-white hover:text-black ">Cerrar Sesión</button>
                 </form>
             </ul>
             {% endif %}
