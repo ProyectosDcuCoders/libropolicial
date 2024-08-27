@@ -163,8 +163,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-
-
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': [
