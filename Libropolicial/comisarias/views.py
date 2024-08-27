@@ -520,7 +520,7 @@ class ComisariaSegundaListView(LoginRequiredMixin, UserPassesTestMixin, ListView
         context['resolveId'] = None
         return context
 
-   
+#-----------------------------------------------------------------------------------------------------------------   
     
 
 class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -614,8 +614,7 @@ class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
         return super().form_valid(form)
 
 
-
-
+#--------------------------------------------------------------------------------------------------
 
 class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ComisariaSegunda
@@ -758,7 +757,7 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
 
         return super().form_valid(form)
 
-
+#------------------------------------------------------------------------------------------------------
 
 
 class ComisariaTerceraListView(LoginRequiredMixin, ListView):
@@ -791,49 +790,83 @@ class ComisariaQuintaCreateView(LoginRequiredMixin, CreateView):
     template_name = 'comisarias/quinta/comisaria_quinta_form.html'
     success_url = reverse_lazy('comisaria_quinta_list')
 
+
+
+#--------------------vista dee todas las comisarias-------------------------------------    
+
 # Vista para listar todas las comisarías
 class ComisariasCompletaListView(LoginRequiredMixin, ListView):
+    # Especifica la plantilla que se utilizará para renderizar la vista.
     template_name = 'comisarias/comisarias_completa_list.html'
+    
+    # Define el nombre del contexto que contendrá la lista de comisarías en la plantilla.
     context_object_name = 'comisarias'
 
     # Obtiene el conjunto de consultas combinado de todas las comisarías
     def get_queryset(self):
-
+        # Obtiene el valor de la consulta de búsqueda desde la URL (si existe).
         query = self.request.GET.get('q', '')
     
+        # Inicializa una lista vacía que contendrá las comisarías combinadas.
         combined_list = []
 
+        # Obtiene todas las instancias de ComisariaPrimera, con relaciones pre-cargadas para mejorar el rendimiento.
         comisarias_primera = ComisariaPrimera.objects.select_related('cuarto').all()
+        
+        # Obtiene todas las instancias de ComisariaSegunda, con relaciones pre-cargadas para mejorar el rendimiento.
         comisarias_segunda = ComisariaSegunda.objects.select_related('cuarto').all()
+        
+        # Obtiene todas las instancias de ComisariaTercera, con relaciones pre-cargadas para mejorar el rendimiento.
         comisarias_tercera = ComisariaTercera.objects.select_related('cuarto').all()
+        
+        # Obtiene todas las instancias de ComisariaCuarta, con relaciones pre-cargadas para mejorar el rendimiento.
         comisarias_cuarta = ComisariaCuarta.objects.select_related('cuarto').all()
+        
+        # Obtiene todas las instancias de ComisariaQuinta, con relaciones pre-cargadas para mejorar el rendimiento.
         comisarias_quinta = ComisariaQuinta.objects.select_related('cuarto').all()
 
+        # Asigna el nombre 'Comisaria Primera' a cada instancia de ComisariaPrimera.
         for comisaria in comisarias_primera:
             comisaria.comisaria_nombre = 'Comisaria Primera'
+        
+        # Asigna el nombre 'Comisaria Segunda' a cada instancia de ComisariaSegunda.
         for comisaria in comisarias_segunda:
             comisaria.comisaria_nombre = 'Comisaria Segunda'
+        
+        # Asigna el nombre 'Comisaria Tercera' a cada instancia de ComisariaTercera.
         for comisaria in comisarias_tercera:
             comisaria.comisaria_nombre = 'Comisaria Tercera'
+        
+        # Asigna el nombre 'Comisaria Cuarta' a cada instancia de ComisariaCuarta.
         for comisaria in comisarias_cuarta:
             comisaria.comisaria_nombre = 'Comisaria Cuarta'
+        
+        # Asigna el nombre 'Comisaria Quinta' a cada instancia de ComisariaQuinta.
         for comisaria in comisarias_quinta:
             comisaria.comisaria_nombre = 'Comisaria Quinta'
 
+        # Combina todas las listas de comisarías en una sola lista.
         combined_list = list(comisarias_primera) + list(comisarias_segunda) + \
                         list(comisarias_tercera) + list(comisarias_cuarta) + \
                         list(comisarias_quinta)
 
+        # Si hay una consulta de búsqueda, filtra la lista combinada.
         if query:
+            # Filtra las comisarías en la lista combinada para que coincidan con la consulta.
             combined_list = [comisaria for comisaria in combined_list if self.query_in_comisaria(comisaria, query)]
 
+        # Ordena la lista combinada por la fecha de creación (o actualización), de la más reciente a la más antigua.
         combined_list = sorted(combined_list, key=lambda x: x.created_at, reverse=True)
 
+        # Devuelve la lista combinada y filtrada como el queryset final.
         return combined_list
 
     # Verifica si la consulta coincide con algún campo de la comisaría
     def query_in_comisaria(self, comisaria, query):
+        # Convierte la consulta de búsqueda a minúsculas para una comparación insensible a mayúsculas.
         query_lower = query.lower()
+        
+        # Retorna True si la consulta coincide con alguno de los campos relevantes en la comisaría.
         return (
             (query_lower in comisaria.comisaria_nombre.lower() if comisaria.comisaria_nombre else False) or
             (query_lower in comisaria.cuarto.cuarto.lower() if comisaria.cuarto and comisaria.cuarto.cuarto else False) or
@@ -850,10 +883,18 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
 
     # Añade información adicional al contexto
     def get_context_data(self, **kwargs):
+        # Llama al método original para obtener el contexto predeterminado.
         context = super().get_context_data(**kwargs)
+        
+        # Añade la consulta de búsqueda al contexto.
         context['query'] = self.request.GET.get('q', '')
+        
+        # Añade el valor de paginación al contexto, por defecto 10 elementos por página.
         context['paginate_by'] = self.request.GET.get('items_per_page', 10)
+        
+        # Devuelve el contexto completo para ser utilizado en la plantilla.
         return context
+
     
     
 
