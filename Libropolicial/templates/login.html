@@ -6,31 +6,46 @@
     <title>Inicio de Sesión</title>
     <!-- Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- icono pestaña -->
+    <link rel="shortcut icon" href="{% static 'comisarias/images/fabico.ico' %}" type="image/x-icon">
 </head>
-<body class="bg-gray-100">
-    
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="text-center">
-            <h1 class="text-3xl font-bold mb-4">Bienvenido usuario policial</h1>
+<style>
+    Body{
+        background-image: url("https://w0.peakpx.com/wallpaper/695/807/HD-wallpaper-flag-of-tierra-del-fuego-silk-flag-province-of-argentina-silk-texture-tierra-del-fuego-province-flag-creative-art-tierra-del-fuego-argentina.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        background-color: black;
+    }
+    /* body{
+        background-color: white;
+    } */
+    .blur-background {
+        background-color: transparent; /* Fondo semitransparente */
+        backdrop-filter: blur(10px); /* Aplica el desenfoque al fondo detrás del div */
+    }
+</style>
+<body class="flex mx-auto items-center min-h-screen">
+    <div class="flex mx-auto rounded-lg shadow-md">
+        <div class="blur-background p-6 rounded-lg w-full max-w-md mx-auto">
             <div class="mb-4">
                 <img src="{% static 'comisarias/images/ESCUDO POLICIA.jpeg' %}" alt="Imagen descriptiva" class="rounded-lg shadow-md w-24 mx-auto">
             </div>
-            <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mx-auto">
-                <h1 class="text-2xl font-bold mb-4">Iniciar Sesión</h1>
-                <form method="post" class="space-y-4">
-                    {% csrf_token %}
-                    <div>
-                        <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Ingrese usuario</label>
-                        {{ form.username }}
-                    </div>
-                    <div>
-                        <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Ingrese contraseña</label>
-                        {{ form.password }}
-                    </div>
-                    <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ingresar</button>
-                </form>
-            </div>
-        </div>
+            <h1 class="text-2xl font-bold mb-4">Iniciar Sesión</h1>
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block pb-1 text-sm font-medium text-gray-700">Ingrese usuario</label>
+                    {{ form.username }}
+                </div>
+                <div>
+                    <label for="{{ form.password.id_for_label }}" class="block pb-1 text-sm font-medium text-gray-700">Ingrese contraseña</label>
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ingresar</button>
+            </form>
+        </div>  
     </div>
+
 </body>
 </html>
