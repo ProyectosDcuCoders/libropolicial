@@ -857,7 +857,7 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
     
     
 
-#-------------------------------------------------------------------------------------
+#-------------------------------genera pdf para virma y descarga------------------------------------------------------
 
 def generate_pdf_content(request, comisaria_model, add_signature=False):
     # 1. Obtener la fecha y hora actual
