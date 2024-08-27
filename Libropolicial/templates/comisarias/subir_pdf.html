@@ -13,29 +13,31 @@
     }
 </style>
 
-    <div class="max-w-xl mx-auto mt-10 p-4 bg-gray-100 rounded-lg shadow-lg">
-        <div class="flex flex-col items-start">
-            <div class="flex mx-auto">
-                <i class="fa-solid fa-circle-exclamation" style="color: #ff000d; margin-top: 4px; margin-right: 2px;"></i>
-                <p class="font-semibold">
-                    Firme digitalmente antes de subir el archivo en el siguiente enlace:
-                </p>
-            </div>
-            <a style="color: #447ff5;" class="hover:underline mx-auto" target="_blank"
-            href="https://firmar.gob.ar/firmador/#/">https://firmar.gob.ar/firmador/#/</a>
-        </div>
-        <!-- <div class="flex justify-center">
-            <a class="joberFirma dark:bg-gray-800 dark:text-white p-2 rounded-lg font-semibold  border-2 border-black flex items-center shadow-md" target="_blank"
-                href="https://firmar.gob.ar/firmador/#/">
-                <span class="mr-2">Firma Digital:</span>
-                <img class="" style="width: 200px;" src="https://firmar.gob.ar/firmador/resources/imgs/argentinagob.svg" alt="">
-            </a>
-        </div> -->
-    </div>
+    
     <!-- Dropzone -->
-    <div class="max-w-xl mx-auto mt-10 p-4 bg-gray-100 dark:text-red-500 rounded-lg shadow-lg">
+    <div class="max-w-xl mx-auto mt-10 p-4 bg-gray-100 dark:text-gray-700 rounded-lg shadow-lg">
         
-        <h1 class="text-2xl font-bold mb-4 text-center ">Subir PDF</h1>
+        <h1 class="text-2xl font-bold text-center">Subir PDF</h1>
+        <div class="max-w-xl mx-auto p-4 mb-2 bg-gray-100 rounded-lg shadow-lg">
+            <div class="flex flex-col items-start">
+                <div class="flex mx-auto">
+                    <i class="fa-solid fa-circle-exclamation" style="color: #ff000d; margin-top: 4px; margin-right: 2px;"></i>
+                    <p class="font-semibold text-[#ff000d]">
+                        Firme digitalmente antes de subir el archivo en el siguiente enlace:
+                    </p>
+                </div>
+                <!-- <a style="color: #447ff5;" class="hover:underline mx-auto" target="_blank"
+                href="https://firmar.gob.ar/firmador/#/">https://firmar.gob.ar/firmador/#/</a> -->
+            </div>
+            <div class="flex justify-center text-center">
+                <a class="joberFirma dark:bg-gray-800 dark:text-white w-full p-2 rounded-lg font-semibold  border-2 border-black flex items-center justify-center shadow-md" target="_blank"
+                    href="https://firmar.gob.ar/firmador/#/"
+                    style="width: 80%;">
+                    <span class="mr-2">Firma Digital:</span>
+                    <img class="" style="width: 200px;" src="https://firmar.gob.ar/firmador/resources/imgs/argentinagob.svg" alt="">
+                </a>
+            </div>
+        </div>
         <form id="upload-form" action="{% url 'subir_pdf' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="flex items-center justify-center w-full mb-4">
