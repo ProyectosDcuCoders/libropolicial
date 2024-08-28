@@ -702,8 +702,8 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
                  # Relaciona el registro con el servicio de emergencia actual.
                  servicio_emergencia=servicio,
         
-                 # Relaciona el registro con la instancia de ComisariaPrimera que se está editando o creando.
-                 comisaria_primera=self.object,
+                 # Relaciona el registro con la instancia de ComisariaSegunda que se está editando o creando.
+                 comisaria_segunda=self.object,
         
                  # Define los valores predeterminados para los campos que se van a actualizar o crear.
                  defaults={

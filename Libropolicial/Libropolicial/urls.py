@@ -15,7 +15,10 @@ urlpatterns = [
     path('comisarias/', include('comisarias.urls')),
 
     # Incluye las rutas definidas en 'comisariasriogrande.urls'
-    path('comisarias/', include('comisariasriogrande.urls')),
+   # path('comisarias/', include('comisariasriogrande.urls')),
+
+    # Incluye las rutas definidas en 'comisariasriogrande.urls'
+    path('comisariasriogrande/', include('comisariasriogrande.urls')),
 
     # Incluye las rutas definidas en 'divisioncomunicaciones.urls'
     path('divisioncomunicaciones/', include('divisioncomunicaciones.urls')),
