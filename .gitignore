@@ -22,6 +22,7 @@ var/
 .installed.cfg
 *.egg
 MANIFEST
+/static/css/
 
 # Django
 *.log
