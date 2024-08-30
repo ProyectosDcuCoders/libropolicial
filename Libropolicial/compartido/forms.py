@@ -9,5 +9,5 @@ class CustomLoginForm(AuthenticationForm):
     }))
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'placeholder': 'Ingrese contraseña',
-        'class': 'form-control rounded-md pl-1'
+        'class': 'contra form-control rounded-md pl-1'
     }))

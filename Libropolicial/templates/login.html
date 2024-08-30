@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- icono pestaña -->
     <link rel="shortcut icon" href="{% static 'comisarias/images/fabico.ico' %}" type="image/x-icon">
+    <!-- cdn iconos -->
+    <script src="https://kit.fontawesome.com/b929cb1411.js" crossorigin="anonymous"></script>
 </head>
 <style>
     Body{
@@ -40,12 +42,26 @@
                 </div>
                 <div>
                     <label for="{{ form.password.id_for_label }}" class="block pb-1 text-sm font-medium text-gray-700">Ingrese contraseña</label>
-                    {{ form.password }}
+                    <div class="relative">
+                        {{ form.password }}
+                        <i onclick="ojo()" id="ojo" class="fa-regular fa-eye absolute top-1 right-1 cursor-pointer"></i>
+                    </div>
                 </div>
                 <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ingresar</button>
             </form>
         </div>  
     </div>
-
+    <script>
+        let contra = document.querySelector('.contra');
+        console.log(contra);
+        function ojo(){
+            
+                if(contra.type == 'password'){
+                    contra.type = 'text';
+                }else{
+                    contra.type = 'password';
+                }
+        }
+    </script>
 </body>
 </html>

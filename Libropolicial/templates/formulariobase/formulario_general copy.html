@@ -7,139 +7,92 @@
 {% endblock %}
 
 {% block content %}
-<style>
-
-</style>
-<div style="width: 70%;" class=" mx-auto mt-4 p-4 dark:text-white">
+<div class="container mx-auto mt-4 p-4 dark:text-white">
     <div class="mt-4">
         {% block back_button %}
         <!-- El botón de "Volver a la lista" se sobrescribirá en cada comisaría -->
         {% endblock %}
     </div>
     <h1 class="text-2xl font-bold mb-4 text-center">Registrar en comisarias</h1>
-    <form method="post" class="dark:text-gray-300" autocomplete="off">
+    <form method="post">
         {% csrf_token %}
-            <div class="grid grid-cols-2 gap-x-4">
-                <div class="">
-                    <!-- BLOQUE 1 -->
-                    <div class="flex gap-x-4 py-1">
-                        <!-- FECHA Y HORA -->
-                        <div class="w-full">
-                            <label for="fecha_hora" class="py-1 block text-gray-700 dark:text-gray-300">Fecha y hora</label>
-                            <input type="datetime-local" id="fecha_hora" 
-                                class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600
-                                text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" 
-                                required value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}" disabled>
-                            <input type="hidden" name="fecha_hora" value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}">
-                        </div>
-                        <!-- CUARTO -->
-                        <div class="w-full">
-                            <label for="{{ form.cuarto.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.cuarto.label }}</label>
-                            {{ form.cuarto }}
-                        </div>
-                    </div>
-                    <!-- "BLOQUE 2" -->
-                    <div class="flex gap-x-4 py-1">
-                        <!-- CODIGO -->
-                        <div class="w-full">
-                            <label for="{{ form.codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.codigo.label }}</label>
-                            {{ form.codigo }}
-                        </div>
-                        <!-- SOLICITANTE -->
-                        <div class="w-full">
-                            <label for="{{ form.solicitante_codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.solicitante_codigo.label }}</label>
-                            {{ form.solicitante_codigo }}
-                        </div>
-                    </div>
-                    <!-- BLOQUE 3 -->
-                    <div class="flex gap-x-4 py-1">
-                        <!-- MOVIL/PATRULLA -->
-                        <div class="w-full">
-                            <label for="{{ form.movil_patrulla.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.movil_patrulla.label }}</label>
-                            <input type="text" name="{{ form.movil_patrulla.name }}" id="{{ form.movil_patrulla.id_for_label }}" class="bg-transparent dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.movil_patrulla.value|default_if_none:'' }}">
-                        </div>
-                        <!-- LUGAR -->
-                        <div class="w-full">
-                            <label for="{{ form.lugar_codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.lugar_codigo.label }}</label>
-                            <input type="text" name="{{ form.lugar_codigo.name }}" id="{{ form.lugar_codigo.id_for_label }}" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.lugar_codigo.value|default_if_none:'' }}">
-                        </div>
-                    </div>
-                    <!-- BLOQUE 4 -->
-                    <div class="flex gap-x-4 py-1">
-                        <!-- A CARGO -->
-                        <div class="w-full">
-                            <label for="{{ form.a_cargo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.a_cargo.label }}</label>
-                            <input type="text" name="{{ form.a_cargo.name }}" id="{{ form.a_cargo.id_for_label }}" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.a_cargo.value|default_if_none:'' }}">
-                        </div>
-                        <!-- SECUNDANTE -->
-                        <div class="w-full">
-                            <label for="{{ form.secundante.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.secundante.label }}</label>
-                            <input type="text" name="{{ form.secundante.name }}" id="{{ form.secundante.id_for_label }}" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.secundante.value|default_if_none:'' }}">
-                        </div>
-                    </div>
-                    <!-- BLOQUE 5 -->
-                    <div class="flex gap-x-4 py-1">
-                        <!-- DEPENDENCIAS SECUNDARIAS -->
-                        <div class="w-full">
-                            <div class=" relative" x-data="{ showDropdown: false }">
-                                <label for="dependencias_secundarias" class="pb-1 block text-gray-700 dark:text-gray-300">{{ form.dependencias_secundarias.label }}</label>
-                                <div @click="showDropdown = !showDropdown" 
-                                    class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
-                                    Dependencias que intervienen
-                                </div>
-                                <div x-show="showDropdown" @click.away="showDropdown = false" 
-                                    class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
-                                    <div class="grid grid-rows-4 gap-2">
-                                        {% for dependencia in form.dependencias_secundarias.field.queryset %}
-                                        <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                            <input type="checkbox" name="dependencias_secundarias" value="{{ dependencia.id }}" 
-                                                class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" {% if dependencia in form.instance.dependencias_secundarias.all %}checked{% endif %}>
-                                            <span class="ml-2 dark:text-gray-300">{{ dependencia }}</span>
-                                        </label>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- ESTADO -->
-                        <div class="w-full">
-                            <label for="{{ form.estado.id_for_label }}" class="block mb-3 text-gray-700 dark:text-gray-300">Estado del código</label>
-                            <label class="relative flex items-center cursor-pointer">
-                                {{ form.estado }}
-                                <div class="w-14 h-7 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white dark:after:bg-gray-800 after:border-gray-300 dark:after:border-gray-700 after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600 hover:peer-checked:bg-indigo-700"></div>
-                                <span id="estado-text" class="ml-3 text-sm font-medium text-gray-600 dark:text-gray-300">Activo</span>
-                            </label>
-                        </div>
-                    </div>
+        <div class="grid gap-4 sm:grid-cols-3">
+            <div class="sm:col-span-1">
+                <label for="fecha_hora" class="block text-gray-700 dark:text-gray-300">Fecha y hora</label>
+                <input type="datetime-local" id="fecha_hora" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" required value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}" disabled>
+                <input type="hidden" name="fecha_hora" value="{{ form.instance.fecha_hora|date:'Y-m-d\\TH:i' }}">
+            </div>
+            <div class="sm:col-span-1">
+                <label for="{{ form.solicitante_codigo.id_for_label }}" class="block text-gray-700 dark:text-gray-300">{{ form.solicitante_codigo.label }}</label>
+                {{ form.solicitante_codigo }}
+            </div>
+            <div class="sm:col-span-1">
+                <label for="{{ form.cuarto.id_for_label }}" class="block text-gray-700 dark:text-gray-300">{{ form.cuarto.label }}</label>
+                {{ form.cuarto }}
+            </div>
+            <div class="sm:col-span-1">
+                <label for="{{ form.codigo.id_for_label }}" class="block text-gray-700 dark:text-gray-300">{{ form.codigo.label }}</label>
+                {{ form.codigo }}
+            </div>
+            <!-- Sección de Dependencias Secundarias -->
+            <div class="sm:col-span-1 relative" x-data="{ showDropdown: false }">
+                <label for="dependencias_secundarias" class="block text-gray-700 dark:text-gray-300">{{ form.dependencias_secundarias.label }}</label>
+                <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
+                    Dependencias Policiales que intervienen
                 </div>
-                <!-- MAPA -->
-                <div class="">
-                    <!-- MAP -->
-                    <div id="map" style="height: 340px; margin-top: 10px;" class="rounded-lg"></div>
-                    <!-- COORDENADAS -->
-                    <div class="flex gap-x-4 py-2">
-                        <!-- LATITUD -->
-                        <div class="w-full">
-                            <label for="id_latitude" class="block text-gray-700 dark:text-gray-300">Latitud</label>
-                            <input type="text" name="latitude" id="id_latitude" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.instance.latitude|default_if_none:'' }}">
-                        </div>
-                        <!-- LONGITUD -->
-                        <div class="w-full">
-                            <label for="id_longitude" class="block text-gray-700 dark:text-gray-300">Longitud</label>
-                            <input type="text" name="longitude" id="id_longitude" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.instance.longitude|default_if_none:'' }}">
-                        </div>
-                        <!-- LIMPIAR -->
-                        <div class="w-full flex items-end">
-                            <button type="button" id="clear-coordinates" class="bg-red-500 text-white w-full py-3 rounded hover:bg-red-700">
-                                Limpiar coordenadas
-                            </button>
-                        </div>
+                <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
+                    <div class="grid grid-cols-4 gap-2">
+                        {% for dependencia in form.dependencias_secundarias.field.queryset %}
+                        <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <input type="checkbox" name="dependencias_secundarias" value="{{ dependencia.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" {% if dependencia in form.instance.dependencias_secundarias.all %}checked{% endif %}>
+                            <span class="ml-2 dark:text-gray-300">{{ dependencia }}</span>
+                        </label>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-            
 
-            <div class="" >
+            <div class="sm:col-span-1">
+                <label for="{{ form.movil_patrulla.id_for_label }}" class="block text-gray-700 dark:text-gray-300">{{ form.movil_patrulla.label }}</label>
+                <input type="text" name="{{ form.movil_patrulla.name }}" id="{{ form.movil_patrulla.id_for_label }}" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.movil_patrulla.value|default_if_none:'' }}">
+            </div>
+            <div class="sm:col-span-1">
+                <label for="{{ form.a_cargo.id_for_label }}" class="block text-gray-700 dark:text-gray-300">{{ form.a_cargo.label }}</label>
+                <input type="text" name="{{ form.a_cargo.name }}" id="{{ form.a_cargo.id_for_label }}" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.a_cargo.value|default_if_none:'' }}">
+            </div>
+            <div class="sm:col-span-1">
+                <label for="{{ form.secundante.id_for_label }}" class="block text-gray-700 dark:text-gray-300">{{ form.secundante.label }}</label>
+                <input type="text" name="{{ form.secundante.name }}" id="{{ form.secundante.id_for_label }}" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.secundante.value|default_if_none:'' }}">
+            </div>
+            <div class="sm:col-span-1">
+                <label for="{{ form.lugar_codigo.id_for_label }}" class="block text-gray-700 dark:text-gray-300">{{ form.lugar_codigo.label }}</label>
+                <input type="text" name="{{ form.lugar_codigo.name }}" id="{{ form.lugar_codigo.id_for_label }}" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.lugar_codigo.value|default_if_none:'' }}">
+            </div>
+            <div class="">
+                <label for="{{ form.estado.id_for_label }}" class="block mb-3 text-gray-700 dark:text-gray-300">Estado del código</label>
+                <label class="relative flex items-center cursor-pointer">
+                    {{ form.estado }}
+                    <div class="w-14 h-7 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white dark:after:bg-gray-800 after:border-gray-300 dark:after:border-gray-700 after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-indigo-600 hover:peer-checked:bg-indigo-700"></div>
+                    <span id="estado-text" class="ml-3 text-sm font-medium text-gray-600 dark:text-gray-300">Activo</span>
+                </label>
+            </div>
+
+            <div class="sm:col-span-3">
+                <!-- Mapa de Leaflet -->
+                <div id="map" style="height: 300px; margin-top: 10px;"></div>
+
+                <!-- Campos visibles para guardar las coordenadas -->
+                <label for="id_latitude" class="block text-gray-700 dark:text-gray-300">Latitud</label>
+                <input type="text" name="latitude" id="id_latitude" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.instance.latitude|default_if_none:'' }}">
+
+                <label for="id_longitude" class="block text-gray-700 dark:text-gray-300">Longitud</label>
+                <input type="text" name="longitude" id="id_longitude" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" value="{{ form.instance.longitude|default_if_none:'' }}">
+
+                <!-- Botón para limpiar las coordenadas -->
+                <button type="button" id="clear-coordinates" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 mt-2">Limpiar coordenadas</button>
+            </div>
+
+            <div class="sm:col-span-3">
                 <label for="{{ form.descripcion.id_for_label }}" class="block text-gray-700 dark:text-white">{{ form.descripcion.label }}</label>
                 {{ form.descripcion }}
             </div>
