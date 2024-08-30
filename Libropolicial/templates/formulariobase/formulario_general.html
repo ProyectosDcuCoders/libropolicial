@@ -11,13 +11,16 @@
 
 </style>
 <div style="width: 70%;" class=" mx-auto mt-4 p-4 dark:text-white">
-    <div class="mt-4">
-        {% block back_button %}
-        <!-- El botón de "Volver a la lista" se sobrescribirá en cada comisaría -->
-        {% endblock %}
-    </div>
     <h1 class="text-2xl font-bold mb-4 text-center">Registrar en comisarias</h1>
     <form method="post" class="dark:text-gray-300" autocomplete="off">
+        <div class="flex w-full items-center gap-x-4">
+            <div class="">
+                <button type="submit" class="bg-blue-500 text-white px-6 py-1 rounded hover:bg-blue-700 w-full">Guardar</button>
+            </div>
+            <div class="">
+                <button class="bg-green-500 text-white px-6 py-1 rounded hover:bg-green-700 w-full" href="/"> Volver</button>
+            </div>
+        </div>
         {% csrf_token %}
             <!-- TOP -->
             <div class="grid grid-cols-2 gap-x-4">
@@ -140,18 +143,23 @@
             </div>
             <!-- MID -->
             <div class="" >
-                <label for="{{ form.descripcion.id_for_label }}" class="block text-gray-700 dark:text-white">{{ form.descripcion.label }}</label>
+                <label for="{{ form.descripcion.id_for_label }}" class="block py-1 text-gray-700 dark:text-white">{{ form.descripcion.label }}:</label>
                 {{ form.descripcion }}
             </div>
             <!-- BOTTOM -->
-            <div class="">
+            <div class="mt-4">
                  <!-- DEP ADICIONALES -->
                 <div class="flex gap-x-4">
                     <!-- BOMBEROS -->
-                    <div class="sm:col-span-1 relative" x-data="{ showDropdown: false, selectedServices: {{ detalle_servicios_emergencia }} }">
-                        <label for="servicios_emergencia" class="block text-gray-700 dark:text-gray-300">{{ form.servicios_emergencia.label }}</label>
-                        <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
-                            Seleccionar
+                    <div class="w-full relative" x-data="{ showDropdown: false, selectedServices: {{ detalle_servicios_emergencia }} }">
+                        <label for="servicios_emergencia" class="block text-gray-700 dark:text-gray-300">
+                            {{ form.servicios_emergencia.label }}
+                        </label>
+                        <div @click="showDropdown = !showDropdown" class="flex justify-between bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
+                            <span>Seleccionar</span>
+                            <span :class="showDropdown ? 'rotate-180' : 'rotate-0'" class="ml-2 transition-transform duration-200">
+                                ▼
+                            </span>
                         </div>
                         <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
                             <div class="grid grid-rows-3 gap-2">
@@ -165,31 +173,44 @@
                                 {% endfor %}
                             </div>
                         </div>
-
                         <!-- Campos visibles para detalles de servicios de emergencia -->
                         <div class="sm:col-span-3 mt-6">
                             <template x-for="service in selectedServices" :key="service.servicio_emergencia_id">
                                 <div>
-                                    <label :for="'numero_movil_bomberos_' + service.servicio_emergencia_id" class="block text-gray-700 dark:text-gray-300">Número móvil Bomberil<span x-text="service.nombre"></span></label>
-                                    <input type="text" :name="'numero_movil_bomberos_' + service.servicio_emergencia_id" :id="'numero_movil_bomberos_' + service.servicio_emergencia_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="service.numero_movil_bomberos">
+                                    <label :for="'numero_movil_bomberos_' + service.servicio_emergencia_id" class="block text-gray-700 dark:text-gray-300">
+                                        Número móvil Bomberil<span x-text="service.nombre"></span>
+                                    </label>
+                                    <input type="text" :name="'numero_movil_bomberos_' + service.servicio_emergencia_id" :id="'numero_movil_bomberos_' + service.servicio_emergencia_id" 
+                                        class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" 
+                                        x-model="service.numero_movil_bomberos">
 
-                                    <label :for="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" class="block text-gray-700 dark:text-gray-300">Nombre a cargo Bomberil <span x-text="service.nombre"></span></label>
-                                    <input type="text" :name="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" :id="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" x-model="service.nombre_a_cargo_bomberos">
+                                    <label :for="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" class="block text-gray-700 dark:text-gray-300">
+                                        Nombre a cargo Bomberil <span x-text="service.nombre"></span>
+                                    </label>
+                                    <input type="text" :name="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" :id="'nombre_a_cargo_bomberos_' + service.servicio_emergencia_id" 
+                                        class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 mb-2" 
+                                        x-model="service.nombre_a_cargo_bomberos">
                                 </div>
                             </template>
                         </div>
                     </div>
                     <!-- HRU -->
-                    <div class="sm:col-span-1 relative" x-data="{ showDropdown: false, selectedInstituciones: {{ detalle_instituciones_hospitalarias }} }">
+                    <div class="w-full relative" x-data="{ showDropdown: false, selectedInstituciones: {{ detalle_instituciones_hospitalarias }} }">
                         <label for="instituciones_hospitalarias" class="block text-gray-700 dark:text-gray-300">{{ form.instituciones_hospitalarias.label }}</label>
-                        <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
-                            Seleccionar
+                        <div @click="showDropdown = !showDropdown" class="flex justify-between bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
+                            <span>Seleccionar</span>
+                            <span :class="showDropdown ? 'rotate-180' : 'rotate-0'" class="ml-2 transition-transform duration-200">
+                                ▼
+                            </span>
                         </div>
-                        <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
+                        <div x-show="showDropdown" @click.away="showDropdown = false" 
+                            class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-2" 
+                            style="display: none;">
                             <div class="grid grid-rows-3 gap-2">
                                 {% for institucion in form.instituciones_hospitalarias.field.queryset %}
-                                <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input type="checkbox" name="instituciones_hospitalarias" value="{{ institucion.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" 
+                                <label class="flex items-center cursor-pointer py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <input type="checkbox" name="instituciones_hospitalarias" value="{{ institucion.id }}" 
+                                        class="form-checkbox px-1 ml-2 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" 
                                         @change="if ($event.target.checked) { if (!selectedInstituciones.some(i => i.institucion_hospitalaria_id == {{ institucion.id }})) { selectedInstituciones.push({id: null, institucion_hospitalaria_id: {{ institucion.id }}, numero_movil_hospital: '', nombre_a_cargo_hospital: ''}); } } else { selectedInstituciones = selectedInstituciones.filter(i => i.institucion_hospitalaria_id != {{ institucion.id }}); }"
                                         :checked="selectedInstituciones.some(i => i.institucion_hospitalaria_id == {{ institucion.id }})">
                                     <span class="ml-2 dark:text-gray-300">{{ institucion }}</span>
@@ -212,17 +233,21 @@
                         </div>
                     </div>
                     <!-- MUNIPAS -->
-                    <div class="sm:col-span-1 relative" x-data="{ showDropdown: false, selectedDependenciasMunicipales: {{ detalle_dependencias_municipales }} }">
+                    <div class="w-full relative" x-data="{ showDropdown: false, selectedDependenciasMunicipales: {{ detalle_dependencias_municipales }} }">
                         <label for="dependencias_municipales" class="block text-gray-700 dark:text-gray-300">{{ form.dependencias_municipales.label }}</label>
-                        <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
-                            Seleccionar
+                        <div @click="showDropdown = !showDropdown" class="flex justify-between bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
+                            <span>Seleccionar</span>
+                            <span :class="showDropdown ? 'rotate-180' : 'rotate-0'" class="ml-2 transition-transform duration-200">
+                                ▼
+                            </span>
                         </div>
                         <div x-show="showDropdown" @click.away="showDropdown = false" 
-                            class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
+                            class="absolute w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-2" style="display: none;">
                             <div class="grid grid-rows-2 gap-2">
                                 {% for dependencia in form.dependencias_municipales.field.queryset %}
-                                <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input type="checkbox" name="dependencias_municipales" value="{{ dependencia.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" 
+                                <label class="flex items-center cursor-pointer py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <input type="checkbox" name="dependencias_municipales" value="{{ dependencia.id }}" 
+                                        class="form-checkbox px-1 ml-2 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" 
                                         @change="if ($event.target.checked) { if (!selectedDependenciasMunicipales.some(d => d.dependencia_municipal_id == {{ dependencia.id }})) { selectedDependenciasMunicipales.push({id: null, dependencia_municipal_id: {{ dependencia.id }}, numero_movil_municipal: '', nombre_a_cargo_municipal: ''}); } } else { selectedDependenciasMunicipales = selectedDependenciasMunicipales.filter(d => d.dependencia_municipal_id != {{ dependencia.id }}); }"
                                         :checked="selectedDependenciasMunicipales.some(d => d.dependencia_municipal_id == {{ dependencia.id }})">
                                     <span class="ml-2 dark:text-gray-300">{{ dependencia }}</span>
@@ -230,7 +255,6 @@
                                 {% endfor %}
                             </div>
                         </div>
-
                         <!-- Campos visibles para detalles de dependencias municipales -->
                         <div class="sm:col-span-3 mt-6">
                             <template x-for="dependencia in selectedDependenciasMunicipales" :key="dependencia.dependencia_municipal_id">
@@ -245,16 +269,22 @@
                         </div>
                     </div>
                     <!-- PROVINCIALES -->
-                    <div class="sm:col-span-1 relative" x-data="{ showDropdown: false, selectedDependenciasProvinciales: {{ detalle_dependencias_provinciales }} }">
+                    <div class="w-full relative" x-data="{ showDropdown: false, selectedDependenciasProvinciales: {{ detalle_dependencias_provinciales }} }">
                         <label for="dependencias_provinciales" class="block text-gray-700 dark:text-gray-300">{{ form.dependencias_provinciales.label }}</label>
-                        <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
-                            Seleccionar
+                        <div @click="showDropdown = !showDropdown" class="flex justify-between bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
+                            <span>Seleccionar</span>
+                            <span :class="showDropdown ? 'rotate-180' : 'rotate-0'" class="ml-2 transition-transform duration-200">
+                                ▼
+                            </span>
                         </div>
-                        <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
+                        <div x-show="showDropdown" @click.away="showDropdown = false" 
+                            class="absolute w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-2" 
+                            style="display: none;">
                             <div class="grid grid-rows-3 gap-2">
                                 {% for dependencia in form.dependencias_provinciales.field.queryset %}
-                                <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input type="checkbox" name="dependencias_provinciales" value="{{ dependencia.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" 
+                                <label class="cursor-pointer flex items-center rounded-lg py-1 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <input type="checkbox" name="dependencias_provinciales" value="{{ dependencia.id }}" 
+                                        class="form-checkbox px-1 ml-2 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" 
                                         @change="if ($event.target.checked) { if (!selectedDependenciasProvinciales.some(d => d.dependencia_provincial_id == {{ dependencia.id }})) { selectedDependenciasProvinciales.push({id: null, dependencia_provincial_id: {{ dependencia.id }}, numero_movil_provincial: '', nombre_a_cargo_provincial: ''}); } } else { selectedDependenciasProvinciales = selectedDependenciasProvinciales.filter(d => d.dependencia_provincial_id != {{ dependencia.id }}); }"
                                         :checked="selectedDependenciasProvinciales.some(d => d.dependencia_provincial_id == {{ dependencia.id }})">
                                     <span class="ml-2 dark:text-gray-300">{{ dependencia }}</span>
@@ -262,7 +292,6 @@
                                 {% endfor %}
                             </div>
                         </div>
-
                         <!-- Campos visibles para detalles de dependencias provinciales -->
                         <div class="sm:col-span-3 mt-6">
                             <template x-for="dependencia in selectedDependenciasProvinciales" :key="dependencia.dependencia_provincial_id">
@@ -277,16 +306,22 @@
                         </div>
                     </div>
                     <!-- COD SECUNDARIOS -->
-                    <div class="sm:col-span-1 relative" x-data="{ showDropdown: false }">
+                    <div class="w-full relative" x-data="{ showDropdown: false }">
                         <label for="codigos_secundarios" class="block text-gray-700 dark:text-gray-300">{{ form.codigos_secundarios.label }}</label>
-                        <div @click="showDropdown = !showDropdown" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
-                            Seleccionar códigos secundarios
+                        <div @click="showDropdown = !showDropdown" class="flex justify-between bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 cursor-pointer">
+                            <span>Seleccionar</span>
+                            <span :class="showDropdown ? 'rotate-180' : 'rotate-0'" class="ml-2 transition-transform duration-200">
+                                ▼
+                            </span>
                         </div>
-                        <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
-                            <div class="grid grid-cols-4 gap-2 h-28 overflow-y-scroll">
+                        <div x-show="showDropdown" @click.away="showDropdown = false" 
+                            class="absolute w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-1" 
+                            style="display: none;">
+                            <div class="grid grid-cols-4 gap-1 h-[150px] overflow-y-scroll">
                                 {% for codigo in form.codigos_secundarios.field.queryset %}
-                                <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input type="checkbox" name="codigos_secundarios" value="{{ codigo.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" {% if codigo in form.instance.codigos_secundarios.all %}checked{% endif %}>
+                                <label class="cursor-pointer rounded-lg w-fit pl-1 pr-2 flex items-center hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <input type="checkbox" name="codigos_secundarios" value="{{ codigo.id }}" 
+                                        class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" {% if codigo in form.instance.codigos_secundarios.all %}checked{% endif %}>
                                     <span class="ml-2 dark:text-gray-300">{{ codigo }}</span>
                                 </label>
                                 {% endfor %}
@@ -295,21 +330,18 @@
                     </div>
                 </div>
                 <!-- TAREAS JUDICIALES -->
-                <div class="sm:col-span-3">
+                <div class="">
                     <label for="{{ form.tareas_judiciales.id_for_label }}" class="block text-gray-700 dark:text-gray-300">{{ form.tareas_judiciales.label }}</label>
                     <textarea name="{{ form.tareas_judiciales.name }}" id="{{ form.tareas_judiciales.id_for_label }}" class="bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3">{{ form.tareas_judiciales.value|default_if_none:'' }}</textarea>
                 </div>
             </div>
-            <!-- <div class="sm:col-span-3">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Guardar</button>
-            </div> -->
         </div>
     </form>
     <!-- Botón "Volver a la lista" -->
-    <div class="mt-4">
+    <!-- <div class="mt-4">
         {% block green_button %}
         <!-- El botón de "Volver a la lista" se sobrescribirá en cada comisaría -->
         {% endblock %}
-    </div>
+    </div> -->
 </div>
 {% endblock %}
