@@ -179,7 +179,7 @@ CKEDITOR_CONFIGS = {
             {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
             {'name': 'document', 'items': ['Source']}
         ],
-        'height': 300,
+        'height': 150,
         'width': 'auto',
     },
 }
