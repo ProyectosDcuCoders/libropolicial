@@ -49,14 +49,13 @@
                     <!-- "BLOQUE 2" -->
                     <div class="flex gap-x-4 py-1">
                         <!-- CODIGO -->
-                        <div class="w-full">
-                            <label for="{{ form.codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.codigo.label }}</label>
-                            {{ form.codigo }}
-                            {% if form.codigo.value %}
-                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                    Nombre del Código: {{ form.instance.codigo.nombre_codigo }}
-                                </p>
-                            {% endif %}
+                        <div class="w-full">                          
+                            <div class="w-full">
+                                <label for="{{ form.codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.codigo.label }}</label>
+                                {{ form.codigo }}
+                               
+                            </div>
+                            
                         </div>
                         
                         <!-- SOLICITANTE -->

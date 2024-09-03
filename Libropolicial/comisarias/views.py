@@ -22,7 +22,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, CreateView, UpdateView, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView,DetailView, TemplateView
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -35,6 +35,9 @@ from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraF
 from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, DependenciasSecundarias, CodigoPolicialUSH, DetalleServicioEmergencia, DetalleInstitucionHospitalaria, DetalleDependenciaMunicipal, DetalleDependenciaProvincial, UploadedPDF
 from compartido.utils import user_is_in_group
 import base64
+
+
+
 
 #------------------funcion par de realizar las firmas--------------------------------------------
 
@@ -483,6 +486,15 @@ class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
 
         # Llama al método form_valid de la clase base para completar la operación.
         return super().form_valid(form)
+
+#--------------------------viesta para ver todos completo cada regitro--------
+
+
+
+class ComisariaPrimeraDetailView(DetailView):
+    model = ComisariaPrimera
+    template_name = 'comisarias/primera/comisaria_primera_detail.html'
+    context_object_name = 'record'
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------

@@ -11,13 +11,14 @@ from .views import (
     ComisariaCuartaListView, ComisariaQuintaListView, ComisariaPrimeraCreateView,
     ComisariaSegundaCreateView, ComisariaTerceraCreateView, ComisariaCuartaCreateView,
     ComisariaQuintaCreateView, ComisariasCompletaListView, ComisariaPrimeraUpdateView,
-    ComisariaSegundaUpdateView, generate_comisaria_primera_pdf_download_previous_day  # <-- Asegúrate de incluir esta línea
+    ComisariaSegundaUpdateView,ComisariaPrimeraDetailView, generate_comisaria_primera_pdf_download_previous_day  # <-- Asegúrate de incluir esta línea
 )
 
 urlpatterns = [
      path('primera/', ComisariaPrimeraListView.as_view(), name='comisaria_primera_list'),
     path('primera/create/', ComisariaPrimeraCreateView.as_view(), name='comisaria_primera_create'),
     path('primera/edit/<int:pk>/', ComisariaPrimeraUpdateView.as_view(), name='comisaria_primera_edit'),
+    path('comisarias/primera/detalle/<int:pk>/', ComisariaPrimeraDetailView.as_view(), name='comisaria_primera_detail'),
     path('primera/reporte/view/', generate_comisaria_primera_pdf_view, name='generate_comisaria_primera_pdf_view'),
     path('primera/reporte/download/', generate_comisaria_primera_pdf_download, name='generate_comisaria_primera_pdf_download'),
     path('comisarias/primera/descargar-dia-anterior/', generate_comisaria_primera_pdf_download_previous_day, name='generate_comisaria_primera_pdf_download_previous_day'),  # <-- Esta es la ruta que debes agregar
