@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            font-size: 12px;
+        }
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .escudo {
+            width: 60px; /* Ajusta el tamaño del escudo aquí */
+            height: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Escudo de la Policía centrado -->
+    <div class="header">
+        <img src="{{ image_path }}" alt="Escudo de la Policía" class="escudo">
+        <br>
+        Libro de Guardia {{ comisaria_name }}
+    </div>
+
+    <!-- Resto del contenido -->
+    {% for registro in registros %}
+    <div class="registro">
+        <table>
+            <tr>
+                <td><strong>Estado del Código:</strong> {{ registro.estado|yesno:"Activo,Finalizado" }}</td>
+                <td><strong>Fecha y hora del Código:</strong> {{ registro.fecha_hora|date:"d/m/Y H:i:s" }}</td>
+                <td><strong>Última actualización del Código:</strong> {{ registro.updated_at|date:"d/m/Y H:i:s" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Código:</strong> {% if registro.codigo %}{{ registro.codigo.codigo }}{% else %}S/N{% endif %}</td>
+                <td><strong>Guardia:</strong> {% if registro.cuarto %}{{ registro.cuarto.cuarto }}{% else %}N/A{% endif %}</td>
+                <td><strong>Móvil Patrulla:</strong> {% if registro.movil_patrulla %}{{ registro.movil_patrulla }}{% else %}N/A{% endif %}</td>
+            </tr>
+            <tr>
+                <td><strong>A Cargo:</strong> {% if registro.a_cargo %}{{ registro.a_cargo }}{% else %}N/A{% endif %}</td>
+                <td><strong>Secundante:</strong> {% if registro.secundante %}{{ registro.secundante }}{% else %}N/A{% endif %}</td>
+                <td><strong>Lugar del Código:</strong> {% if registro.lugar_codigo %}{{ registro.lugar_codigo }}{% else %}N/A{% endif %}</td>
+            </tr>
+        </table>
+        <div><strong>Descripción:</strong> {{ registro.descripcion|safe }}</div>
+        <div><strong>Instituciones Intervinientes:</strong> {% if registro.instituciones_intervinientes %}{{ registro.instituciones_intervinientes }}{% else %}N/A{% endif %}</div>
+        <div><strong>Tareas Judiciales:</strong> {% if registro.tareas_judiciales %}{{ registro.tareas_judiciales }}{% else %}N/A{% endif %}</div>
+        {% if registro.firmas %}
+        <div class="signature">Firmado por: {{ registro.firmas }}</div>
+        {% endif %}
+        <div class="line-separator">-</div>
+    </div>
+    {% endfor %}
+
+    <!-- Información de pie de página -->
+    <div class="footer">
+        {{ comisaria_name }}. Descargado por: {{ username }}. Fecha y hora: {{ now|date:"d/m/Y H:i:s" }}
+    </div>
+
+</body>
+</html>

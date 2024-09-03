@@ -19,6 +19,11 @@
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://unpkg.com/htmx.org@1.4.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2" defer></script>
+
+    <!-- Incluye moment.js y el plugin para DataTables esto ayuda para q el dtatable se ordene de forma correcta en desc respete este formato dd/mm/aa h:m:s -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.11.3/sorting/datetime-moment.js"></script>
+
     <!-- icono pestaña -->
     <link rel="shortcut icon" href="{% static 'comisarias/images/fabico.ico' %}" type="image/x-icon">
     <!-- cdn iconos -->
@@ -185,6 +190,8 @@
     <!-- DATATABLE COMISARIAS -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Registra el formato de fecha para DataTables
+            $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
             // Inicializa el DataTable
             const table = $('#comisarias-table').DataTable({
                 paging: true,
@@ -452,7 +459,6 @@
               }).catch(error => console.error('Error:', error));
         });
     </script>
-    
     
 </body>
 <script>

@@ -13,6 +13,11 @@
             font-size: 16px;
             margin-bottom: 20px;
         }
+        .header p {
+            font-size: 8px; /* Reducir el tamaño de la fuente de las leyendas */
+            margin: 0; /* Eliminar márgenes adicionales */
+            padding: 0; /* Eliminar el padding para que quede ajustado */
+        }
         .registro {
             margin-bottom: 20px;
         }
@@ -48,11 +53,13 @@
 <body>
 
     <div class="header">
-        Libro de Guardia {{ comisaria_name }}
+        <img src="data:image/jpeg;base64,{{ escudo_base64 }}" alt="Escudo Policial" style="width: 100px; height: auto;">
+        <p>“2024 - 30° Aniversario de la Disposición Transitoria Primera de la Constitución Nacional de 1994”</p>
         <br>
-        
+        Libro de Guardia {{ comisaria_name }}
     </div>
 
+    <!-- Aquí va el contenido principal del PDF, como las tablas y registros -->
     {% for registro in registros %}
     <div class="registro">
         <table>
