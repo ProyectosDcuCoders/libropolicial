@@ -6,7 +6,7 @@ from .views import (
     generate_comisaria_tercera_pdf_view, generate_comisaria_tercera_pdf_download,
     generate_comisaria_cuarta_pdf_view, generate_comisaria_cuarta_pdf_download,
     generate_comisaria_quinta_pdf_view, generate_comisaria_quinta_pdf_download,
-    sign_comisaria_primera, sign_comisaria_segunda,subir_pdf, ver_pdfs,
+    sign_comisaria_primera, sign_comisaria_segunda,subir_pdf, ver_pdfs, mostrar_pdf,
     ComisariaPrimeraListView, ComisariaSegundaListView, ComisariaTerceraListView,
     ComisariaCuartaListView, ComisariaQuintaListView, ComisariaPrimeraCreateView,
     ComisariaSegundaCreateView, ComisariaTerceraCreateView, ComisariaCuartaCreateView,
@@ -24,6 +24,7 @@ urlpatterns = [
     path('primera/firmar/<int:pk>/', sign_comisaria_primera, name='comisaria_primera_sign'),
     path('subir-pdf/', subir_pdf, name='subir_pdf'),
     path('ver-pdfs/', ver_pdfs, name='ver_pdfs'),  # Nueva URL para ver los PDFs
+    path('mostrar-pdf/<int:pdf_id>/', mostrar_pdf, name='mostrar_pdf'),
 
     path('segunda/', ComisariaSegundaListView.as_view(), name='comisaria_segunda_list'),
     path('segunda/nuevo/', ComisariaSegundaCreateView.as_view(), name='comisaria_segunda_create'),

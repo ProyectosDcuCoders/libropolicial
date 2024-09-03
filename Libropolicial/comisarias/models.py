@@ -15,9 +15,10 @@ class UploadedPDF(models.Model):
 # Clase para manejar códigos policiales de Ushuaia.
 class CodigoPolicialUSH(models.Model):
     codigo = models.CharField(max_length=10)  # Campo para almacenar un código, con un máximo de 10 caracteres.
-
+    nombre_codigo = models.CharField(max_length=255, null=True, blank=True)  # Nuevo campo agregado que acepta nulos
+    
     def __str__(self):
-        return self.codigo  # Define la representación en cadena del objeto, mostrando el código.
+        return f"{self.codigo} - {self.nombre_codigo}"  # Define la representación en cadena del objeto, mostrando el código.
 
 # Clase para manejar códigos secundarios.
 class CodigosSecundarios(models.Model):

@@ -34,6 +34,7 @@ from Libropolicial.settings import MEDIA_ROOT
 from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, CustomLoginForm
 from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, DependenciasSecundarias, CodigoPolicialUSH, DetalleServicioEmergencia, DetalleInstitucionHospitalaria, DetalleDependenciaMunicipal, DetalleDependenciaProvincial, UploadedPDF
 from compartido.utils import user_is_in_group
+import base64
 
 #------------------funcion par de realizar las firmas--------------------------------------------
 
@@ -917,13 +918,23 @@ def generate_pdf_content(request, comisaria_model, add_signature=False):
     # 4. Cargar la plantilla HTML que se usará para generar el PDF
     template = get_template('comisarias/comisarias_pdf_template.html')
 
+    
+    # Convierte la imagen a base64
+    escudo_path = os.path.join(settings.BASE_DIR, 'comisarias', 'static', 'comisarias', 'images', 'ESCUDO POLICIA.jpeg')
+    with open(escudo_path, "rb") as img_file:
+        escudo_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+    
+    
+
     # 5. Preparar el contexto que se pasará a la plantilla
     context = {
         'registros': registros,  # Los registros filtrados del día
         'comisaria_name': comisaria_model._meta.verbose_name.title(),  # Nombre legible de la comisaría
         'add_signature': add_signature,  # Indicador de si se debe agregar la firma
         'username': request.user.get_full_name(),  # Nombre completo del usuario que genera el PDF
-        'now': now  # Fecha y hora actual
+        'now': now,  # Fecha y hora actual
+        'escudo_base64': escudo_base64,  # Pasar la imagen en base64 al contexto
+       
     }
 
     # 6. Renderizar la plantilla HTML con el contexto proporcionado
@@ -1031,6 +1042,8 @@ def generate_comisaria_primera_pdf_download_previous_day(request):
     # y lo devolverá como una respuesta HTTP.
     return generate_pdf_for_specific_date(request, ComisariaPrimera, previous_day, filename, add_signature=add_signature)
 
+
+
 # Función para generar un PDF para una fecha específica
 def generate_pdf_for_specific_date(request, comisaria_model, specific_date, filename, add_signature=False):
     # Define el inicio del día específico (00:00:00.000).
@@ -1049,13 +1062,19 @@ def generate_pdf_for_specific_date(request, comisaria_model, specific_date, file
     # Carga la plantilla HTML que se utilizará para renderizar el PDF.
     template = get_template('comisarias/comisarias_pdf_template.html')
     
+    # Convierte la imagen a base64
+    escudo_path = os.path.join(settings.BASE_DIR, 'comisarias', 'static', 'comisarias', 'images', 'ESCUDO POLICIA.jpeg')
+    with open(escudo_path, "rb") as img_file:
+        escudo_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+    
     # Crea un diccionario de contexto con los datos necesarios para renderizar la plantilla HTML.
     context = {
         'registros': registros,
         'comisaria_name': comisaria_model._meta.verbose_name.title(),
         'add_signature': add_signature,
         'username': request.user.get_full_name(),
-        'now': specific_date
+        'now': specific_date,
+        'escudo_base64': escudo_base64,  # Incluir la imagen en base64 en el contexto
     }
     
     # Renderiza la plantilla HTML utilizando el contexto proporcionado, generando
@@ -1077,6 +1096,7 @@ def generate_pdf_for_specific_date(request, comisaria_model, specific_date, file
         # Si hubo un error en la generación del PDF, devuelve una respuesta HTTP
         # con un mensaje de error y un estado HTTP 500 (Internal Server Error).
         return HttpResponse('Error al generar el PDF', status=500)
+
 
 #------------------------------------esta funcion se encarga de subir el pdf al dopzonde despues de la firma digital-------------------------------------------------------------
 
@@ -1121,8 +1141,17 @@ def subir_pdf(request):
     # Si la solicitud no es POST, renderiza la plantilla 'subir_pdf.html' para mostrar el formulario de subida
     return render(request, 'comisarias/subir_pdf.html')
 
-#-----------------------------------funcion para ver todos los registros--------------------------------------------------------------
+#-----------------------------------funcion para ver todos los registros  de los pdf--------------------------------------------------------------
 
+
+#def ver_pdfs(request):
+    # Obtiene todos los registros de PDF almacenados en la base de datos
+ #   pdfs = UploadedPDF.objects.all()
+    
+    # Renderiza la plantilla 'ver_pdfs.html' y pasa los registros de PDF al contexto
+   # return render(request, 'comisarias/ver_pdfs.html', {'pdfs': pdfs})
+
+from django.http import FileResponse
 
 def ver_pdfs(request):
     # Obtiene todos los registros de PDF almacenados en la base de datos
@@ -1130,6 +1159,22 @@ def ver_pdfs(request):
     
     # Renderiza la plantilla 'ver_pdfs.html' y pasa los registros de PDF al contexto
     return render(request, 'comisarias/ver_pdfs.html', {'pdfs': pdfs})
+
+def mostrar_pdf(request, pdf_id):
+    # Obtiene el objeto UploadedPDF por ID
+    pdf = UploadedPDF.objects.get(id=pdf_id)
+    
+    # Abre el archivo desde el sistema de archivos
+    pdf_path = pdf.file.path
+    response = FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
+    
+    # Asegúrate de que el PDF se abra en el navegador en lugar de descargarse
+    response['Content-Disposition'] = 'inline; filename="%s"' % pdf.file.name
+    
+    return response
+
+
+
 
 
 

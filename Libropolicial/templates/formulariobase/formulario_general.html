@@ -12,14 +12,18 @@
 </style>
 <div style="width: 70%;" class=" mx-auto mt-4 p-4 dark:text-white">
     <h1 class="text-2xl font-bold mb-4 text-center">Registrar en comisarias</h1>
+   <!-- <div class="">
+        <button class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-1 rounded  w-full" href="/"> Volver</button>
+    </div>-->
+        {% block back_button %}
+        <!-- El botón de "Volver a la lista" se sobrescribirá en cada comisaría -->
+        {% endblock %}
     <form method="post" class="dark:text-gray-300" autocomplete="off">
         <div class="flex w-full items-center gap-x-4">
             <div class="">
                 <button type="submit" class="bg-blue-500 text-white px-6 py-1 rounded hover:bg-blue-700 w-full">Guardar</button>
             </div>
-            <div class="">
-                <button class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-1 rounded  w-full" href="/"> Volver</button>
-            </div>
+            
         </div>
         {% csrf_token %}
             <!-- TOP -->
@@ -48,7 +52,13 @@
                         <div class="w-full">
                             <label for="{{ form.codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.codigo.label }}</label>
                             {{ form.codigo }}
+                            {% if form.codigo.value %}
+                                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                    Nombre del Código: {{ form.instance.codigo.nombre_codigo }}
+                                </p>
+                            {% endif %}
                         </div>
+                        
                         <!-- SOLICITANTE -->
                         <div class="w-full">
                             <label for="{{ form.solicitante_codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.solicitante_codigo.label }}</label>
@@ -163,7 +173,7 @@
                             </span>
                         </div>
                         <div x-show="showDropdown" @click.away="showDropdown = false" class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-4" style="display: none;">
-                            <div class="grid grid-rows-3 gap-2">
+                            <div class="grid grid-cols-1 gap-1 h-[150px] overflow-y-scroll">
                                 {% for servicio in form.servicios_emergencia.field.queryset %}
                                 <label class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <input type="checkbox" name="servicios_emergencia" value="{{ servicio.id }}" class="form-checkbox dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" 
@@ -207,7 +217,7 @@
                         <div x-show="showDropdown" @click.away="showDropdown = false" 
                             class="absolute mt-2 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-2" 
                             style="display: none;">
-                            <div class="grid grid-rows-3 gap-2">
+                            <div class="grid grid-cols-1 gap-1 h-[150px] overflow-y-scroll">
                                 {% for institucion in form.instituciones_hospitalarias.field.queryset %}
                                 <label class="flex items-center cursor-pointer py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <input type="checkbox" name="instituciones_hospitalarias" value="{{ institucion.id }}" 
@@ -244,7 +254,7 @@
                         </div>
                         <div x-show="showDropdown" @click.away="showDropdown = false" 
                             class="absolute w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-2" style="display: none;">
-                            <div class="grid grid-rows-2 gap-2">
+                            <div class="grid grid-cols-1 gap-1 h-[150px] overflow-y-scroll">
                                 {% for dependencia in form.dependencias_municipales.field.queryset %}
                                 <label class="flex items-center cursor-pointer py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <input type="checkbox" name="dependencias_municipales" value="{{ dependencia.id }}" 
@@ -281,7 +291,7 @@
                         <div x-show="showDropdown" @click.away="showDropdown = false" 
                             class="absolute w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 p-2" 
                             style="display: none;">
-                            <div class="grid grid-rows-3 gap-2">
+                            <div class="grid grid-cols-1 gap-1 h-[150px] overflow-y-scroll">
                                 {% for dependencia in form.dependencias_provinciales.field.queryset %}
                                 <label class="cursor-pointer flex items-center rounded-lg py-1 hover:bg-gray-100 dark:hover:bg-gray-600">
                                     <input type="checkbox" name="dependencias_provinciales" value="{{ dependencia.id }}" 
@@ -338,9 +348,9 @@
             </div>
         </div>
     </form>
-    <!-- <div class="mt-4">
-        {% block green_button %}
-        <!-- El botón de "Volver a la lista" se sobrescribirá en cada comisaría -->
+    <!--<div class="mt-4">
+        {% block green_button %}--> 
+        <!-- El botón de "Volver a la lista" se sobrescribirá en cada comisaría 
         {% endblock %}
     </div> -->
 </div>
