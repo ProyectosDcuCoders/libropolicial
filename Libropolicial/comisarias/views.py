@@ -1186,15 +1186,7 @@ def mostrar_pdf(request, pdf_id):
     return response
 
 
-
-
-
-
 #---------------------------------------------------------------------------
-
-
-
-
 
 
 # Repite las siguientes funciones para las demás comisarías...
@@ -1208,7 +1200,6 @@ def generate_comisaria_segunda_pdf_download(request):
     return generate_pdf(request, ComisariaSegunda, filename, add_signature=add_signature)
 
 # Continúa con las demás funciones para las comisarías tercera, cuarta y quinta.
-
 
 def generate_comisaria_tercera_pdf_view(request):
     return view_pdf_content(request, ComisariaTercera)
