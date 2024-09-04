@@ -20,7 +20,6 @@ from comisarias.models import (
 
 # Función principal para poblar la base de datos
 def run():
-    # Lista de códigos policiales y secundarios a insertar en la base de datos
     # Lista de códigos policiales y secundarios a insertar en la base de datos junto con sus nombres
     codigos = [
         ('00', 'PERSONA FALLECIDA'),
