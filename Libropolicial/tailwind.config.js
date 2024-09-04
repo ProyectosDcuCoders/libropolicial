@@ -22,7 +22,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        prueba: '#00cccc', // Nuevo color personalizado
+        prueba: '#48556a', // Nuevo color personalizado
       },
     },
   },

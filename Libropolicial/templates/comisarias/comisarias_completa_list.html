@@ -20,6 +20,7 @@
     }
     #dt-search-0{
         border-radius: 6px;
+        min-width: 300px;
     }
     #dt-length-0{
         border-radius: 6px;
@@ -38,7 +39,6 @@
         justify-content: flex-end;
         margin-right: 0;
     }
-    /*  */
     /* Estilos para el modo oscuro */
     .dark .dataTables_wrapper {
         background-color: #2d2d2d;
@@ -69,7 +69,7 @@
         background-color: #2d2d2d;
     }
     #myTable tbody tr:hover {
-        color: black;
+        background-color: transparent; /* Elimina el color de fondo en hover */
     }
     /*  */
     .carajo {
@@ -81,8 +81,8 @@
     }
 </style>
 
-<div class="mx-auto mt-4 p-4 rounded-lg dark:text-white" x-data="{ showModal: false, descripcion: '' }">
-    <h1 class="text-2xl font-bold mb-4 text-center">Registros Completos de Comisarías</h1>
+<div class="w-[95%] mx-auto px-4 pb-4 pt-2 rounded-lg dark:text-white" x-data="{ showModal: false, descripcion: '' }">
+    <h1 class="text-2xl font-bold text-center">Registros Completos de Comisarías</h1>
     <div class="overflow-x-auto rounded-lg">
         <table id="myTable" class="display carajo w-full  text-[13px] rounded-lg">
             <thead class="bg-[#111] text-white text-[16px] rounded-lg">
@@ -103,7 +103,7 @@
             </thead>
             <tbody class="">
                 {% for comisaria in comisarias %}
-                <tr class="border-b ">
+                <tr class="border-b cursor-pointer">
                     <td class="py-1 px-2 font-bold ">{{ comisaria.comisaria_nombre }}</td>
                     <td class="py-1 px-2 text-center">{{ comisaria.cuarto.cuarto }}</td>
                     <td class="py-1 px-2">{{ comisaria.fecha_hora|date:"Y-m-d H:i" }}</td>
@@ -150,7 +150,7 @@
         </div>
     </div>
     <!-- VOLVER -->
-    <a href="/" class="mt-4 inline-block text-[13px] bg-[#00b3b3] hover:bg-prueba text-white px-4 py-2 rounded text-center">Volver</a>
+    <a href="/" class="inline-block text-[13px] bg-[#00b3b3] hover:bg-gray-700 text-white px-4 py-2 rounded text-center">Volver</a>
     
 </div>
 <!-- DATATABLE CONFIG -->
@@ -202,6 +202,32 @@
         $(document).on('keydown', function(e) {
             if (e.key === 'Escape') {
                 $('#myTable tbody tr.selected').removeClass('selected');
+            }
+        });
+        // Navegar entre filas usando las flechas del teclado sin mover la pantalla
+        $(document).on('keydown', function(e) {
+            const selectedRow = $('#myTable tbody tr.selected');
+
+            if (selectedRow.length) {
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault(); // Evita que la pantalla se mueva
+
+                    if (e.key === 'ArrowUp') {
+                        // Mover a la fila anterior
+                        const prevRow = selectedRow.prev('tr');
+                        if (prevRow.length) {
+                            selectedRow.removeClass('selected');
+                            prevRow.addClass('selected');
+                        }
+                    } else if (e.key === 'ArrowDown') {
+                        // Mover a la fila siguiente
+                        const nextRow = selectedRow.next('tr');
+                        if (nextRow.length) {
+                            selectedRow.removeClass('selected');
+                            nextRow.addClass('selected');
+                        }
+                    }
+                }
             }
         });
         /*  */
