@@ -35,6 +35,7 @@
         justify-content: flex-end;
         margin-right: 0;
     }
+
     /* Estilos para el modo oscuro */
     .dark .dataTables_wrapper {
         background-color: #2d2d2d;
@@ -64,14 +65,27 @@
     .dark .dataTables_wrapper .dataTables_body {
         background-color: #2d2d2d;
     }
+
+    .dark #myTablePDF thead th {
+        background-color: #111 !important;
+        color: white !important;
+    }
+
+    .dark #myTablePDF tbody td {
+        background-color: #333 !important;
+        color: #e0e0e0 !important;
+    }
+
     #myTablePDF tbody tr:hover {
         background-color: transparent; /* Elimina el color de fondo en hover */
     }
-    /*  */
+
+    /* Bordes de la tabla en modo oscuro */
     .carajo {
         border: 1px solid #555 !important;
     }
-    /*  */
+
+    /* Efecto hover en modo oscuro */
     .dark .dataTables_wrapper tbody tr:hover {
         background-color: #3b82f6; /* Equivalente a blue-500 */
     }
@@ -80,7 +94,7 @@
 <div class="max-w-7xl mx-auto px-4 pb-4 pt-2 rounded-lg dark:text-white">
     <h1 class="text-2xl font-bold mb-4 text-center">Lista de PDFs Subidos</h1>
     <div class="overflow-x-auto">
-        <table id="myTablePDF" class="display carajo w-full  text-[13px] rounded-lg">
+        <table id="myTablePDF" class="display carajo w-full text-[13px] rounded-lg">
             <thead class="bg-[#111] text-white text-[16px] rounded-lg">
                 <tr>
                     <th class="px-4 py-4 rounded-tl-lg">Nombre del Archivo</th>
@@ -92,12 +106,11 @@
             <tbody>
                 {% for pdf in pdfs %}
                 <tr>
-                    <td class="px-4 py-2 ">{{ pdf.file.name|cut:"partespdf/" }}</td>
-                    <td class="px-4 py-2 ">{{ pdf.uploaded_by.get_full_name }}</td>
-                    <td class="px-4 py-2 ">{{ pdf.uploaded_at|date:"d/m/Y H:i" }}</td>
-                    <td class="px-4 py-2 ">
-                        <a href="{{ pdf.file.url }}" class="bg-[#00b3b3] text-white px-2 py-1 rounded hover:bg-gray-700">Ver</a>
-
+                    <td class="px-4 py-2">{{ pdf.file.name|cut:"partespdf/" }}</td>
+                    <td class="px-4 py-2">{{ pdf.uploaded_by.get_full_name }}</td>
+                    <td class="px-4 py-2">{{ pdf.uploaded_at|date:"d/m/Y H:i:s" }}</td>
+                    <td class="px-4 py-2">
+                        <a href="{% url 'mostrar_pdf' pdf.id %}" target="_blank" class="bg-[#00b3b3] text-white px-2 py-1 rounded hover:bg-gray-700">Ver</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -105,12 +118,29 @@
         </table>
     </div>
     <div class="mt-6">
-        <a href="/" class="inline-block  bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded text-center">Volver</a>
+        <a href="/" class="inline-block bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded text-center">Volver</a>
     </div>
 </div>
+
 <!-- DATATABLE CONFIG -->
 <script>
     $(document).ready(function() {
+        // Añadimos un parser personalizado para la fecha en formato d/m/Y H:i:s
+        $.fn.dataTable.ext.type.order['date-eu-pre'] = function (date) {
+            if (!date) {
+                return 0;
+            }
+            // Extraemos día, mes, año, hora, minuto y segundo del formato d/m/Y H:i:s
+            const parts = date.split(/[\s/:]/);
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1; // Mes en JavaScript es 0-based
+            const year = parseInt(parts[2], 10);
+            const hour = parseInt(parts[3], 10);
+            const minute = parseInt(parts[4], 10);
+            const second = parseInt(parts[5], 10);
+            return new Date(year, month, day, hour, minute, second).getTime();
+        };
+
         $('#myTablePDF').DataTable({
             language: {
                 "sProcessing": "Procesando...",
@@ -119,78 +149,40 @@
                 "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
                 "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
                 "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sInfoPostFix": "",
                 "sSearch": "Buscar:",
-                "sUrl": "",
-                "sInfoThousands": ",",
                 "sLoadingRecords": "Cargando...",
                 "oPaginate": {
                     "sFirst": "Primero",
                     "sLast": "Último",
                     "sNext": "Siguiente",
                     "sPrevious": "Anterior"
-                },
-                "oAria": {
-                    "sSortAscending": ": activar para ordenar la columna de manera ascendente",
-                    "sSortDescending": ": activar para ordenar la columna de manera descendente"
                 }
             },
-            /* pageLength: -1, */
-            ordering: false,
+            order: [[2, 'desc']], // Orden descendente por la columna "Fecha de Subida"
+            columnDefs: [
+                { 
+                    type: 'date-eu', 
+                    targets: 2  // Aplica el parser de fecha personalizado a la tercera columna (Fecha de Subida)
+                }
+            ],
             fixedHeader: true
         });
+
         // Maneja la selección y deselección de filas
         $('#myTablePDF tbody').on('click', 'tr', function() {
-        // Verifica si la fila clickeada ya está seleccionada
             if ($(this).hasClass('selected')) {
-                // Deselecciona la fila si ya estaba seleccionada
                 $(this).removeClass('selected');
             } else {
-                // Deselecciona cualquier otra fila previamente seleccionada
                 $('#myTablePDF tbody tr.selected').removeClass('selected');
-                
-                // Marca la fila clickeada como seleccionada
                 $(this).addClass('selected');
             }
         });
-        /* ESC */
-        $(document).on('keydown', function(e) {
-            if (e.key === 'Escape') {
-                $('#myTablePDF tbody tr.selected').removeClass('selected');
-            }
-        });
-        // Navegar entre filas usando las flechas del teclado sin mover la pantalla
-        $(document).on('keydown', function(e) {
-            const selectedRow = $('#myTablePDF tbody tr.selected');
 
-            if (selectedRow.length) {
-                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                    e.preventDefault(); // Evita que la pantalla se mueva
-
-                    if (e.key === 'ArrowUp') {
-                        // Mover a la fila anterior
-                        const prevRow = selectedRow.prev('tr');
-                        if (prevRow.length) {
-                            selectedRow.removeClass('selected');
-                            prevRow.addClass('selected');
-                        }
-                    } else if (e.key === 'ArrowDown') {
-                        // Mover a la fila siguiente
-                        const nextRow = selectedRow.next('tr');
-                        if (nextRow.length) {
-                            selectedRow.removeClass('selected');
-                            nextRow.addClass('selected');
-                        }
-                    }
-                }
-            }
-        });
-        /*  */
         // Aplica estilos de modo oscuro si está activo
         const isDarkMode = document.documentElement.classList.contains('dark');
-            if (isDarkMode) {
-                $('.dataTables_wrapper').addClass('dark');
-            }
+        if (isDarkMode) {
+            $('.dataTables_wrapper').addClass('dark');
+        }
     });
 </script>
 {% endblock %}

@@ -156,4 +156,22 @@
 </div>
 
 </div>
+
+<!-- SweetAlert2 para mostrar el mensaje de éxito -->
+{% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% for message in messages %}
+                Swal.fire({
+                    icon: 'success',  // Cambia el ícono según el tipo de mensaje (success, error, etc.)
+                    title: '¡Éxito!',
+                    text: '{{ message }}',
+                    confirmButtonText: 'OK',
+                    timer: 3000  // La alerta se cierra automáticamente después de 3 segundos
+                });
+            {% endfor %}
+        });
+    </script>
+{% endif %}
+
 {% endblock %}

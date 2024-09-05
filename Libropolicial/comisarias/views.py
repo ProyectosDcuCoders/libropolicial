@@ -320,6 +320,9 @@ class ComisariaPrimeraCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
                 )
 
         # Llama al método form_valid de la clase base para completar la operación.
+        # Añadir un mensaje de éxito al sistema de mensajes
+        messages.success(self.request, 'El código ha sido guardado exitosamente.')
+        
         return super().form_valid(form)
     
  #------------------------clase para el edit updtae------------------------------------------------------
@@ -483,6 +486,10 @@ class ComisariaPrimeraUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
                     'nombre_a_cargo_provincial': nombre_a_cargo_provincial
                 }
             )
+
+             # Añadir el mensaje de éxito
+       # messages.success(self.request, 'El código ha sido editado exitosamente.')
+        messages.success(self.request, 'El código ha sido guardado exitosamente.')
 
         # Llama al método form_valid de la clase base para completar la operación.
         return super().form_valid(form)
@@ -911,7 +918,7 @@ class ComisariasCompletaListView(LoginRequiredMixin, ListView):
     
     
 
-#-------------------------------genera pdf para virma y descarga------------------------------------------------------
+#-------------------------------genera pdf para firma y descarga------------------------------------------------------
 
 def generate_pdf_content(request, comisaria_model, add_signature=False):
     # 1. Obtener la fecha y hora actual
@@ -1040,13 +1047,17 @@ def generate_comisaria_primera_pdf_download_previous_day(request):
     
     # Obtiene la fecha y hora actual.
     now = datetime.now()
+
+    # Obtiene el nombre de la comisaría desde el modelo (por ejemplo, "Comisaria Primera").
+    comisaria_name = ComisariaPrimera._meta.verbose_name.title().replace(' ', '-')
+    
     
     # Calcula la fecha del día anterior.
     previous_day = now - timedelta(days=1)
     
     # Define el nombre del archivo para el PDF, incluyendo "parte-diario", 
     # la fecha del día anterior, y la extensión ".pdf".
-    filename = f"parte-diario-{previous_day.strftime('%d-%m-%Y')}.pdf"
+    filename = f"libro-diario-{comisaria_name}-Ush-{previous_day.strftime('%d-%m-%Y')}.pdf"
     
     # Llama a la función generate_pdf_for_specific_date, pasando el request, 
     # el modelo ComisariaPrimera, la fecha del día anterior, el nombre del archivo,
@@ -1113,55 +1124,54 @@ def generate_pdf_for_specific_date(request, comisaria_model, specific_date, file
 #------------------------------------esta funcion se encarga de subir el pdf al dopzonde despues de la firma digital-------------------------------------------------------------
 
 
+from django.http import JsonResponse
+import mimetypes
+import os
+from PyPDF2 import PdfReader
+
+def verificar_firma_digital(pdf):
+    try:
+        # Abre el archivo PDF usando PyPDF2
+        reader = PdfReader(pdf)
+        
+        # Revisa si el PDF tiene un campo de firma digital
+        if '/AcroForm' in reader.trailer['/Root']:
+            acroform = reader.trailer['/Root']['/AcroForm']
+            if '/SigFlags' in acroform:
+                return True
+        return False
+    except Exception as e:
+        return False
+
 def subir_pdf(request):
-    # Verifica si el método de la solicitud es POST
     if request.method == 'POST':
-        # Verifica si hay un archivo PDF en la solicitud
         if 'pdf' in request.FILES:
-            # Obtiene el archivo PDF de los archivos subidos
             pdf = request.FILES['pdf']
-            
-            # Validar que el archivo sea un PDF
             mime_type, _ = mimetypes.guess_type(pdf.name)
             if mime_type != 'application/pdf':
-                # Si el archivo no es un PDF, devuelve un error en formato JSON
                 return JsonResponse({'error': 'El archivo seleccionado no es un PDF.'})
-            
+
+            # Verificar si tiene firma digital
+            if not verificar_firma_digital(pdf):
+                return JsonResponse({'error': 'El PDF no contiene una firma digital válida.'})
+
             try:
-                # Especifica la ruta donde se guardarán los archivos dentro del directorio MEDIA_ROOT
                 folder = 'partespdf/'
-                # Configura el sistema de almacenamiento de archivos con la ubicación especificada
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, folder))
-                # Guarda el archivo PDF en el sistema de archivos y obtiene el nombre del archivo guardado
                 filename = fs.save(pdf.name, pdf)
-                
-                # Guarda una referencia al archivo en la base de datos
                 new_pdf = UploadedPDF(file=os.path.join(folder, filename), uploaded_by=request.user)
                 new_pdf.save()
-
-                # Devuelve una respuesta en formato JSON indicando que el archivo se subió correctamente
                 return JsonResponse({'success': 'El archivo PDF se ha subido correctamente.'})
-            
             except Exception as e:
-                # Si ocurre algún error durante la subida, devuelve un mensaje de error en formato JSON
                 return JsonResponse({'error': f'Error al subir el archivo: {str(e)}'})
-        
         else:
-            # Si no se seleccionó ningún archivo, devuelve un error en formato JSON
             return JsonResponse({'error': 'No se seleccionó ningún archivo.'})
-    
-    # Si la solicitud no es POST, renderiza la plantilla 'subir_pdf.html' para mostrar el formulario de subida
     return render(request, 'comisarias/subir_pdf.html')
+
 
 #-----------------------------------funcion para ver todos los registros  de los pdf--------------------------------------------------------------
 
 
-#def ver_pdfs(request):
-    # Obtiene todos los registros de PDF almacenados en la base de datos
- #   pdfs = UploadedPDF.objects.all()
-    
-    # Renderiza la plantilla 'ver_pdfs.html' y pasa los registros de PDF al contexto
-   # return render(request, 'comisarias/ver_pdfs.html', {'pdfs': pdfs})
 
 from django.http import FileResponse
 
@@ -1186,15 +1196,7 @@ def mostrar_pdf(request, pdf_id):
     return response
 
 
-
-
-
-
 #---------------------------------------------------------------------------
-
-
-
-
 
 
 # Repite las siguientes funciones para las demás comisarías...
@@ -1208,7 +1210,6 @@ def generate_comisaria_segunda_pdf_download(request):
     return generate_pdf(request, ComisariaSegunda, filename, add_signature=add_signature)
 
 # Continúa con las demás funciones para las comisarías tercera, cuarta y quinta.
-
 
 def generate_comisaria_tercera_pdf_view(request):
     return view_pdf_content(request, ComisariaTercera)
