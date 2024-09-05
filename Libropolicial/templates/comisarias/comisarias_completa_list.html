@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
 <!-- estilos varios -->
 <style>
-    ::-webkit-scrollbar {
+    /* ::-webkit-scrollbar {
         display: none;
-    }
+    } */
     h1{
         font-family: 'Roboto Slab', serif;
     }
@@ -81,7 +81,8 @@
     }
 </style>
 
-<div class="w-[95%] mx-auto px-4 pb-4 pt-2 rounded-lg dark:text-white" x-data="{ showModal: false, descripcion: '' }">
+<div class="w-full mx-auto px-4 pb-4 pt-2 rounded-lg dark:text-white"
+     x-data="{ showModal: false, descripcion: '' }">
     <h1 class="text-2xl font-bold text-center">Registros Completos de Comisarías</h1>
     <div class="overflow-x-auto rounded-lg">
         <table id="myTable" class="display carajo w-full  text-[13px] rounded-lg">
@@ -116,7 +117,11 @@
                         <button @click="descripcion = '{{ comisaria.descripcion|escapejs }}'; showModal = true" class="bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-gray-700">Ver</button>
                     </td>
                     <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.instituciones_intervinientes }}</p></td>
-                    <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.tareas_judiciales }}</p></td>
+                    <td class="py-1 px-2">
+                        <p class="overflow-auto max-w-[300px]" style="max-height: 60px; line-height: 18px;">
+                            {{ comisaria.tareas_judiciales }}
+                        </p>
+                    </td>
                     <td class="py-1 px-2">{{ comisaria.created_at }}</td>
                 </tr>
                 {% endfor %}

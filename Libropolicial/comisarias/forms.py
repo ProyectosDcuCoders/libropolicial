@@ -87,8 +87,7 @@ class BaseComisariaForm(forms.ModelForm):
         label='Código Principal',  # Etiqueta del campo
         widget=forms.Select(
             attrs={
-                'class': 'cursor-pointer bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 appearance-none',
-                # 'style': 'font-size: 10px;'
+                'class': 'cursor-pointer bg-gray-50 dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 appearance-none'
             }
         )
     )
