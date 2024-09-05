@@ -11,7 +11,7 @@ from .views import (
     ComisariaCuartaListView, ComisariaQuintaListView, ComisariaPrimeraCreateView,
     ComisariaSegundaCreateView, ComisariaTerceraCreateView, ComisariaCuartaCreateView,
     ComisariaQuintaCreateView, ComisariasCompletaListView, ComisariaPrimeraUpdateView,
-    ComisariaSegundaUpdateView,ComisariaPrimeraDetailView, generate_comisaria_primera_pdf_download_previous_day  # <-- Asegúrate de incluir esta línea
+    ComisariaSegundaUpdateView,ComisariaPrimeraDetailView, generate_comisaria_primera_pdf_download_previous_day, generate_comisaria_segunda_pdf_download_previous_day # <-- Asegúrate de incluir esta línea
 )
 
 urlpatterns = [
@@ -23,6 +23,8 @@ urlpatterns = [
     path('primera/reporte/download/', generate_comisaria_primera_pdf_download, name='generate_comisaria_primera_pdf_download'),
     path('comisarias/primera/descargar-dia-anterior/', generate_comisaria_primera_pdf_download_previous_day, name='generate_comisaria_primera_pdf_download_previous_day'),  # <-- Esta es la ruta que debes agregar
     path('primera/firmar/<int:pk>/', sign_comisaria_primera, name='comisaria_primera_sign'),
+
+
     path('subir-pdf/', subir_pdf, name='subir_pdf'),
     path('ver-pdfs/', ver_pdfs, name='ver_pdfs'),  # Nueva URL para ver los PDFs
     path('mostrar-pdf/<int:pdf_id>/', mostrar_pdf, name='mostrar_pdf'),
@@ -32,6 +34,7 @@ urlpatterns = [
     path('segunda/editar/<int:pk>/', ComisariaSegundaUpdateView.as_view(), name='comisaria_segunda_edit'),
     path('segunda/reporte/', generate_comisaria_segunda_pdf_view, name='generate_comisaria_segunda_pdf_view'),
     path('segunda/reporte/download/', generate_comisaria_segunda_pdf_download, name='generate_comisaria_segunda_pdf_download'),
+    path('comisarias/segunda/descargar-dia-anterior/', generate_comisaria_segunda_pdf_download_previous_day, name='generate_comisaria_segunda_pdf_download_previous_day'),  # <-- Esta es la ruta que debes agregar
     path('segunda/firmar/<int:pk>/', sign_comisaria_segunda, name='comisaria_segunda_sign'),
 
     path('tercera/', ComisariaTerceraListView.as_view(), name='comisaria_tercera_list'),

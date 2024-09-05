@@ -171,9 +171,20 @@ class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView
     def get_context_data(self, **kwargs):
         # Llama al método original para obtener el contexto predeterminado.
         context = super().get_context_data(**kwargs)
+
+        user = self.request.user
         
         # Agrega al contexto un booleano que indica si el usuario pertenece al grupo 'jefessuperiores'.
-        context['is_jefessuperiores'] = self.request.user.groups.filter(name='jefessuperiores').exists()
+       # context['is_jefessuperiores'] = self.request.user.groups.filter(name='jefessuperiores').exists()
+
+          # Verificar la pertenencia a los grupos
+          
+        
+        context['is_encargados_guardias_primera'] = user.groups.filter(name='encargados_guardias_primera').exists()
+        context['is_jefessuperiores'] = user.groups.filter(name='jefessuperiores').exists()
+        context['is_oficialesservicios'] = user.groups.filter(name='oficialesservicios').exists()
+        context['is_comisariaprimera'] = user.groups.filter(name='comisariaprimera').exists()
+
         
         # Agrega la fecha actual al contexto.
         context['today'] = timezone.now().date()
@@ -535,7 +546,12 @@ class ComisariaSegundaListView(LoginRequiredMixin, UserPassesTestMixin, ListView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_jefessuperiores'] = self.request.user.groups.filter(name='jefessuperiores').exists()
+        user = self.request.user
+
+        #context['is_jefessuperiores'] = self.request.user.groups.filter(name='jefessuperiores').exists()
+        context['is_encargados_guardias_segunda'] = user.groups.filter(name='encargados_guardias_segunda').exists()
+        context['is_jefessuperiores'] = user.groups.filter(name='jefessuperiores').exists()
+
         context['today'] = timezone.now().date()
         context['resolveId'] = None
         return context
@@ -631,6 +647,8 @@ class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
                     nombre_a_cargo_provincial=nombre_a_cargo_provincial
                 )
 
+
+        messages.success(self.request, 'El código ha sido guardado exitosamente.')
         return super().form_valid(form)
 
 
@@ -774,7 +792,7 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
                     'nombre_a_cargo_provincial': nombre_a_cargo_provincial
                 }
             )
-
+        messages.success(self.request, 'El código ha sido guardado exitosamente.')
         return super().form_valid(form)
 
 #------------------------------------------------------------------------------------------------------
@@ -1196,20 +1214,57 @@ def mostrar_pdf(request, pdf_id):
     return response
 
 
-#---------------------------------------------------------------------------
+#-----------------------aqui empieza las funciones de comisarias segunda----------------------------------------------------
 
 
 # Repite las siguientes funciones para las demás comisarías...
 def generate_comisaria_segunda_pdf_view(request):
     return view_pdf_content(request, ComisariaSegunda)
 
+#--------------------------------------------------------------------
 def generate_comisaria_segunda_pdf_download(request):
     add_signature = 'signature' in request.GET
     now = datetime.now()
-    filename = f"parte-diario-{now.strftime('%d-%m-%Y_%H-%M-%S')}.pdf"
+
+
+    # Obtiene el nombre de la comisaría desde el modelo (por ejemplo, "Comisaria Primera").
+    comisaria_name = ComisariaSegunda._meta.verbose_name.title().replace(' ', '-')
+    
+    # Define el nombre del archivo, incluyendo "libro-diario", el nombre de la comisaría, y la fecha actual.
+    filename = f"libro-diario-{comisaria_name}-Ush-{now.strftime('%d-%m-%Y')}.pdf"
+    
+
     return generate_pdf(request, ComisariaSegunda, filename, add_signature=add_signature)
 
-# Continúa con las demás funciones para las comisarías tercera, cuarta y quinta.
+#------------------------------decragar de comisaria segunda pdf del dia anterior------------------------------------------------------
+
+# Función para descargar el PDF del día anterior
+def generate_comisaria_segunda_pdf_download_previous_day(request):
+    # Verifica si la URL contiene el parámetro 'signature' en la cadena de consulta (GET).
+    add_signature = 'signature' in request.GET
+    
+    # Obtiene la fecha y hora actual.
+    now = datetime.now()
+
+    # Obtiene el nombre de la comisaría desde el modelo (por ejemplo, "Comisaria Primera").
+    comisaria_name = ComisariaSegunda._meta.verbose_name.title().replace(' ', '-')
+    
+    
+    # Calcula la fecha del día anterior.
+    previous_day = now - timedelta(days=1)
+    
+    # Define el nombre del archivo para el PDF, incluyendo "parte-diario", 
+    # la fecha del día anterior, y la extensión ".pdf".
+    filename = f"libro-diario-{comisaria_name}-Ush-{previous_day.strftime('%d-%m-%Y')}.pdf"
+    
+    # Llama a la función generate_pdf_for_specific_date, pasando el request, 
+    # el modelo ComisariaPrimera, la fecha del día anterior, el nombre del archivo,
+    # y el valor de add_signature. Esta función generará el PDF para la fecha específica
+    # y lo devolverá como una respuesta HTTP.
+    return generate_pdf_for_specific_date(request, ComisariaSegunda, previous_day, filename, add_signature=add_signature)
+
+
+#--------------------------aqui empieza comisiaria tercefra los pdf------------------------------------------------------
 
 def generate_comisaria_tercera_pdf_view(request):
     return view_pdf_content(request, ComisariaTercera)
@@ -1219,6 +1274,9 @@ def generate_comisaria_tercera_pdf_download(request):
     now = datetime.now()
     filename = f"parte-diario-{now.strftime('%d-%m-%Y_%H-%M-%S')}.pdf"
     return generate_pdf(request, ComisariaTercera, filename, add_signature=add_signature)
+
+
+#-----------------------aqui empieza comisaria cuarta las funciones ---------------------------------------------
 
 def generate_comisaria_cuarta_pdf_view(request):
     return view_pdf_content(request, ComisariaCuarta)
