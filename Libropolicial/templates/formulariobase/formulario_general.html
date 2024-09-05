@@ -28,6 +28,12 @@
     .django-ckeditor-widget{
         width: 100%;
     }
+    select option{
+        font-size: 10px;
+        text-wrap: wrap;
+        width: 20%;
+        word-break: break-all;
+    }
 </style>
 <div style="width: 75%;" class=" mx-auto mt-4 p-4 dark:text-white">
     <!-- TITULO -->
@@ -79,11 +85,8 @@
                         <div class="w-full">
                             <label for="{{ form.codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.codigo.label }}</label>
                             {{ form.codigo }}
-                            
                         </div>
-                        
                     </div>
-                    
                     <!-- SOLICITANTE -->
                     <div class="w-full">
                         <label for="{{ form.solicitante_codigo.id_for_label }}" class="py-1 block text-gray-700 dark:text-gray-300">{{ form.solicitante_codigo.label }}</label>
