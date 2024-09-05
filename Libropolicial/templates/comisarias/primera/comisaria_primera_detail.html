@@ -113,9 +113,15 @@
                 <ul>
                     {% for detalle in record.detalles_servicio_emergencia.all %}
                     <li>
-                        Servicio: {{ detalle.servicio_emergencia.nombre|default:"S/N" }},
-                        Móvil: {{ detalle.numero_movil_bomberos|default:"S/N" }},
-                        A Cargo: {{ detalle.nombre_a_cargo_bomberos|default:"S/N" }}
+                        <span class="font-semibold">Servicio: </span>
+                        {{ detalle.servicio_emergencia.nombre|default:"S/N" }}
+                    </li>
+                    <li>
+                        <span class="font-semibold">Móvil: </span>
+                        {{ detalle.numero_movil_bomberos|default:"S/N" }}</li>
+                    <li>
+                        <span class="font-semibold">A Cargo: </span>
+                        {{ detalle.nombre_a_cargo_bomberos|default:"S/N" }}
                     </li>
                     {% endfor %}
                 </ul>
@@ -196,7 +202,7 @@
     </div>
     <!-- ULTIMA ACTUALIZACION -->
     <div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
-        <h2 class="text-xl pb-1 font-semibold">Última Actualización:</h2>
+        <h2 class="text-xl pb-1 font-semibold">Última Actualización del Codigo:</h2>
         <p>{{ record.updated_at|date:"d/m/Y H:i:s"|default:"S/N" }}</p>
     </div>
     <!-- VOLVER -->
