@@ -1172,12 +1172,6 @@ def subir_pdf(request):
 #-----------------------------------funcion para ver todos los registros  de los pdf--------------------------------------------------------------
 
 
-#def ver_pdfs(request):
-    # Obtiene todos los registros de PDF almacenados en la base de datos
- #   pdfs = UploadedPDF.objects.all()
-    
-    # Renderiza la plantilla 'ver_pdfs.html' y pasa los registros de PDF al contexto
-   # return render(request, 'comisarias/ver_pdfs.html', {'pdfs': pdfs})
 
 from django.http import FileResponse
 
