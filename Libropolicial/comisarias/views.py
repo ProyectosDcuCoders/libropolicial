@@ -1047,13 +1047,17 @@ def generate_comisaria_primera_pdf_download_previous_day(request):
     
     # Obtiene la fecha y hora actual.
     now = datetime.now()
+
+    # Obtiene el nombre de la comisaría desde el modelo (por ejemplo, "Comisaria Primera").
+    comisaria_name = ComisariaPrimera._meta.verbose_name.title().replace(' ', '-')
+    
     
     # Calcula la fecha del día anterior.
     previous_day = now - timedelta(days=1)
     
     # Define el nombre del archivo para el PDF, incluyendo "parte-diario", 
     # la fecha del día anterior, y la extensión ".pdf".
-    filename = f"parte-diario-{previous_day.strftime('%d-%m-%Y')}.pdf"
+    filename = f"libro-diario-{comisaria_name}-Ush-{previous_day.strftime('%d-%m-%Y')}.pdf"
     
     # Llama a la función generate_pdf_for_specific_date, pasando el request, 
     # el modelo ComisariaPrimera, la fecha del día anterior, el nombre del archivo,
