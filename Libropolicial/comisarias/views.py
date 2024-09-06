@@ -37,8 +37,6 @@ from compartido.utils import user_is_in_group
 import base64
 
 
-
-
 #------------------funcion par de realizar las firmas--------------------------------------------
 
 @login_required
@@ -794,8 +792,21 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
             )
         messages.success(self.request, 'El código ha sido guardado exitosamente.')
         return super().form_valid(form)
+    
 
-#------------------------------------------------------------------------------------------------------
+#--------------------------viesta para ver todos completo cada regitro--------
+
+
+
+class ComisariaSegundaDetailView(DetailView):
+    model = ComisariaSegunda
+    template_name = 'comisarias/segunda/comisaria_segunda_detail.html'
+    context_object_name = 'record'
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 class ComisariaTerceraListView(LoginRequiredMixin, ListView):
@@ -1221,7 +1232,7 @@ def mostrar_pdf(request, pdf_id):
 def generate_comisaria_segunda_pdf_view(request):
     return view_pdf_content(request, ComisariaSegunda)
 
-#--------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------
 def generate_comisaria_segunda_pdf_download(request):
     add_signature = 'signature' in request.GET
     now = datetime.now()
