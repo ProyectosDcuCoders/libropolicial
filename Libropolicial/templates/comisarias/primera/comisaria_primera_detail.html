@@ -91,13 +91,15 @@
             <p>{{ record.estado|yesno:"Activo,Finalizado"|default:"S/N" }}</p>
         </div>
     </div>
-    <!-- DESCRIPCION -->
-    <div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
-        <h2 class="text-lg pb-1 font-semibold">Descripción:</h2>
-        <p class="block px-1 break-all" style="word-break: break-all;">
-            {{ record.descripcion|default:"S/N" }}
-        </p>
-    </div>
+  <!-- DESCRIPCIÓN -->
+<div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
+    <h2 class="text-xl pb-1 font-semibold">Descripción:</h2>
+    <p class="block px-1 break-all" style="word-break: break-all;">
+        {{ record.descripcion|safe|default:"S/N" }}
+    </p>
+</div>
+
+
     <!-- TAREAS JUDICIALES, INSTITUCIONES INT.  -->
     <div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
         <div class="col-span-2">

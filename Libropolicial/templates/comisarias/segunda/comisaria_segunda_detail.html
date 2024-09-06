@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de Código en Comisaría Segunda{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-6 mb-6 px-6 py-4 bg-white dark:bg-gray-600 rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold py-4 my-2 bg-gray-200 rounded-md px-2 mb-4 text-center">Detalle del Código</h1>
+    <!-- CODIGO, CUARTO Y FECHA -->
+    <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <div>
+            <h2 class="text-xl font-semibold">Código:</h2>
+            <p>{{ record.codigo.codigo|default:"S/N" }} - {{ record.codigo.nombre_codigo|default:"S/N" }}</p>
+        </div>
+
+        <div>
+            <h2 class="text-xl font-semibold">Cuarto:</h2>
+            <p>{{ record.cuarto.cuarto|default:"S/N" }}</p>
+        </div>
+
+        <div>
+            <h2 class="text-xl font-semibold">Fecha y Hora:</h2>
+            <p>{{ record.fecha_hora|date:"d/m/Y H:i:s"|default:"S/N" }}</p>
+        </div>
+    </div>
+    <!-- QTH, LAT Y LONG -->
+    <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <div>
+            <h2 class="text-xl font-semibold">Lugar del Código:</h2>
+            <p>{{ record.lugar_codigo|default:"S/N" }}</p>
+        </div>
+        
+        <div>
+            <h2 class="text-xl font-semibold">Latitud:</h2>
+            <p>{{ record.latitude|default_if_none:"S/N" }}</p>
+        </div>
+
+        <div>
+            <h2 class="text-xl font-semibold">Longitud:</h2>
+            <p>{{ record.longitude|default_if_none:"S/N" }}</p>
+        </div>
+    </div>
+    <!-- MOVIL/PATRULLA, A/C, SEC.  -->
+    <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <div class="">
+            <h2 class="text-xl font-semibold">Movil Patrulla:</h2>
+            <p>{{ record.movil_patrulla|default:"S/N" }}</p>
+        </div>
+
+        <div class="">
+            <h2 class="text-xl font-semibold">A Cargo:</h2>
+            <p>{{ record.a_cargo|default:"S/N" }}</p>
+        </div>
+
+        <div class="">
+            <h2 class="text-xl font-semibold">Secundante:</h2>
+            <p>{{ record.secundante|default:"S/N" }}</p>
+        </div>
+    </div>
+    <!-- DEPENDENCIAS Y CODIGOS, ESTADO -->
+    <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <!-- Detalles de relaciones ManyToMany -->
+        <div class="">
+            <h2 class="text-xl font-semibold">Dependencias Secundarias:</h2>
+            {% if record.dependencias_secundarias.all %}
+                <ul>
+                    {% for dependencia in record.dependencias_secundarias.all %}
+                    <li>{{ dependencia.dependencia|default:"S/N" }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>S/N</p>
+            {% endif %}
+        </div>
+
+        <div class="">
+            <h2 class="text-xl font-semibold">Codigos Secundarios:</h2>
+            {% if record.codigos_secundarios.all %}
+                <ul>
+                    {% for codigo in record.codigos_secundarios.all %}
+                    <li>{{ codigo.codigo|default:"S/N" }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>S/N</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <h2 class="text-xl font-semibold">Estado del Código:</h2>
+            <p>{{ record.estado|yesno:"Activo,Finalizado"|default:"S/N" }}</p>
+        </div>
+    </div>
+  <!-- DESCRIPCIÓN -->
+<div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
+    <h2 class="text-xl pb-1 font-semibold">Descripción:</h2>
+    <p class="block px-1 break-all" style="word-break: break-all;">
+        {{ record.descripcion|safe|default:"S/N" }}
+    </p>
+</div>
+
+
+    <!-- TAREAS JUDICIALES, INSTITUCIONES INT.  -->
+    <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <div class="">
+            <h2 class="text-xl font-semibold">Tareas Judiciales:</h2>
+            <p style="max-height: 80px; line-height: 20px;" class="overflow-auto leading-10">{{ record.tareas_judiciales|default:"S/N" }}</p>
+        </div>
+        <div class="">
+            <h2 class="text-xl font-semibold">Instituciones Intervinientes:</h2>
+            <p>{{ record.instituciones_intervinientes|default:"S/N" }}</p>
+        </div>
+        <div class="">
+            <h2 class="text-xl font-semibold">Servicios de Emergencia:</h2>
+            {% if record.detalles_servicio_emergencia.all %}
+                <ul>
+                    {% for detalle in record.detalles_servicio_emergencia.all %}
+                    <li>
+                        Servicio: {{ detalle.servicio_emergencia.nombre|default:"S/N" }},
+                        Móvil: {{ detalle.numero_movil_bomberos|default:"S/N" }},
+                        A Cargo: {{ detalle.nombre_a_cargo_bomberos|default:"S/N" }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>S/N</p>
+            {% endif %}
+        </div>
+
+    </div>
+    <!-- HOSPITALES, MUNICIPIO, PROVINCIA -->
+    <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <!-- Detalles de las instituciones hospitalarias -->
+        <div class="">
+            <h2 class="text-xl font-semibold">Instituciones Hospitalarias:</h2>
+            {% if record.detalles_institucion_hospitalaria.all %}
+                <ul>
+                    {% for detalle in record.detalles_institucion_hospitalaria.all %}
+                    <li>
+                        Institución: {{ detalle.institucion_hospitalaria.nombre|default:"S/N" }},
+                        Móvil: {{ detalle.numero_movil_hospital|default:"S/N" }},
+                        A Cargo: {{ detalle.nombre_a_cargo_hospital|default:"S/N" }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>S/N</p>
+            {% endif %}
+        </div>
+        <!-- Detalles de dependencias municipales -->
+        <div class="">
+            <h2 class="text-xl font-semibold">Dependencias Municipales:</h2>
+            {% if record.detalles_dependencia_municipal.all %}
+                <ul>
+                    {% for detalle in record.detalles_dependencia_municipal.all %}
+                    <li>
+                        Dependencia: {{ detalle.dependencia_municipal.nombre|default:"S/N" }},
+                        Móvil: {{ detalle.numero_movil_municipal|default:"S/N" }},
+                        A Cargo: {{ detalle.nombre_a_cargo_municipal|default:"S/N" }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>S/N</p>
+            {% endif %}
+        </div>
+        <!-- Detalles de dependencias provinciales -->
+        <div class="">
+            <h2 class="text-xl font-semibold">Dependencias Provinciales:</h2>
+            {% if record.detalles_dependencia_provincial.all %}
+                <ul>
+                    {% for detalle in record.detalles_dependencia_provincial.all %}
+                    <li>
+                        Dependencia: {{ detalle.dependencia_provincial.nombre|default:"S/N" }},
+                        Móvil: {{ detalle.numero_movil_provincial|default:"S/N" }},
+                        A Cargo: {{ detalle.nombre_a_cargo_provincial|default:"S/N" }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>S/N</p>
+            {% endif %}
+        </div>
+    </div>
+    <!-- FECHA, CREADO Y EDITADO POR.. -->
+    <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <div class="">
+            <h2 class="text-xl font-semibold">Fecha de Creación:</h2>
+            <p>{{ record.created_at|date:"d/m/Y H:i:s"|default:"S/N" }}</p>
+        </div>
+        <div class="">
+            <h2 class="text-xl font-semibold">Creado por:</h2>
+            <p>{{ record.created_by.get_full_name|default:"S/N" }}</p>
+        </div>
+        <div class="">
+            <h2 class="text-xl font-semibold">Editado por:</h2>
+            <p>{{ record.updated_by.get_full_name|default:"S/N" }}</p>
+        </div>
+    </div>
+    <!-- ULTIMA ACTUALIZACION -->
+    <div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
+        <h2 class="text-xl pb-1 font-semibold">Última Actualización:</h2>
+        <p>{{ record.updated_at|date:"d/m/Y H:i:s"|default:"S/N" }}</p>
+    </div>
+    <!-- VOLVER -->
+    <div class="mt-4 text-center">
+        <a href="{% url 'comisaria_segunda_list' %}" 
+            class="inline-block border-2 border-white bg-gray-700 hover:bg-gray-600 dark:bg-white text-white font-semibold px-6 py-2 rounded-md text-center">
+            Volver a la Lista
+        </a>
+    </div>
+</div>
+{% endblock %}

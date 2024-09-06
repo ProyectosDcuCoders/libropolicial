@@ -11,7 +11,8 @@ from .views import (
     ComisariaCuartaListView, ComisariaQuintaListView, ComisariaPrimeraCreateView,
     ComisariaSegundaCreateView, ComisariaTerceraCreateView, ComisariaCuartaCreateView,
     ComisariaQuintaCreateView, ComisariasCompletaListView, ComisariaPrimeraUpdateView,
-    ComisariaSegundaUpdateView,ComisariaPrimeraDetailView, generate_comisaria_primera_pdf_download_previous_day, generate_comisaria_segunda_pdf_download_previous_day # <-- Asegúrate de incluir esta línea
+    ComisariaSegundaUpdateView,ComisariaPrimeraDetailView,ComisariaSegundaDetailView,
+    generate_comisaria_primera_pdf_download_previous_day, generate_comisaria_segunda_pdf_download_previous_day # <-- Asegúrate de incluir esta línea
 )
 
 urlpatterns = [
@@ -32,6 +33,7 @@ urlpatterns = [
     path('segunda/', ComisariaSegundaListView.as_view(), name='comisaria_segunda_list'),
     path('segunda/nuevo/', ComisariaSegundaCreateView.as_view(), name='comisaria_segunda_create'),
     path('segunda/editar/<int:pk>/', ComisariaSegundaUpdateView.as_view(), name='comisaria_segunda_edit'),
+    path('comisarias/segunda/detalle/<int:pk>/', ComisariaSegundaDetailView.as_view(), name='comisaria_segunda_detail'),
     path('segunda/reporte/', generate_comisaria_segunda_pdf_view, name='generate_comisaria_segunda_pdf_view'),
     path('segunda/reporte/download/', generate_comisaria_segunda_pdf_download, name='generate_comisaria_segunda_pdf_download'),
     path('comisarias/segunda/descargar-dia-anterior/', generate_comisaria_segunda_pdf_download_previous_day, name='generate_comisaria_segunda_pdf_download_previous_day'),  # <-- Esta es la ruta que debes agregar
