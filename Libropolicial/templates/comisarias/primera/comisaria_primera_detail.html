@@ -6,18 +6,19 @@
 <div class="max-w-4xl mx-auto mt-6 mb-6 px-6 py-4 bg-white dark:bg-gray-600 rounded-lg shadow-lg"
     style="font-family: 'Roboto Slab', serif;">
     <h1 class="text-2xl font-bold py-4 my-2 bg-gray-200 rounded-md px-2 text-center">Detalle del Código</h1>
-    <!-- CODIGO, CUARTO Y FECHA -->
+    <!-- CODIGO, CUARTO Y FECHA-HORA -->
     <div class="grid grid-cols-3 overflow-auto gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <!-- CODIGO -->
         <div class="">
             <h2 class="text-lg font-semibold">Código:</h2>
             <p style="max-height: 40px; line-height: 20px;" class="overflow-auto">{{ record.codigo.codigo|default:"S/N" }} - {{ record.codigo.nombre_codigo|default:"S/N" }}</p>
         </div>
-
+        <!-- CUARTO -->
         <div>
             <h2 class="text-lg font-semibold">Cuarto:</h2>
             <p>{{ record.cuarto.cuarto|default:"S/N" }}</p>
         </div>
-
+        <!-- HORA -->
         <div>
             <h2 class="text-lg font-semibold">Fecha y Hora del codigo:</h2>
             <p>{{ record.fecha_hora|date:"d/m/Y H:i:s"|default:"S/N" }}</p>
@@ -25,16 +26,17 @@
     </div>
     <!-- QTH, LAT Y LONG -->
     <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <!-- LUGAR -->
         <div>
             <h2 class="text-lg font-semibold">Lugar del Código:</h2>
             <p>{{ record.lugar_codigo|default:"S/N" }}</p>
         </div>
-        
+        <!-- LATITUD -->
         <div>
             <h2 class="text-lg font-semibold">Latitud:</h2>
             <p>{{ record.latitude|default_if_none:"S/N" }}</p>
         </div>
-
+        <!-- LONGITUD -->
         <div>
             <h2 class="text-lg font-semibold">Longitud:</h2>
             <p>{{ record.longitude|default_if_none:"S/N" }}</p>
@@ -42,16 +44,17 @@
     </div>
     <!-- MOVIL/PATRULLA, A/C, SEC.  -->
     <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <!-- MOV/PATR -->
         <div class="">
             <h2 class="text-lg font-semibold">Movil Patrulla:</h2>
             <p>{{ record.movil_patrulla|default:"S/N" }}</p>
         </div>
-
+        <!-- A CARGO -->
         <div class="">
             <h2 class="text-lg font-semibold">A Cargo:</h2>
             <p>{{ record.a_cargo|default:"S/N" }}</p>
         </div>
-
+        <!-- SECUNDANTE -->
         <div class="">
             <h2 class="text-lg font-semibold">Secundante:</h2>
             <p>{{ record.secundante|default:"S/N" }}</p>
@@ -59,8 +62,9 @@
     </div>
     <!-- DEPENDENCIAS Y CODIGOS SEC., ESTADO -->
     <div class="grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
-        <!-- Detalles de relaciones ManyToMany -->
+        <!-- DEPENDENCIAS SECUNDARIAS -->
         <div class="">
+            <!-- Detalles de relaciones ManyToMany -->
             <h2 class="text-lg font-semibold">Dependencias Secundarias:</h2>
             {% if record.dependencias_secundarias.all %}
                 <ul>
@@ -72,7 +76,7 @@
                 <p>S/N</p>
             {% endif %}
         </div>
-
+        <!-- CODIGOS SECUNDARIOS -->
         <div class="">
             <h2 class="text-lg font-semibold">Codigos Secundarios:</h2>
             {% if record.codigos_secundarios.all %}
@@ -85,32 +89,31 @@
                 <p>S/N</p>
             {% endif %}
         </div>
-
+        <!-- ESTADO -->
         <div>
             <h2 class="text-lg font-semibold">Estado del Código:</h2>
             <p>{{ record.estado|yesno:"Activo,Finalizado"|default:"S/N" }}</p>
         </div>
     </div>
-  <!-- DESCRIPCIÓN -->
-<div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
-    <h2 class="text-lg pb-1 font-semibold">Descripción:</h2>
-    <p class="block px-1 break-all" style="word-break: break-all;">
-        {{ record.descripcion|safe|default:"S/N" }}
-    </p>
-</div>
-
-
-    <!-- TAREAS JUDICIALES, INSTITUCIONES INT.  -->
+    <!-- DESCRIPCIÓN -->
+    <div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
+        <h2 class="text-lg pb-1 font-semibold">Descripción:</h2>
+        <p class="block px-1 break-all" style="word-break: break-all;">
+            {{ record.descripcion|safe|default:"S/N" }}
+        </p>
+    </div>
+    <!-- TAREAS JUDICIALES -->
     <div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
         <div class="col-span-2">
             <h2 class="text-lg font-semibold">Tareas Judiciales:</h2>
             <p style="max-height: 80px; line-height: 20px;" class="overflow-auto leading-10">{{ record.tareas_judiciales|default:"S/N" }}</p>
         </div>
     </div>
-    <!--  -->
+    <!-- BOMBEROS, HOSPITALES -->
     <div class="grid grid-cols-2 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
+        <!-- BOMBEROS -->
         <div class="">
-            <h2 class="text-lg font-semibold">Servicios de Emergencia:</h2>
+            <h2 class="text-lg font-semibold">Servicios de Emergencia Bomberil:</h2>
             {% if record.detalles_servicio_emergencia.all %}
                 <ul>
                     <div class="flex flex-col gap-y-2">
@@ -135,7 +138,7 @@
                 <p>S/N</p>
             {% endif %}
         </div>
-        <!-- Detalles de las instituciones hospitalarias -->
+        <!-- HOSPITALES -->
         <div class="">
             <h2 class="text-lg font-semibold">Instituciones Hospitalarias:</h2>
             {% if record.detalles_institucion_hospitalaria.all %}
@@ -161,9 +164,9 @@
             {% endif %}
         </div>
     </div>
-    <!-- HOSPITALES, MUNICIPIO, PROVINCIA -->
+    <!-- MUNICIPIO, PROVINCIA -->
     <div class="grid grid-cols-2 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
-        <!-- Detalles de dependencias municipales -->
+        <!-- MUNICIPIO -->
         <div class="">
             <h2 class="text-lg font-semibold">Dependencias Municipales:</h2>
             {% if record.detalles_dependencia_municipal.all %}
@@ -188,7 +191,7 @@
                 <p>S/N</p>
             {% endif %}
         </div>
-        <!-- Detalles de dependencias provinciales -->
+        <!-- PROVINCIA -->
         <div class="">
             <h2 class="text-lg font-semibold">Dependencias Provinciales:</h2>
             {% if record.detalles_dependencia_provincial.all %}
@@ -214,24 +217,25 @@
             {% endif %}
         </div>
     </div>
+    <!-- FECHA, CREADO Y EDITADO POR -->
     <div class="py-4 my-2 bg-gray-200 rounded-md px-2">
+        <!-- FECHA -->
         <div class="flex gap-x-2">
             <h2 class="text-lg font-semibold pb-1 break-words" style="line-height: 20px;">Fecha de Creación del Primer registro:</h2>
             <p>{{ record.created_at|date:"d/m/Y H:i:s"|default:"S/N" }}</p>
         </div>
-        <!-- FECHA, CREADO Y EDITADO POR.. -->
+        <!-- CREADO Y EDITADO POR.. -->
         <div class="grid grid-cols-2 gap-x-4 mt-1">
             <div class="">
-                <h2 class="text-lg font-semibold">Creado por:</h2>
+                <h2 class="text-lg font-semibold">Personal que realizo el primer Registro:</h2>
                 <p>{{ record.created_by.get_full_name|default:"S/N" }}</p>
             </div>
             <div class="">
-                <h2 class="text-lg font-semibold">Editado por:</h2>
+                <h2 class="text-lg font-semibold">Personal que realizo la ultima edicion:</h2>
                 <p>{{ record.updated_by.get_full_name|default:"S/N" }}</p>
             </div>
         </div>  
     </div>
-            
     <!-- ULTIMA ACTUALIZACION -->
     <div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
         <h2 class="text-lg pb-1 font-semibold">Última Actualización del Codigo:</h2>
