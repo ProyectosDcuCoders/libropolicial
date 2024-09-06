@@ -33,28 +33,26 @@
     <!-- TITULO -->
     <h1 class="text-2xl font-bold mb-4 text-center">Registrar en comisarias</h1>
     <form method="post" class="dark:text-gray-300" autocomplete="off">
-        
-
         {% csrf_token %}
         <!-- TOP -->
+        <!-- BOTONES -->
+        <div class="flex w-full justify-between pb-1">
+            <!-- GUARDAR -->
+            <div class="">
+                <button type="submit" 
+                    class="bg-blue-500 text-white px-6 py-1 rounded hover:bg-blue-700 w-full">
+                    Guardar
+                </button>
+            </div>
+            <!-- VOLVER -->
+            <div class="flex">
+                {% block back_button %}
+                {% endblock %}
+            </div>
+        </div>
         <div class="grid grid-cols-2 gap-x-4">
             <!-- FORMULARIO -->
             <div class="">
-                <!-- BOTONES -->
-                <div class="flex w-full justify-between pb-1">
-                    <!-- GUARDAR -->
-                    <div class="">
-                        <button type="submit" 
-                            class="bg-blue-500 text-white px-6 py-1 rounded hover:bg-blue-700 w-full">
-                            Guardar
-                        </button>
-                    </div>
-                    <!-- VOLVER -->
-                    <div class="flex">
-                        {% block back_button %}
-                        {% endblock %}
-                    </div>
-                </div>
                 <!-- BLOQUE 1 -->
                 <div class="flex gap-x-4 pb-2 pt-1">
                     <!-- FECHA Y HORA -->
@@ -151,7 +149,7 @@
                 </div>
             </div>
             <!-- MAPA -->
-            <div class="mt-14">
+            <div class="mt-4">
                 <!-- MAP -->
                 <div id="map" style="height: 343px;" class="rounded-lg"></div>
                 <!-- COORDENADAS -->
@@ -392,10 +390,5 @@
             </button>
         </div>
     </form>
-    <!--<div class="mt-4">
-        {% block green_button %}--> 
-        <!-- El botón de "Volver a la lista" se sobrescribirá en cada comisaría 
-        {% endblock %}
-    </div> -->
 </div>
 {% endblock %}
