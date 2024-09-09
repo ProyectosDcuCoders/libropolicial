@@ -4,6 +4,26 @@
 {% block title %}Lista de Codigos en Comisaría Primera{% endblock %}
 
 {% block content %}
+<style>
+    /* Modo oscuro para los elementos de DataTables */
+.dark .dataTables_length label,
+.dark .dataTables_filter label,
+.dark .dataTables_info,
+.dark .dataTables_paginate span a {
+    color: white !important;
+}
+
+.dark .paginate_button.current,
+.dark .paginate_button:hover {
+    background-color: #4B5563 !important;  /* Color gris oscuro */
+    color: white !important;
+}
+
+.dark .paginate_button {
+    color: white !important;
+}
+
+</style>
 <div class="mx-auto mt-4 p-4 dark:text-white" x-data="{ 
     showModal: false, 
     descripcion: '', 
@@ -56,7 +76,7 @@
     
 
     <div class="overflow-x-auto max-w-7xl mx-auto">
-        <table id="comisarias-table" class="min-w-full bg-gray-600 border border-gray-600 mt-4 dark:bg-gray-800 dark:border-gray-700">
+        <table id="comisarias-table" class="min-w-full bg-gray-600 border dark:text-white border-gray-600 mt-4 dark:bg-gray-800 dark:border-gray-700">
             <thead class="bg-slate-800 text-white dark:bg-slate-900 dark:text-gray-200">
                 <tr>
                     <!-- Aplica las clases de Tailwind para el modo oscuro -->
