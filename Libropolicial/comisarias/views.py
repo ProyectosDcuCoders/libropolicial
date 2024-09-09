@@ -724,7 +724,7 @@ class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
             if numero_movil_secundaria or nombre_a_cargo_secundaria:
                 DetalleDependenciaSecundaria.objects.create(
                     dependencia_secundaria=dependencia_secundaria,
-                    comisaria_primera=self.object,
+                    comisaria_segunda=self.object,
                     numero_movil_secundaria=numero_movil_secundaria,
                     nombre_a_cargo_secundaria=nombre_a_cargo_secundaria
                 )
@@ -736,7 +736,7 @@ class ComisariaSegundaCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
             if numero_movil_federal or nombre_a_cargo_federal:
                 DetalleInstitucionFederal.objects.create(
                     institucion_federal=institucion_federal,
-                    comisaria_primera=self.object,
+                    comisaria_segunda=self.object,
                     numero_movil_federal=numero_movil_federal,
                     nombre_a_cargo_federal=nombre_a_cargo_federal
                 )         
@@ -793,12 +793,12 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
 
         # Añadir los nuevos detalles para dependencias secundarias
         context['detalle_dependencias_secundarias'] = json.dumps(list(
-            DetalleDependenciaSecundaria.objects.filter(comisaria_primera=self.object.pk).values('id', 'dependencia_secundaria_id', 'numero_movil_secundaria', 'nombre_a_cargo_secundaria')
+            DetalleDependenciaSecundaria.objects.filter(comisaria_segunda=self.object.pk).values('id', 'dependencia_secundaria_id', 'numero_movil_secundaria', 'nombre_a_cargo_secundaria')
         ))
 
         # Añadir los nuevos detalles para instituciones federales
         context['detalle_instituciones_federales'] = json.dumps(list(
-            DetalleInstitucionFederal.objects.filter(comisaria_primera=self.object.pk).values('id', 'institucion_federal_id', 'numero_movil_federal', 'nombre_a_cargo_federal')
+            DetalleInstitucionFederal.objects.filter(comisaria_segunda=self.object.pk).values('id', 'institucion_federal_id', 'numero_movil_federal', 'nombre_a_cargo_federal')
         ))
 
         return context
@@ -903,7 +903,7 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
             nombre_a_cargo_secundaria = self.request.POST.get(f'nombre_a_cargo_secundaria_{dependencia_secundaria.id}')
             DetalleDependenciaSecundaria.objects.update_or_create(
                 dependencia_secundaria=dependencia_secundaria,
-                comisaria_primera=self.object,
+                comisaria_segunda=self.object,
                 defaults={
                     'numero_movil_secundaria': numero_movil_secundaria,
                     'nombre_a_cargo_secundaria': nombre_a_cargo_secundaria
@@ -916,7 +916,7 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
             nombre_a_cargo_federal = self.request.POST.get(f'nombre_a_cargo_federal_{institucion_federal.id}')
             DetalleInstitucionFederal.objects.update_or_create(
                 institucion_federal=institucion_federal,
-                comisaria_primera=self.object,
+                comisaria_segunda=self.object,
                 defaults={
                     'numero_movil_federal': numero_movil_federal,
                     'nombre_a_cargo_federal': nombre_a_cargo_federal
