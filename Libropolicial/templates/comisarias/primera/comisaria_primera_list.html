@@ -22,32 +22,37 @@
 
     <div class="flex flex-wrap justify-center gap-4 mb-4">
         <a href="{% url 'comisaria_primera_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
-
-         <!-- Botón para 'jefessuperiores' -->
+    
+        <!-- Botón para 'jefessuperiores' -->
         {% if is_jefessuperiores %}
         <a href="{% url 'comisarias_completa_list' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Libro general</a>
         {% endif %}
-
-         <!-- Botón para 'oficialesservicios' y 'jefessuperiores' -->
+    
+        <!-- Botón para 'oficialesservicios' y 'jefessuperiores' -->
         {% if is_oficialesservicios or is_jefessuperiores or is_encargados_guardias_primera %}
-         <a href="{% url 'generate_comisaria_primera_pdf_download' %}?signature=true" target="_blank" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Firmar y Descargar PDF</a>
-         {% endif %}
-
-         {% if user.is_authenticated and user.is_superuser %}
+        <a href="{% url 'generate_comisaria_primera_pdf_download' %}?signature=true" target="_blank" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Firmar y Descargar PDF</a>
+        {% endif %}
+    
+        {% if user.is_authenticated and user.is_superuser %}
         <a href="{% url 'generate_comisaria_primera_pdf_download_previous_day' %}" target="_blank" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Descargar PDF del Día Anterior</a>
-         {% endif %}
-
-        
-         <!-- Botón para 'oficialesservicios' y 'jefessuperiores' --> <!-- Botón para subir y ver PDFs -->
-         {% if is_oficialesservicios or is_jefessuperiores %}
+        {% endif %}
+    
+        <!-- Botón para subir y ver PDFs -->
+        {% if is_oficialesservicios or is_jefessuperiores %}
         <a href="{% url 'subir_pdf' %}" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-700">Subir PDF</a>
         {% endif %}
-
+    
         {% if user.is_authenticated and user.is_superuser %}
         <a href="{% url 'ver_pdfs' %}" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Ver PDF Libro</a>
         {% endif %}
-
+    
+        <!-- Nuevo botón para ir al mapa -->
+        <a href="{% url 'generar_mapa' %}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700">Ver Mapa</a>
+    
+        <!-- Nuevo botón para ver estadísticas -->
+        <a href="{% url 'estadisticas_comisarias' %}" class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-700">Estadística</a>
     </div>
+    
     
 
     <div class="overflow-x-auto max-w-7xl mx-auto">

@@ -15,7 +15,7 @@ django.setup()
 from comisarias.models import (
     CodigoPolicialUSH, CodigosSecundarios, CuartoGuardiaUSH, DependenciasSecundarias, 
     SolicitanteCodigo, ServiciosEmergencia, InstitucionesHospitalarias, 
-    DependenciasMunicipales, DependenciasProvinciales
+    DependenciasMunicipales, DependenciasProvinciales, InstitucionesFederales
 )
 
 # Función principal para poblar la base de datos
@@ -66,7 +66,7 @@ def run():
     cuartos = ['A', 'B', 'C', 'D']
     
     # Lista de dependencias secundarias
-    dependencias_secundarias = ['C.G. y F.Nº1U.', 'C.G. y F.Nº2U.', 'D.P.C.U', 'D.S.E.U']
+    dependencias_secundarias = ['C.G. y F.Nº1U.', 'C.G. y F.Nº2U.', 'D.P.C.U', 'D.S.E.U', 'D.D.C.U', 'D.N.D.F.U', 'CRIA 1ra', 'CRIA 2da', 'CRIA 3ra', 'CRIA 4ta', 'CRIA 5ta']
 
     # Lista de solicitantes de código
     solicitantes_codigo = ['D.C.U', 'PARTICULAR', 'COMISARIA', 'OTRO']
@@ -82,6 +82,9 @@ def run():
 
     # Lista de dependencias provinciales
     dependencias_provinciales = ['CAMUZZI USHUAIA', 'D.P.E', 'TRANSPORTE PROVINCIAL', 'D.P.O.S.S.', 'MANEJO DEL FUEGO', 'RECURSOS NATURALES', 'PROTECCION CIVIL', 'MINISTERIO DE TRABAJO', 'SERVICIOS GENERALES', 'DIR. PROV. DE VIALIDAD', 'I.P.V', 'A.R.E.F', 'O.S.E.F', 'DIV. PROV. PUERTOS' ]
+
+    # Lista de instituciones federales
+    instituciones_federales = ['P.S.A', 'G.N.A', 'P.N.A', 'P.F.A', 'A.R.A']
 
     # Inserta cada código en la base de datos si no existe
     for codigo, nombre in codigos:
@@ -118,6 +121,10 @@ def run():
     # Inserta cada dependencia provincial en la base de datos si no existe
     for dependencia in dependencias_provinciales:
         DependenciasProvinciales.objects.get_or_create(nombre=dependencia)
+
+    # Inserta cada institución federal en la base de datos si no existe
+    for institucion in instituciones_federales:
+        InstitucionesFederales.objects.get_or_create(nombre=institucion)
 
     print('Successfully seeded the database for comisarias')
 

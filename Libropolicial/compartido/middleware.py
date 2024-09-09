@@ -33,6 +33,8 @@ class RedirectAuthenticatedUserMiddleware(MiddlewareMixin):
                 return redirect('comisaria_segunda_list')
             elif request.user.groups.filter(name='divisioncomunicaciones').exists():
                 return redirect('divisioncomunicaciones_list')
+            elif request.user.groups.filter(name='estadisticas').exists():
+                return redirect('estadisticas_comisarias')
             else:
                 return redirect('no_permission')
         return None
