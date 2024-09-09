@@ -66,7 +66,7 @@
                 <div colspan="3" style="text-align: center; font-size: 16px; font-weight: bold;">
                     <span style="color: blue;">CÓDIGO:</span>
                     {% if registro.codigo %}
-                        <span style="color: red;">{{ registro.codigo.codigo }}</span>
+                        <span style="color: red;">{{ registro.codigo.codigo }} - {{ registro.codigo.nombre_codigo|default:"S/N" }}</span>
                     {% else %}
                         <span style="color: red;">S/N</span>
                     {% endif %}
@@ -184,6 +184,53 @@
         {% endif %}
     </tr>
 </table>
+
+
+
+<!-- Instituciones Federales -->
+<table>
+    <tr>
+        <td><strong>Instituciones Federales:</strong></td>
+        {% if registro.detalles_institucion_federal.all %}
+            <td colspan="2">
+                <table>
+                    {% for detalle in registro.detalles_institucion_federal.all %}
+                    <tr>
+                        <td><strong>Institución:</strong> {{ detalle.institucion_federal.nombre|default:"S/N" }}</td>
+                        <td><strong>Móvil:</strong> {{ detalle.numero_movil_federal|default:"S/N" }}</td>
+                        <td><strong>A Cargo:</strong> {{ detalle.nombre_a_cargo_federal|default:"S/N" }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+        {% else %}
+            <td colspan="2">S/N</td>
+        {% endif %}
+    </tr>
+</table>
+
+<!-- Dependencias Secundarias -->
+<table>
+    <tr>
+        <td><strong>Dependencias Secundarias:</strong></td>
+        {% if registro.detalles_dependencia_secundaria.all %}
+            <td colspan="2">
+                <table>
+                    {% for detalle in registro.detalles_dependencia_secundaria.all %}
+                    <tr>
+                        <td><strong>Dependencia:</strong> {{ detalle.dependencia_secundaria.nombre|default:"S/N" }}</td>
+                        <td><strong>Móvil:</strong> {{ detalle.numero_movil_secundaria|default:"S/N" }}</td>
+                        <td><strong>A Cargo:</strong> {{ detalle.nombre_a_cargo_secundaria|default:"S/N" }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </td>
+        {% else %}
+            <td colspan="2">S/N</td>
+        {% endif %}
+    </tr>
+</table>
+
 
 
         <!-- Fecha de creación, creado y editado por 
