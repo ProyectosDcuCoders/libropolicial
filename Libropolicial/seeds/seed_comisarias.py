@@ -18,6 +18,8 @@ from comisarias.models import (
     DependenciasMunicipales, DependenciasProvinciales, InstitucionesFederales
 )
 
+#from divisioncomunicaciones.models import CuartoGuardiaUSH
+
 # Función principal para poblar la base de datos
 def run():
     # Lista de códigos policiales y secundarios a insertar en la base de datos junto con sus nombres

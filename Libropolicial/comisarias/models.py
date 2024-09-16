@@ -1,6 +1,10 @@
 from django.contrib.auth.models import User  # Importa el modelo User de Django, que representa a los usuarios del sistema.
 from django.db import models  # Importa el módulo models de Django, usado para definir modelos de base de datos.
 from django.utils import timezone  # Importa la utilidad timezone para manejar fechas y horas según la zona horaria.
+#from compartido.models import CuartoGuardiaUSH
+from compartido.models import CuartoGuardiaUSH  # Importa el modelo compartido
+
+
 
 # Clase para manejar los archivos PDF subidos.
 class UploadedPDF(models.Model):
@@ -16,77 +20,130 @@ class UploadedPDF(models.Model):
 class CodigoPolicialUSH(models.Model):
     codigo = models.CharField(max_length=10)  # Campo para almacenar un código, con un máximo de 10 caracteres.
     nombre_codigo = models.CharField(max_length=255, null=True, blank=True)  # Nuevo campo agregado que acepta nulos
+    activo = models.BooleanField(default=True)  # Soft delete
     
     def __str__(self):
         return f"{self.codigo} - {self.nombre_codigo}"  # Define la representación en cadena del objeto, mostrando el código.
+    
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
 # Clase para manejar códigos secundarios.
 class CodigosSecundarios(models.Model):
     codigo = models.CharField(max_length=10)  # Campo para almacenar un código secundario, con un máximo de 10 caracteres.
+    activo = models.BooleanField(default=True)  # Soft delete
 
     def __str__(self):
         return self.codigo  # Define la representación en cadena del objeto, mostrando el código.
+    
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
 # Clase para manejar dependencias secundarias.
 class DependenciasSecundarias(models.Model):
     dependencia = models.CharField(max_length=100)  # Campo para almacenar el nombre de una dependencia secundaria, con un máximo de 100 caracteres.
+    activo = models.BooleanField(default=True)  # Soft delete
+
 
     def __str__(self):
         return self.dependencia  # Define la representación en cadena del objeto, mostrando el nombre de la dependencia.
+    
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
 # Clase para manejar los turnos de guardia en la comisaría.
-class CuartoGuardiaUSH(models.Model):
-    cuarto = models.CharField(max_length=1)  # Campo para almacenar el número o letra del cuarto de guardia, con un solo carácter.
+#class CuartoGuardiaUSH(models.Model):
+   # cuarto = models.CharField(max_length=1)  # Campo para almacenar el número o letra del cuarto de guardia, con un solo carácter.
+   # activo = models.BooleanField(default=True)  # Soft delete
 
-    def __str__(self):
-        return self.cuarto  # Define la representación en cadena del objeto, mostrando el número o letra del cuarto.
+   # def __str__(self):
+    #    return self.cuarto  # Define la representación en cadena del objeto, mostrando el número o letra del cuarto.
+    
+   # def delete(self, *args, **kwargs):
+     #   self.activo = False
+     #   self.save()
 
 # Clase para manejar solicitantes de códigos.
 class SolicitanteCodigo(models.Model):
     codigo = models.CharField(max_length=100)  # Campo para almacenar el nombre o identificador del solicitante de código, con un máximo de 100 caracteres.
+    activo = models.BooleanField(default=True)  # Soft delete
 
     def __str__(self):
         return self.codigo  # Define la representación en cadena del objeto, mostrando el nombre del solicitante.
+    
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
 # Clase para manejar las instituciones hospitalarias.
 class InstitucionesHospitalarias(models.Model):
     nombre = models.CharField(max_length=60)  # Campo para almacenar el nombre de una institución hospitalaria, con un máximo de 60 caracteres.
-
+    activo = models.BooleanField(default=True)  # Soft delete
+   
     def __str__(self):
         return self.nombre  # Define la representación en cadena del objeto, mostrando el nombre de la institución.
+    
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
 # Clase para manejar dependencias municipales.
 class DependenciasMunicipales(models.Model):
     nombre = models.CharField(max_length=60)  # Campo para almacenar el nombre de una dependencia municipal, con un máximo de 60 caracteres.
+    activo = models.BooleanField(default=True)  # Soft delete
 
     def __str__(self):
         return self.nombre  # Define la representación en cadena del objeto, mostrando el nombre de la dependencia.
+
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
 # Clase para manejar dependencias provinciales.
 class DependenciasProvinciales(models.Model):
     nombre = models.CharField(max_length=60)  # Campo para almacenar el nombre de una dependencia provincial, con un máximo de 60 caracteres.
+    activo = models.BooleanField(default=True)  # Soft delete
 
     def __str__(self):
         return self.nombre  # Define la representación en cadena del objeto, mostrando el nombre de la dependencia.
 
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
+
 # Clase para manejar los servicios de emergencia.
 class ServiciosEmergencia(models.Model):
     nombre = models.CharField(max_length=60)  # Campo para almacenar el nombre de un servicio de emergencia, con un máximo de 60 caracteres.
+    activo = models.BooleanField(default=True)  # Soft delete
 
     def __str__(self):
         return self.nombre  # Define la representación en cadena del objeto, mostrando el nombre del servicio.
     
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
+
+
 class InstitucionesFederales(models.Model):
     nombre =  models.CharField(max_length=60)
+    activo = models.BooleanField(default=True)  # Soft delete
      
     def __str__(self):
         return self.nombre
-            
+
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
+        
             
 
 # Clase abstracta que sirve como base para todas las comisarías.
 class BaseComisaria(models.Model):
-    cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, on_delete=models.CASCADE)  # Relaciona la comisaría con un cuarto de guardia; si el cuarto se elimina, se elimina la comisaría.
+    #cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, on_delete=models.CASCADE)  # Relaciona la comisaría con un cuarto de guardia; si el cuarto se elimina, se elimina la comisaría.
+    cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, on_delete=models.CASCADE)
     fecha_hora = models.DateTimeField(default=timezone.now)  # Almacena la fecha y hora del registro, con la fecha y hora actuales por defecto.
     codigo = models.ForeignKey(CodigoPolicialUSH, null=True, blank=True, on_delete=models.SET_NULL)  # Relaciona la comisaría con un código policial; si el código se elimina, se establece a NULL.
     solicitante_codigo = models.ForeignKey(SolicitanteCodigo, null=True, blank=True, on_delete=models.SET_NULL)  # Relaciona la comisaría con un solicitante de código; si el solicitante se elimina, se establece a NULL.

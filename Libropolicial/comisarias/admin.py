@@ -1,3 +1,71 @@
 from django.contrib import admin
 
-# Register your models here.
+from django.contrib import admin
+from .models import (
+    CodigoPolicialUSH, CodigosSecundarios, CuartoGuardiaUSH, 
+    DependenciasSecundarias, SolicitanteCodigo, ServiciosEmergencia, 
+    InstitucionesHospitalarias, DependenciasMunicipales, DependenciasProvinciales
+)
+
+# Admin para CodigoPolicialUSH con opción de activar/desactivar
+@admin.register(CodigoPolicialUSH)
+class CodigoPolicialUSHAdmin(admin.ModelAdmin):
+    list_display = ('codigo', 'activo')  # Mostrar si está activo o no
+    search_fields = ('codigo',)
+    list_filter = ('activo',)  # Agregar filtro por activos
+
+# Admin para CodigosSecundarios con opción de activar/desactivar
+@admin.register(CodigosSecundarios)
+class CodigosSecundariosAdmin(admin.ModelAdmin):
+    list_display = ('codigo', 'activo')  # Mostrar si está activo o no
+    search_fields = ('codigo',)
+    list_filter = ('activo',)  # Agregar filtro por activos
+
+# Admin para CuartoGuardiaUSH con opción de activar/desactivar
+@admin.register(CuartoGuardiaUSH)
+class CuartoGuardiaUSHAdmin(admin.ModelAdmin):
+    list_display = ('cuarto', 'activo')  # Mostrar si está activo o no
+    search_fields = ('cuarto',)
+    list_filter = ('activo',)  # Agregar filtro por activos
+
+# Admin para DependenciasSecundarias con opción de activar/desactivar
+@admin.register(DependenciasSecundarias)
+class DependenciasSecundariasAdmin(admin.ModelAdmin):
+    list_display = ('dependencia', 'activo')  # Mostrar si está activo o no
+    search_fields = ('dependencia',)
+    list_filter = ('activo',)  # Agregar filtro por activos
+
+# Admin para SolicitanteCodigo con opción de activar/desactivar
+@admin.register(SolicitanteCodigo)
+class SolicitanteCodigoAdmin(admin.ModelAdmin):
+    list_display = ('codigo', 'activo')  # Mostrar si está activo o no
+    search_fields = ('codigo',)
+    list_filter = ('activo',)  # Agregar filtro por activos
+
+# Admin para ServiciosEmergencia con opción de activar/desactivar
+@admin.register(ServiciosEmergencia)
+class ServiciosEmergenciaAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'activo')  # Mostrar si está activo o no
+    search_fields = ('nombre',)
+    list_filter = ('activo',)  # Agregar filtro por activos
+
+# Admin para InstitucionesHospitalarias con opción de activar/desactivar
+@admin.register(InstitucionesHospitalarias)
+class InstitucionesHospitalariasAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'activo')  # Mostrar si está activo o no
+    search_fields = ('nombre',)
+    list_filter = ('activo',)  # Agregar filtro por activos
+
+# Admin para DependenciasMunicipales con opción de activar/desactivar
+@admin.register(DependenciasMunicipales)
+class DependenciasMunicipalesAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'activo')  # Mostrar si está activo o no
+    search_fields = ('nombre',)
+    list_filter = ('activo',)  # Agregar filtro por activos
+
+# Admin para DependenciasProvinciales con opción de activar/desactivar
+@admin.register(DependenciasProvinciales)
+class DependenciasProvincialesAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'activo')  # Mostrar si está activo o no
+    search_fields = ('nombre',)
+    list_filter = ('activo',)  # Agregar filtro por activos
