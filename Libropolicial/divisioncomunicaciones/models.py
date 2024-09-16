@@ -34,16 +34,16 @@ class PersonalGuardia(models.Model):
 
     
 
-class CuartoGuardiaUSH(models.Model):
-    cuarto = models.CharField(max_length=1)
-    activo = models.BooleanField(default=True)  # Ensure this field exists
+#class CuartoGuardiaUSH(models.Model):
+ #   cuarto = models.CharField(max_length=1)
+  #  activo = models.BooleanField(default=True)  # Ensure this field exists
 
-    def __str__(self):
-        return self.cuarto
+   # def __str__(self):
+    #    return self.cuarto
     
-    def delete(self, *args, **kwargs):
-        self.activo = False
-        self.save()  
+    #def delete(self, *args, **kwargs):
+     #   self.activo = False
+      #  self.save()  
     
 
 

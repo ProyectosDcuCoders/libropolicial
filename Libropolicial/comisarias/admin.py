@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from django.contrib import admin
 from .models import (
-    CodigoPolicialUSH, CodigosSecundarios, CuartoGuardiaUSH, 
+    CodigoPolicialUSH, CodigosSecundarios,  
     DependenciasSecundarias, SolicitanteCodigo, ServiciosEmergencia, 
     InstitucionesHospitalarias, DependenciasMunicipales, DependenciasProvinciales
 )
@@ -21,12 +21,6 @@ class CodigosSecundariosAdmin(admin.ModelAdmin):
     search_fields = ('codigo',)
     list_filter = ('activo',)  # Agregar filtro por activos
 
-# Admin para CuartoGuardiaUSH con opción de activar/desactivar
-@admin.register(CuartoGuardiaUSH)
-class CuartoGuardiaUSHAdmin(admin.ModelAdmin):
-    list_display = ('cuarto', 'activo')  # Mostrar si está activo o no
-    search_fields = ('cuarto',)
-    list_filter = ('activo',)  # Agregar filtro por activos
 
 # Admin para DependenciasSecundarias con opción de activar/desactivar
 @admin.register(DependenciasSecundarias)
