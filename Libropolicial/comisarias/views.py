@@ -32,7 +32,9 @@ from xhtml2pdf import pisa
 
 from Libropolicial.settings import MEDIA_ROOT
 from .forms import ComisariaPrimeraForm, ComisariaSegundaForm, ComisariaTerceraForm, ComisariaCuartaForm, ComisariaQuintaForm, CustomLoginForm
-from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, DependenciasSecundarias, CodigoPolicialUSH, DetalleDependenciaSecundaria, DetalleInstitucionFederal, DetalleServicioEmergencia, DetalleInstitucionHospitalaria, DetalleDependenciaMunicipal, DetalleDependenciaProvincial, UploadedPDF
+from .models import ComisariaPrimera, ComisariaSegunda, ComisariaTercera, ComisariaCuarta, ComisariaQuinta, DependenciasSecundarias, CodigoPolicialUSH, DetalleDependenciaSecundaria, DetalleInstitucionFederal, DetalleServicioEmergencia, DetalleInstitucionHospitalaria, DetalleDependenciaMunicipal, DetalleDependenciaProvincial 
+from compartido.models import UploadedPDF
+
 from compartido.utils import user_is_in_group
 import base64
 

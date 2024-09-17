@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from compartido.models import CuartoGuardiaUSH
+from compartido.models import CodigoPolicialUSH, CodigosSecundarios, CuartoGuardiaUSH
 
 
 class EncargadoGuardia(models.Model):
@@ -32,28 +32,15 @@ class PersonalGuardia(models.Model):
         self.activo = False
         self.save()
 
-    
-
-#class CuartoGuardiaUSH(models.Model):
- #   cuarto = models.CharField(max_length=1)
-  #  activo = models.BooleanField(default=True)  # Ensure this field exists
-
-   # def __str__(self):
-    #    return self.cuarto
-    
-    #def delete(self, *args, **kwargs):
-     #   self.activo = False
-      #  self.save()  
-    
-
 
 class DivisionComunicaciones(models.Model):
     inicio_guardia = models.DateTimeField(null=True, blank=True)
     finalizacion_guardia = models.DateTimeField(null=True, blank=True)
     cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, blank=True, on_delete=models.CASCADE)
-    #cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, blank=True, on_delete=models.CASCADE)
+    codigo = models.ForeignKey(CodigoPolicialUSH, null=True, blank=True, on_delete=models.CASCADE)  # Relaciona la comisaría con un código policial; si el código se elimina, se establece a NULL.
+    codigos_secundarios = models.ManyToManyField(CodigosSecundarios, blank=True)  # Relaciona la comisaría con múltiples códigos secundarios, permitiendo que el campo quede vacío.
     oficial_servicio = models.CharField(max_length=100, null=True, blank=True)
-    encargado_guardia = models.ForeignKey(EncargadoGuardia, null=True, blank=True, on_delete=models.SET_NULL)  # Cambiar a SET_NULL
+    encargado_guardia = models.ForeignKey(EncargadoGuardia, null=True, blank=True, on_delete=models.CASCADE)  # Cambiar a SET_NULL
     personal_guardia = models.ManyToManyField(PersonalGuardia, blank=True, related_name='comunicaciones_guardia')
     distribucion_personal_moviles = models.TextField(null=True, blank=True)
     novedades = models.TextField(null=True, blank=True)

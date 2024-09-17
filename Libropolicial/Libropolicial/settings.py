@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'Libropolicial.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Utiliza el backend MySQL
-        'NAME': 'librodiario',  # Nombre de la base de datos
+        'NAME': 'libro',  # Nombre de la base de datos
         'USER': 'root',  # Usuario de la base de datos
         'PASSWORD': '',  # Contraseña de la base de datos
         'HOST': 'localhost',  # Host de la base de datos

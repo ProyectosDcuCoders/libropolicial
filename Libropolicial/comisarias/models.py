@@ -2,44 +2,9 @@ from django.contrib.auth.models import User  # Importa el modelo User de Django,
 from django.db import models  # Importa el módulo models de Django, usado para definir modelos de base de datos.
 from django.utils import timezone  # Importa la utilidad timezone para manejar fechas y horas según la zona horaria.
 #from compartido.models import CuartoGuardiaUSH
-from compartido.models import CuartoGuardiaUSH  # Importa el modelo compartido
+from compartido.models import CuartoGuardiaUSH, CodigoPolicialUSH, CodigosSecundarios   # Importa el modelo compartido
 
 
-
-# Clase para manejar los archivos PDF subidos.
-class UploadedPDF(models.Model):
-    file = models.FileField(upload_to='partespdf/')  # Campo para almacenar archivos PDF, que se guardan en la carpeta 'partespdf/'.
-    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)  # Relaciona cada PDF con el usuario que lo subió; si el usuario se elimina, también se elimina el PDF.
-    uploaded_at = models.DateTimeField(auto_now_add=True)  # Almacena la fecha y hora en que se subió el PDF, asignada automáticamente al crear el objeto.
-
-    # Método para obtener solo el nombre del archivo PDF.
-    def filename(self):
-        return self.file.name.split('/')[-1]  # Retorna solo el nombre del archivo, eliminando el camino de la ruta.
-
-# Clase para manejar códigos policiales de Ushuaia.
-class CodigoPolicialUSH(models.Model):
-    codigo = models.CharField(max_length=10)  # Campo para almacenar un código, con un máximo de 10 caracteres.
-    nombre_codigo = models.CharField(max_length=255, null=True, blank=True)  # Nuevo campo agregado que acepta nulos
-    activo = models.BooleanField(default=True)  # Soft delete
-    
-    def __str__(self):
-        return f"{self.codigo} - {self.nombre_codigo}"  # Define la representación en cadena del objeto, mostrando el código.
-    
-    def delete(self, *args, **kwargs):
-        self.activo = False
-        self.save()
-
-# Clase para manejar códigos secundarios.
-class CodigosSecundarios(models.Model):
-    codigo = models.CharField(max_length=10)  # Campo para almacenar un código secundario, con un máximo de 10 caracteres.
-    activo = models.BooleanField(default=True)  # Soft delete
-
-    def __str__(self):
-        return self.codigo  # Define la representación en cadena del objeto, mostrando el código.
-    
-    def delete(self, *args, **kwargs):
-        self.activo = False
-        self.save()
 
 # Clase para manejar dependencias secundarias.
 class DependenciasSecundarias(models.Model):
@@ -54,17 +19,6 @@ class DependenciasSecundarias(models.Model):
         self.activo = False
         self.save()
 
-# Clase para manejar los turnos de guardia en la comisaría.
-#class CuartoGuardiaUSH(models.Model):
-   # cuarto = models.CharField(max_length=1)  # Campo para almacenar el número o letra del cuarto de guardia, con un solo carácter.
-   # activo = models.BooleanField(default=True)  # Soft delete
-
-   # def __str__(self):
-    #    return self.cuarto  # Define la representación en cadena del objeto, mostrando el número o letra del cuarto.
-    
-   # def delete(self, *args, **kwargs):
-     #   self.activo = False
-     #   self.save()
 
 # Clase para manejar solicitantes de códigos.
 class SolicitanteCodigo(models.Model):
@@ -142,13 +96,11 @@ class InstitucionesFederales(models.Model):
 
 # Clase abstracta que sirve como base para todas las comisarías.
 class BaseComisaria(models.Model):
-    #cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, on_delete=models.CASCADE)  # Relaciona la comisaría con un cuarto de guardia; si el cuarto se elimina, se elimina la comisaría.
     cuarto = models.ForeignKey(CuartoGuardiaUSH, null=True, on_delete=models.CASCADE)
     fecha_hora = models.DateTimeField(default=timezone.now)  # Almacena la fecha y hora del registro, con la fecha y hora actuales por defecto.
-    codigo = models.ForeignKey(CodigoPolicialUSH, null=True, blank=True, on_delete=models.SET_NULL)  # Relaciona la comisaría con un código policial; si el código se elimina, se establece a NULL.
-    solicitante_codigo = models.ForeignKey(SolicitanteCodigo, null=True, blank=True, on_delete=models.SET_NULL)  # Relaciona la comisaría con un solicitante de código; si el solicitante se elimina, se establece a NULL.
+    codigo = models.ForeignKey(CodigoPolicialUSH, null=True, blank=True, on_delete=models.CASCADE)  # Relaciona la comisaría con un código policial; si el código se elimina, se establece a NULL.
+    solicitante_codigo = models.ForeignKey(SolicitanteCodigo, null=True, blank=True, on_delete=models.CASCADE)  # Relaciona la comisaría con un solicitante de código; si el solicitante se elimina, se establece a NULL.
     codigos_secundarios = models.ManyToManyField(CodigosSecundarios, blank=True)  # Relaciona la comisaría con múltiples códigos secundarios, permitiendo que el campo quede vacío.
-   # dependencias_secundarias = models.ManyToManyField(DependenciasSecundarias, blank=True)  # Relaciona la comisaría con múltiples dependencias secundarias, permitiendo que el campo quede vacío.
     movil_patrulla = models.CharField(max_length=255, null=True, blank=True)  # Campo para almacenar información sobre el móvil de patrulla, permitiendo que quede vacío.
     a_cargo = models.CharField(max_length=255, null=True, blank=True)  # Campo para almacenar el nombre de la persona a cargo, permitiendo que quede vacío.
     secundante = models.CharField(max_length=255, null=True, blank=True)  # Campo para almacenar el nombre del secundante, permitiendo que quede vacío.
