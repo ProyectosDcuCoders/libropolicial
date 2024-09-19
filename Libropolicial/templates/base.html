@@ -93,6 +93,15 @@
             filter: invert(1); /* Invertir el color del ícono en modo oscuro */
         }
     </style>
+    <!-- Estilos CSS para el efecto de destello -->
+<style>
+   
+    .animate-blink {
+        animation: blink 1s infinite;  /* Aplica la animación de destello, cada segundo se repetirá */
+        background-color: #f56565; /* bg-red-500 */
+        color: black; /* Texto en color oscuro */
+    }
+</style>
     <!-- CKEditor media -->
     {% block extrahead %}
         {{ form.media }}
@@ -129,25 +138,16 @@
         </nav>
     </header>
 
+    <!-- Aquí es donde se mostrará el mensaje -->
+    <div id="alert-box" class="hidden fixed top-0 bg-red-500 text-white p-4 z-50 text-center mx-auto animate-blink" style="max-width: 500px; left: 0; right: 0; border-radius: 20px;">
+        <strong>RECUERDE DESCARGAR EL PDF DE LIBRODIARIO ANTES DE LAS 23:59 HS</strong>
+    </div>
+    
+
+    
     <main class="flex-grow mx-auto w-full p-4">
       
 
- <!-- {% if messages %}
-    <div id="messages" class="fixed top-0 left-0 right-0 bg-red-500 text-black p-4 z-50">
-        
-        Recorre cada mensaje en la lista de mensajes
-        {% for message in messages %}
-            <p>{{ message }}</p>  Muestra el mensaje
-        {% endfor %}
-    </div>
-
-    <script>
-        // Oculta el div de mensajes después de 5 minutos (300000 milisegundos)
-        setTimeout(function() {
-            document.getElementById('messages').style.display = 'none';
-        }, 300000); // 5 minutos en milisegundos
-    </script>
-{% endif %}  -->
 
 
 
@@ -478,6 +478,68 @@ form.addEventListener('submit', (e) => {
 
     </script>
     
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function checkForMessage() {
+                fetch('/check-message/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.show_message) {
+                            const alertBox = document.getElementById('alert-box');
+                            alertBox.classList.remove('hidden');
+                            setTimeout(() => {
+                                alertBox.classList.add('hidden');
+                            }, 120000); // 2 minutos (120,000 ms)
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        
+            // Ejecuta la función cada 4 minutos
+            setInterval(checkForMessage, 240000);  // 240000 ms = 4 minutos
+            // Ejecuta al cargar la página por primera vez
+            checkForMessage();
+        });
+    </script>
+    <script>
+       // Función para limpiar las etiquetas HTML de una cadena
+function stripHTML(html) {
+    let doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  }
+  
+  // Función para leer el registro
+  function readRecord(cuarto, fecha_hora, codigo, nombre_codigo, lugar, descripcion, estado, creado_por, editado_por) {
+    // Detener cualquier audio en curso antes de iniciar uno nuevo
+    window.speechSynthesis.cancel();
+  
+    // Limpiar las etiquetas HTML de la descripción
+    const cleanDescripcion = stripHTML(descripcion);
+  
+    // Crear un nuevo mensaje de síntesis de voz
+    const mensaje = new SpeechSynthesisUtterance(
+      `El cuarto es ${cuarto}, la fecha y hora del código es ${fecha_hora}, el código es ${codigo} - ${nombre_codigo}, el lugar del código es ${lugar}. Descripción: ${cleanDescripcion}. 
+      El estado del código es ${estado}. Creado por: ${creado_por}. Última actualización por: ${editado_por}.`
+    );
+  
+    // Configurar la voz (opcional)
+    const voices = window.speechSynthesis.getVoices();
+    mensaje.voice = voices.find(voice => voice.lang === 'es-ES') || voices[0]; // Busca una voz en español
+  
+    // Ajustar la velocidad de la voz (1 es la velocidad normal, 0.8 es más lento)
+    mensaje.rate = 0.8;
+  
+    // Reproducir el mensaje
+    window.speechSynthesis.speak(mensaje);
+  }
+  
+  // Función para detener el audio manualmente
+  function stopAudio() {
+    window.speechSynthesis.cancel();
+  }
+  
+      </script>
+                
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

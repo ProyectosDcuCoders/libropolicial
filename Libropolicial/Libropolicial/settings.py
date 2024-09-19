@@ -64,6 +64,14 @@ MIDDLEWARE = [
 
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+
 ROOT_URLCONF = 'Libropolicial.urls'
 
 TEMPLATES = [
@@ -82,8 +90,30 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Libropolicial.wsgi.application'
+
+
+#WSGI_APPLICATION = 'Libropolicial.wsgi.application'
 #ASGI_APPLICATION = 'Libropolicial.asgi.application'
+
+# Configuración para canales
+# settings.py
+
+ASGI_APPLICATION = 'Libropolicial.asgi.application'
+
+
+
+# En desarrollo, si no quieres usar Redis todavía
+# Puedes usar esto:
+# CHANNEL_LAYERS = {
+#    'default': {
+#        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+#    },
+# }
+
+# settings.py
+
+
+
 
 # Base de datos
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

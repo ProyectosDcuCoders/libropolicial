@@ -1054,6 +1054,10 @@ video {
   width: 100vw;
 }
 
+.min-w-\[120px\] {
+  min-width: 120px;
+}
+
 .min-w-full {
   min-width: 100%;
 }
@@ -2068,6 +2072,11 @@ video {
 .text-gray-950 {
   --tw-text-opacity: 1;
   color: rgb(3 7 18 / var(--tw-text-opacity));
+}
+
+.text-green-500 {
+  --tw-text-opacity: 1;
+  color: rgb(34 197 94 / var(--tw-text-opacity));
 }
 
 .text-green-800 {
