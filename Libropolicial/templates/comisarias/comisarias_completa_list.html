@@ -90,14 +90,14 @@
                 <tr class="">
                     <th class="px-4 py-4 rounded-tl-lg">Comisaria</th>
                     <th class="px-4 py-4">Guardia</th>
-                    <th class="px-4 py-4"style="white-space: nowrap;">Fecha y Hora</th>
+                    <th class="px-4 py-4"style="white-space: nowrap;">Fecha y Hora Codigo</th>
                     <th class="px-4 py-4">Código</th>
                     <th class="px-4 py-4" style="white-space: nowrap;">Móvil-Patrulla</th>
                     <th class="px-4 py-4">A Cargo</th>
                     <th class="px-4 py-4">Secundante</th>
-                    <th class="px-4 py-4">QTH</th>
-                    <th class="px-4 py-4">Descrip.</th>
-                    <th class="px-4 py-4">Instituciones Intervinientes</th>
+                    <th class="px-4 py-4">Lugar Codigo</th>
+                    <th class="px-4 py-4">Descrip.</th>                   
+                    <!--<th class="px-4 py-4">Instituciones Intervinientes</th>-->
                     <th class="px-4 py-4">Tareas Judiciales</th>
                     <th class="px-4 py-4 rounded-tr-lg">Fecha de Registro</th>
                 </tr>
@@ -116,7 +116,7 @@
                     <td class="py-1 px-2">
                         <button @click="descripcion = '{{ comisaria.descripcion|escapejs }}'; showModal = true" class="bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-gray-700">Ver</button>
                     </td>
-                    <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.instituciones_intervinientes }}</p></td>
+                   <!-- <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.instituciones_intervinientes }}</p></td>-->
                     <td class="py-1 px-2">
                         <p class="overflow-auto max-w-[300px]" style="max-height: 60px; line-height: 18px;">
                             {{ comisaria.tareas_judiciales }}

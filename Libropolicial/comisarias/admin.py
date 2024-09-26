@@ -7,8 +7,6 @@ from .models import (
 )
 
 
-
-
 # Admin para DependenciasSecundarias con opción de activar/desactivar
 @admin.register(DependenciasSecundarias)
 class DependenciasSecundariasAdmin(admin.ModelAdmin):

@@ -103,3 +103,31 @@ def check_message(request):
         });
     </script>
     {% endblocktrans %}
+
+    from django.http import JsonResponse
+from datetime import datetime
+from django.core.cache import cache
+
+def check_message(request):
+    # Intenta obtener el valor de la caché
+    cached_response = cache.get('check_message_cache')
+    
+    if cached_response:
+        # Si existe en caché, devuelve el resultado almacenado
+        return JsonResponse(cached_response)
+
+    # Si no está en caché, ejecuta la lógica para calcular el mensaje
+    current_time = datetime.now().time()
+    show_message = False
+
+    # Condiciones para mostrar el mensaje
+    if (current_time >= datetime.strptime('15:15', '%H:%M').time() and current_time <= datetime.strptime('15:17', '%H:%M').time()) or \
+       (current_time >= datetime.strptime('15:32', '%H:%M').time() and current_time <= datetime.strptime('15:34', '%H:%M').time()) or \
+       (current_time >= datetime.strptime('15:40', '%H:%M').time() and current_time <= datetime.strptime('15:43', '%H:%M').time()):
+        show_message = True
+
+    # Almacena el resultado en la caché durante 30 segundos
+    response_data = {'show_message': show_message}
+    cache.set('check_message_cache', response_data, 30)
+
+    return JsonResponse(response_data)
