@@ -235,3 +235,5 @@ class ComisariaCuartaForm(BaseComisariaForm):
 class ComisariaQuintaForm(BaseComisariaForm):
     class Meta(BaseComisariaForm.Meta):
         model = ComisariaQuinta
+
+

@@ -119,3 +119,60 @@ class DivisionComunicacionesUpdateView(LoginRequiredMixin, UserPassesTestMixin, 
             return redirect(self.success_url)
         else:
             return self.form_invalid(form)
+
+
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import ListView, CreateView, UpdateView
+from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+
+# Vista para listar los usuarios de la división
+class DivisionUsuariosListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = User
+    template_name = 'divisioncomunicaciones/usuarios_list.html'
+
+    def get_queryset(self):
+        # Filtrar por usuarios que pertenecen al grupo 'divisioncomunicaciones'
+        return User.objects.filter(groups__name='divisioncomunicaciones')
+
+    def test_func(self):
+        # Verificar si el usuario tiene permiso de administración en esta dependencia
+        return self.request.user.groups.filter(name='admin_divisioncomunicaciones').exists()
+
+# Vista para crear un nuevo usuario en la división
+class DivisionUsuarioCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = User
+    form_class = UserCreationForm
+    template_name = 'divisioncomunicaciones/usuario_form.html'
+    success_url = reverse_lazy('division_usuarios_list')
+    action = 'Crear'
+
+    def form_valid(self, form):
+        user = form.save()
+        # Asignar al nuevo usuario al grupo 'divisioncomunicaciones'
+        group = get_object_or_404(Group, name='divisioncomunicaciones')
+        user.groups.add(group)
+        messages.success(self.request, 'Usuario creado exitosamente.')
+        return super().form_valid(form)
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='admin_divisioncomunicaciones').exists()
+
+# Vista para editar un usuario de la división
+class DivisionUsuarioUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = User
+    form_class = UserChangeForm
+    template_name = 'divisioncomunicaciones/usuario_form.html'
+    success_url = reverse_lazy('division_usuarios_list')
+    action = 'Editar'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'Editar'
+        return context
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='admin_divisioncomunicaciones').exists()

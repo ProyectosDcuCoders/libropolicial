@@ -1,50 +1,69 @@
 from django.contrib import admin
-
-from django.contrib import admin
 from .models import (  
     DependenciasSecundarias, SolicitanteCodigo, ServiciosEmergencia, 
     InstitucionesHospitalarias, DependenciasMunicipales, DependenciasProvinciales
 )
 
+# Acción para activar registros
+def make_active(modeladmin, request, queryset):
+    queryset.update(activo=True)
+make_active.short_description = "Activar seleccionados"
 
-# Admin para DependenciasSecundarias con opción de activar/desactivar
+# Acción para desactivar registros
+def make_inactive(modeladmin, request, queryset):
+    queryset.update(activo=False)
+make_inactive.short_description = "Desactivar seleccionados"
+
+# Admin para DependenciasSecundarias con opciones de activar/desactivar y paginación
 @admin.register(DependenciasSecundarias)
 class DependenciasSecundariasAdmin(admin.ModelAdmin):
-    list_display = ('dependencia', 'activo')  # Mostrar si está activo o no
+    list_display = ('dependencia', 'activo')
     search_fields = ('dependencia',)
-    list_filter = ('activo',)  # Agregar filtro por activos
+    list_filter = ('activo',)
+    list_per_page = 20  # Paginación
+    actions = [make_active, make_inactive]  # Acciones personalizadas
 
-# Admin para SolicitanteCodigo con opción de activar/desactivar
+# Admin para SolicitanteCodigo con opciones de activar/desactivar y paginación
 @admin.register(SolicitanteCodigo)
 class SolicitanteCodigoAdmin(admin.ModelAdmin):
-    list_display = ('codigo', 'activo')  # Mostrar si está activo o no
+    list_display = ('codigo', 'activo')
     search_fields = ('codigo',)
-    list_filter = ('activo',)  # Agregar filtro por activos
+    list_filter = ('activo',)
+    list_per_page = 20  # Paginación
+    actions = [make_active, make_inactive]  # Acciones personalizadas
 
-# Admin para ServiciosEmergencia con opción de activar/desactivar
+# Admin para ServiciosEmergencia con opciones de activar/desactivar y paginación
 @admin.register(ServiciosEmergencia)
 class ServiciosEmergenciaAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'activo')  # Mostrar si está activo o no
+    list_display = ('nombre', 'activo')
     search_fields = ('nombre',)
-    list_filter = ('activo',)  # Agregar filtro por activos
+    list_filter = ('activo',)
+    list_per_page = 20  # Paginación
+    actions = [make_active, make_inactive]  # Acciones personalizadas
 
-# Admin para InstitucionesHospitalarias con opción de activar/desactivar
+# Admin para InstitucionesHospitalarias con opciones de activar/desactivar y paginación
 @admin.register(InstitucionesHospitalarias)
 class InstitucionesHospitalariasAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'activo')  # Mostrar si está activo o no
+    list_display = ('nombre', 'activo')
     search_fields = ('nombre',)
-    list_filter = ('activo',)  # Agregar filtro por activos
+    list_filter = ('activo',)
+    list_per_page = 20  # Paginación
+    actions = [make_active, make_inactive]  # Acciones personalizadas
 
-# Admin para DependenciasMunicipales con opción de activar/desactivar
+# Admin para DependenciasMunicipales con opciones de activar/desactivar y paginación
 @admin.register(DependenciasMunicipales)
 class DependenciasMunicipalesAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'activo')  # Mostrar si está activo o no
+    list_display = ('nombre', 'activo')
     search_fields = ('nombre',)
-    list_filter = ('activo',)  # Agregar filtro por activos
+    list_filter = ('activo',)
+    list_per_page = 20  # Paginación
+    actions = [make_active, make_inactive]  # Acciones personalizadas
 
-# Admin para DependenciasProvinciales con opción de activar/desactivar
+# Admin para DependenciasProvinciales con opciones de activar/desactivar y paginación
 @admin.register(DependenciasProvinciales)
 class DependenciasProvincialesAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'activo')  # Mostrar si está activo o no
+    list_display = ('nombre', 'activo')
     search_fields = ('nombre',)
-    list_filter = ('activo',)  # Agregar filtro por activos
+    list_filter = ('activo',)
+    list_per_page = 20  # Paginación
+    actions = [make_active, make_inactive]  # Acciones personalizadas
