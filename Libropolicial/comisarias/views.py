@@ -2744,6 +2744,3 @@ def estadisticas_comisarias(request):
         'total_secundarios_mes': total_secundarios_mes,
     })
 
-
-
-
