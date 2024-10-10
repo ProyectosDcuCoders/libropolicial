@@ -33,3 +33,4 @@ media/
 
 # Entorno virtual
 .venv/
+#se elimino el .env
