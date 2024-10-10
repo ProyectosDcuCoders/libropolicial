@@ -1,5 +1,4 @@
 # Archivos de entorno
-.env
 
 # Python
 *.pyc
@@ -34,3 +33,4 @@ media/
 
 # Entorno virtual
 .venv/
+#se elimino el .env del gitigniore
