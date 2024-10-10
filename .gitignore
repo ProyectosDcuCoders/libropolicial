@@ -33,4 +33,4 @@ media/
 
 # Entorno virtual
 .venv/
-#se elimino el .env
+#se elimino el .env del gitigniore
