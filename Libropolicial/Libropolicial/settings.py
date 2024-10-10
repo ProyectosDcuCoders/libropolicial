@@ -9,7 +9,7 @@ import os
 # Construye rutas dentro del proyecto como BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Configuraciones rápidas para el desarrollo - no adecuadas para producción
+# Configuraciones rápidas para el desarrollo - no adecuadas para producción//
 # Ver https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 
