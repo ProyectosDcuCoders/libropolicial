@@ -1353,7 +1353,7 @@ def eliminar_comisaria_tercera(request, pk):
     messages.success(request, 'El código ha sido eliminado correctamente.')
     
     # Redirige de vuelta a la lista
-    return redirect('comisaria_segunda_list')
+    return redirect('comisaria_tercera_list')
 
 
 
@@ -1713,7 +1713,7 @@ def eliminar_comisaria_cuarta(request, pk):
     messages.success(request, 'El código ha sido eliminado correctamente.')
     
     # Redirige de vuelta a la lista
-    return redirect('comisaria_primera_list')
+    return redirect('comisaria_cuarta_list')
 
 
 
@@ -2071,7 +2071,7 @@ def eliminar_comisaria_quinta(request, pk):
     messages.success(request, 'El código ha sido eliminado correctamente.')
     
     # Redirige de vuelta a la lista
-    return redirect('comisaria_primera_list')
+    return redirect('comisaria_quinta_list')
 
 
 
