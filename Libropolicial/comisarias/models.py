@@ -112,6 +112,7 @@ class BaseComisaria(models.Model):
     firmas = models.TextField(null=True, blank=True)  # Campo para almacenar las firmas, permitiendo que quede vacío.
     latitude = models.FloatField(null=True, blank=True)  # Campo para almacenar la latitud de la comisaría, permitiendo que quede vacío.
     longitude = models.FloatField(null=True, blank=True)  # Campo para almacenar la longitud de la comisaría, permitiendo que quede vacío.
+    activo = models.BooleanField(default=True)  # Soft delete para comisarías
     created_at = models.DateTimeField(auto_now_add=True)  # Almacena la fecha y hora en que se creó el registro, asignada automáticamente al crear el objeto.
     created_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='%(class)s_created_records')  # Relaciona la comisaría con el usuario que la creó, permitiendo que quede vacío; si el usuario se elimina, también se elimina la comisaría.
     updated_at = models.DateTimeField(auto_now=True)  # Almacena la fecha y hora en que se actualizó el registro, asignada automáticamente al actualizar el objeto.
@@ -129,26 +130,33 @@ class BaseComisaria(models.Model):
     class Meta:
         abstract = True  # Define que esta clase es abstracta, es decir, no se creará una tabla de base de datos para esta clase, sino para sus subclases.
 
-# Subclase concreta de BaseComisaria para la Comisaría Primera.
+# Subclases concretas de BaseComisaria para cada comisaría.
 class ComisariaPrimera(BaseComisaria):
-    pass  # No agrega nuevos campos ni métodos; hereda todo de BaseComisaria.
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
-# Subclase concreta de BaseComisaria para la Comisaría Segunda.
 class ComisariaSegunda(BaseComisaria):
-    pass  # No agrega nuevos campos ni métodos; hereda todo de BaseComisaria.
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
-# Subclase concreta de BaseComisaria para la Comisaría Tercera.
 class ComisariaTercera(BaseComisaria):
-    pass  # No agrega nuevos campos ni métodos; hereda todo de BaseComisaria.
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
-# Subclase concreta de BaseComisaria para la Comisaría Cuarta.
 class ComisariaCuarta(BaseComisaria):
-    pass  # No agrega nuevos campos ni métodos; hereda todo de BaseComisaria.
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
-# Subclase concreta de BaseComisaria para la Comisaría Quinta.
 class ComisariaQuinta(BaseComisaria):
-    pass  # No agrega nuevos campos ni métodos; hereda todo de BaseComisaria.
+    def delete(self, *args, **kwargs):
+        self.activo = False
+        self.save()
 
+        
 # Clase para manejar los detalles adicionales de Servicios de Emergencia.
 class DetalleServicioEmergencia(models.Model):
     servicio_emergencia = models.ForeignKey(ServiciosEmergencia, on_delete=models.CASCADE)  # Relaciona el detalle con un servicio de emergencia; si el servicio se elimina, también se elimina el detalle.

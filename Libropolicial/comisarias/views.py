@@ -146,8 +146,8 @@ class ComisariaPrimeraListView(LoginRequiredMixin, UserPassesTestMixin, ListView
     # Método que personaliza el conjunto de datos que se listará en la vista.
     def get_queryset(self):
         # Obtiene el queryset predeterminado y lo ordena por la fecha y hora en orden descendente.
-        queryset = super().get_queryset().order_by('-fecha_hora')
-        
+        #queryset = super().get_queryset().order_by('-fecha_hora')
+        queryset = super().get_queryset().filter(activo=True).order_by('-fecha_hora')
         # Obtiene el parámetro de búsqueda de la solicitud GET, si existe.
         search_query = self.request.GET.get('q', '')
         
@@ -588,6 +588,29 @@ class ComisariaPrimeraDetailView(DetailView):
     context_object_name = 'record'
 
 
+
+
+#----------------------------softdelete-------------------------------------------------------------
+
+# En views.py
+
+def eliminar_comisaria_primera(request, pk):
+    # Obtén el registro a eliminar
+    comisaria = get_object_or_404(ComisariaPrimera, pk=pk)
+    
+    # Marca el registro como inactivo
+    comisaria.activo = False
+    comisaria.save()
+    
+    # Envía un mensaje de confirmación
+    messages.success(request, 'El código ha sido eliminado correctamente.')
+    
+    # Redirige de vuelta a la lista
+    return redirect('comisaria_primera_list')
+
+
+
+
 #---------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -607,7 +630,8 @@ class ComisariaSegundaListView(LoginRequiredMixin, UserPassesTestMixin, ListView
     
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('-fecha_hora')
+        #queryset = super().get_queryset().order_by('-fecha_hora')
+        queryset = super().get_queryset().filter(activo=True).order_by('-fecha_hora')
         search_query = self.request.GET.get('q', '')
         if search_query:
             queryset = queryset.filter(cuarto__cuarto__icontains=search_query)
@@ -951,6 +975,26 @@ class ComisariaSegundaDetailView(DetailView):
     context_object_name = 'record'
 
 
+#----------------------------softdelete-------------------------------------------------------------
+
+# En views.py
+
+def eliminar_comisaria_segunda(request, pk):
+    # Obtén el registro a eliminar
+    comisaria = get_object_or_404(ComisariaSegunda, pk=pk)
+    
+    # Marca el registro como inactivo
+    comisaria.activo = False
+    comisaria.save()
+    
+    # Envía un mensaje de confirmación
+    messages.success(request, 'El código ha sido eliminado correctamente.')
+    
+    # Redirige de vuelta a la lista
+    return redirect('comisaria_segunda_list')
+
+
+
 #-------------------------VISTA DE COMISARIA TERCERA ---------------------------------------------------------------------------------------------------------
 
 
@@ -966,7 +1010,8 @@ class ComisariaTerceraListView(LoginRequiredMixin, UserPassesTestMixin, ListView
         return redirect('no_permission')
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('-fecha_hora')
+        #queryset = super().get_queryset().order_by('-fecha_hora')
+        queryset = super().get_queryset().filter(activo=True).order_by('-fecha_hora')
         search_query = self.request.GET.get('q', '')
         if search_query:
             queryset = queryset.filter(cuarto__cuarto__icontains=search_query)
@@ -1292,6 +1337,24 @@ class ComisariaTerceraDetailView(DetailView):
     context_object_name = 'record'
 
 
+#----------------------------softdelete-------------------------------------------------------------
+
+# En views.py
+
+def eliminar_comisaria_tercera(request, pk):
+    # Obtén el registro a eliminar
+    comisaria = get_object_or_404(ComisariaTercera, pk=pk)
+    
+    # Marca el registro como inactivo
+    comisaria.activo = False
+    comisaria.save()
+    
+    # Envía un mensaje de confirmación
+    messages.success(request, 'El código ha sido eliminado correctamente.')
+    
+    # Redirige de vuelta a la lista
+    return redirect('comisaria_segunda_list')
+
 
 
 #--------------------------vista para para la comisria cuarta------------------------------------------------------
@@ -1310,7 +1373,8 @@ class ComisariaCuartaListView(LoginRequiredMixin, UserPassesTestMixin, ListView)
         return redirect('no_permission')
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('-fecha_hora')
+        queryset = super().get_queryset().filter(activo=True).order_by('-fecha_hora')
+        #queryset = super().get_queryset().order_by('-fecha_hora')
         search_query = self.request.GET.get('q', '')
         if search_query:
             queryset = queryset.filter(cuarto__cuarto__icontains=search_query)
@@ -1633,6 +1697,25 @@ class ComisariaCuartaDetailView(DetailView):
     context_object_name = 'record'
 
 
+#----------------------------softdelete-------------------------------------------------------------
+
+# En views.py
+
+def eliminar_comisaria_cuarta(request, pk):
+    # Obtén el registro a eliminar
+    comisaria = get_object_or_404(ComisariaCuarta, pk=pk)
+    
+    # Marca el registro como inactivo
+    comisaria.activo = False
+    comisaria.save()
+    
+    # Envía un mensaje de confirmación
+    messages.success(request, 'El código ha sido eliminado correctamente.')
+    
+    # Redirige de vuelta a la lista
+    return redirect('comisaria_primera_list')
+
+
 
 
 
@@ -1650,7 +1733,8 @@ class ComisariaQuintaListView(LoginRequiredMixin, UserPassesTestMixin, ListView)
         return redirect('no_permission')
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('-fecha_hora')
+        queryset = super().get_queryset().filter(activo=True).order_by('-fecha_hora')
+        #queryset = super().get_queryset().order_by('-fecha_hora')
         search_query = self.request.GET.get('q', '')
         if search_query:
             queryset = queryset.filter(cuarto__cuarto__icontains=search_query)
@@ -1969,6 +2053,25 @@ class ComisariaQuintaDetailView(DetailView):
     model = ComisariaQuinta
     template_name = 'comisarias/quinta/comisaria_quinta_detail.html'
     context_object_name = 'record'
+
+
+#----------------------------softdelete-------------------------------------------------------------
+
+# En views.py
+
+def eliminar_comisaria_quinta(request, pk):
+    # Obtén el registro a eliminar
+    comisaria = get_object_or_404(ComisariaQuinta, pk=pk)
+    
+    # Marca el registro como inactivo
+    comisaria.activo = False
+    comisaria.save()
+    
+    # Envía un mensaje de confirmación
+    messages.success(request, 'El código ha sido eliminado correctamente.')
+    
+    # Redirige de vuelta a la lista
+    return redirect('comisaria_primera_list')
 
 
 

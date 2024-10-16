@@ -28,7 +28,11 @@ from .views import (
     
     # Vistas de detalle
     ComisariaPrimeraDetailView, ComisariaSegundaDetailView, ComisariaTerceraDetailView,
-    ComisariaCuartaDetailView, ComisariaQuintaDetailView
+    ComisariaCuartaDetailView, ComisariaQuintaDetailView,
+
+     #softdelete
+    eliminar_comisaria_primera, eliminar_comisaria_segunda, eliminar_comisaria_tercera, eliminar_comisaria_cuarta,
+    eliminar_comisaria_quinta
 )
 
 urlpatterns = [
@@ -41,6 +45,7 @@ urlpatterns = [
     path('primera/reporte/download/', generate_comisaria_primera_pdf_download, name='generate_comisaria_primera_pdf_download'),
     path('comisarias/primera/descargar-dia-anterior/', generate_comisaria_primera_pdf_download_previous_day, name='generate_comisaria_primera_pdf_download_previous_day'),
     path('primera/firmar/<int:pk>/', sign_comisaria_primera, name='comisaria_primera_sign'),
+    path('comisarias/primera/eliminar/<int:pk>/', eliminar_comisaria_primera, name='comisaria_primera_eliminar'),
 
     # Comisaría Segunda
     path('segunda/', ComisariaSegundaListView.as_view(), name='comisaria_segunda_list'),
@@ -51,6 +56,7 @@ urlpatterns = [
     path('segunda/reporte/download/', generate_comisaria_segunda_pdf_download, name='generate_comisaria_segunda_pdf_download'),
     path('comisarias/segunda/descargar-dia-anterior/', generate_comisaria_segunda_pdf_download_previous_day, name='generate_comisaria_segunda_pdf_download_previous_day'),
     path('segunda/firmar/<int:pk>/', sign_comisaria_segunda, name='comisaria_segunda_sign'),
+    path('comisarias/segunda/eliminar/<int:pk>/', eliminar_comisaria_segunda, name='comisaria_segunda_eliminar'),
 
     # Comisaría Tercera
     path('tercera/', ComisariaTerceraListView.as_view(), name='comisaria_tercera_list'),
@@ -61,6 +67,7 @@ urlpatterns = [
     path('tercera/reporte/download/', generate_comisaria_tercera_pdf_download, name='generate_comisaria_tercera_pdf_download'),
     path('comisarias/tercera/descargar-dia-anterior/', generate_comisaria_tercera_pdf_download_previous_day, name='generate_comisaria_tercera_pdf_download_previous_day'),
     path('tercera/firmar/<int:pk>/', sign_comisaria_tercera, name='comisaria_tercera_sign'),
+    path('comisarias/tercera/eliminar/<int:pk>/', eliminar_comisaria_tercera, name='comisaria_tercera_eliminar'),
 
     # Comisaría Cuarta
     path('cuarta/', ComisariaCuartaListView.as_view(), name='comisaria_cuarta_list'),
@@ -71,6 +78,8 @@ urlpatterns = [
     path('cuarta/reporte/download/', generate_comisaria_cuarta_pdf_download, name='generate_comisaria_cuarta_pdf_download'),
     path('comisarias/cuarta/descargar-dia-anterior/', generate_comisaria_cuarta_pdf_download_previous_day, name='generate_comisaria_cuarta_pdf_download_previous_day'),
     path('cuarta/firmar/<int:pk>/', sign_comisaria_cuarta, name='comisaria_cuarta_sign'),
+    path('comisarias/cuarta/eliminar/<int:pk>/', eliminar_comisaria_cuarta, name='comisaria_cuarta_eliminar'),
+
 
     # Comisaría Quinta
     path('quinta/', ComisariaQuintaListView.as_view(), name='comisaria_quinta_list'),
@@ -81,6 +90,8 @@ urlpatterns = [
     path('quinta/reporte/download/', generate_comisaria_quinta_pdf_download, name='generate_comisaria_quinta_pdf_download'),
     path('comisarias/quinta/descargar-dia-anterior/', generate_comisaria_quinta_pdf_download_previous_day, name='generate_comisaria_quinta_pdf_download_previous_day'),
     path('quinta/firmar/<int:pk>/', sign_comisaria_quinta, name='comisaria_quinta_sign'),
+    path('comisarias/quinta/eliminar/<int:pk>/', eliminar_comisaria_quinta, name='comisaria_quinta_eliminar'),
+
 
     # Otras rutas
     path('subir-pdf/', subir_pdf, name='subir_pdf'),
