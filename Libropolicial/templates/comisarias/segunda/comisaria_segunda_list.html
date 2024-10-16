@@ -28,12 +28,14 @@
         {% endif %}
          <!-- Botón para 'oficialesservicios' y 'jefessuperiores' -->
         {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
-         <a href="{% url 'generate_comisaria_segunda_pdf_download' %}?signature=true" target="_blank" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Firmar y Descargar PDF</a>
+         <a href="{% url 'generate_comisaria_segunda_pdf_download' %}?signature=true" target="_blank" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Ver y Descargar PDF</a>
          {% endif %}
          {% if user.is_authenticated and user.is_superuser %}
         <a href="{% url 'generate_comisaria_segunda_pdf_download_previous_day' %}" target="_blank" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Descargar PDF del Día Anterior</a>
-         {% endif %} 
-         <!-- Botón para 'oficialesservicios' y 'jefessuperiores' --> <!-- Botón para subir y ver PDFs -->
+         {% endif %}
+
+        
+         <!-- Botón para 'oficialesservicios se agrego ' y 'jefessuperiores' --> <!-- Botón para subir y ver PDFs -->
          {% if is_oficialesservicios or is_jefessuperiores %}
         <a href="{% url 'subir_pdf' %}" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-700">Subir PDF</a>
         {% endif %}
@@ -106,7 +108,16 @@
                         {% endif %}
                         <!-- Nuevo botón "Full" -->
                         <a href="{% url 'comisaria_segunda_detail' record.pk %}" class="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-700 block text-center mt-2">Full</a>
+
+                        {% if is_jefessuperiores or user.is_superuser %}
+                        <!-- Botón Eliminar (Soft Delete) con confirmación -->
+                            <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_segunda_eliminar' record.pk %}' }"
+                            class="bg-red-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-red-600 block text-center mt-2">
+                            Eliminar
+                            </button>
+                       {% endif %}
                     </td>
+                    
                     
                 </tr>
                 {% endfor %}
