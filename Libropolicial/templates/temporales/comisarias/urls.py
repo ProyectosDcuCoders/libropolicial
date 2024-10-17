@@ -12,7 +12,7 @@ from .views import (
     sign_comisaria_primera, sign_comisaria_segunda, sign_comisaria_tercera, sign_comisaria_cuarta, sign_comisaria_quinta,
     
     # Otras funciones y vistas
-    subir_pdf, ver_pdfs, mostrar_pdf,
+    subir_pdf, ver_pdfs, mostrar_pdf, generar_mapa, estadisticas_comisarias,
     
     # Vistas de listas y CRUD de comisarías
     ComisariaPrimeraListView, ComisariaSegundaListView, ComisariaTerceraListView,
@@ -98,7 +98,8 @@ urlpatterns = [
     path('subir-pdf/', subir_pdf, name='subir_pdf'),
     path('ver-pdfs/', ver_pdfs, name='ver_pdfs'),  # Nueva URL para ver los PDFs
     path('mostrar-pdf/<int:pdf_id>/', mostrar_pdf, name='mostrar_pdf'),
-   
+    path('mapa/', generar_mapa, name='generar_mapa'),
+    path('estadisticas/', estadisticas_comisarias, name='estadisticas_comisarias'),
 
     # Completas
     path('completas/', ComisariasCompletaListView.as_view(), name='comisarias_completa_list'),
