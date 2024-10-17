@@ -45,12 +45,12 @@
     
         <!-- Botón para 'jefessuperiores' -->
         {% if is_jefessuperiores %}
-        <a href="{% url 'comisarias_completa_list' %}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700">Libro general</a>
+        <a href="{% url 'comisarias_completa_list' %}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700">Libro general codigos</a>
         {% endif %}
     
         <!-- Botón para 'oficialesservicios' y 'jefessuperiores' -->
         {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
-        <a href="{% url 'generate_comisaria_cuarta_pdf_download' %}?signature=true" target="_blank" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Firmar y Descargar PDF</a>
+        <a href="{% url 'generate_comisaria_cuarta_pdf_download' %}?signature=true" target="_blank" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Ver y Descargar PDF</a>
         {% endif %}
     
         {% if user.is_authenticated and user.is_superuser %}
@@ -65,12 +65,6 @@
         {% if user.is_authenticated and user.is_superuser %}
         <a href="{% url 'ver_pdfs' %}" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Ver PDF Libro</a>
         
-    
-        <!-- Nuevo botón para ir al mapa -->
-        <a href="{% url 'generar_mapa' %}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700">Ver Mapa</a>
-    
-        <!-- Nuevo botón para ver estadísticas -->
-        <a href="{% url 'estadisticas_comisarias' %}" class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-700">Estadística</a>
         {% endif %}
     </div>
     

@@ -24,7 +24,7 @@
         <a href="{% url 'comisaria_segunda_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
          <!-- Botón para 'jefessuperiores' -->
         {% if is_jefessuperiores %}
-        <a href="{% url 'comisarias_completa_list' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Libro general</a>
+        <a href="{% url 'comisarias_completa_list' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Libro general codigos</a>
         {% endif %}
          <!-- Botón para 'oficialesservicios' y 'jefessuperiores' -->
         {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
