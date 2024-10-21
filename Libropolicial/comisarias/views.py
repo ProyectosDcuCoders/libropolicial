@@ -863,7 +863,7 @@ class ComisariaSegundaUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
 
 
 
-        # Eliminar los detalles que ya no están seleccionados
+        # Eliminar los detalles que ya no se arreglo están seleccionados
         DetalleServicioEmergencia.objects.filter(comisaria_segunda=self.object).exclude(servicio_emergencia_id__in=servicios_emergencia_ids).delete()
         DetalleInstitucionHospitalaria.objects.filter(comisaria_segunda=self.object).exclude(institucion_hospitalaria_id__in=instituciones_hospitalarias_ids).delete()
         DetalleDependenciaMunicipal.objects.filter(comisaria_segunda=self.object).exclude(dependencia_municipal_id__in=dependencias_municipales_ids).delete()
