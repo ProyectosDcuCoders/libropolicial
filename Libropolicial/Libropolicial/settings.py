@@ -24,7 +24,9 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 # ADVERTENCIA DE SEGURIDAD: no ejecutes con debug activado en producción.
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Allowed Hosts
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
+
 
 # Definición de la aplicación
 
@@ -60,7 +62,6 @@ MIDDLEWARE = [
     # 'comisarias.middleware.RedirectAuthenticatedUserMiddleware',  # Añadir este middleware si es necesario
     # 'comisarias.middleware.InactivityLogoutMiddleware',  # Añadir este middleware si es necesario
    
-
 ]
 
 CACHES = {
@@ -112,19 +113,18 @@ ASGI_APPLICATION = 'Libropolicial.asgi.application'
 # settings.py
 
 
-
-
 # Base de datos
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# Configuración de la base de datos
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Utiliza el backend MySQL
-        'NAME': 'libro',  # Nombre de la base de datos
-        'USER': 'root',  # Usuario de la base de datos
-        'PASSWORD': '',  # Contraseña de la base de datos
-        'HOST': 'localhost',  # Host de la base de datos
-        'PORT': '3306',  # Puerto de la base de datos
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DB_NAME', 'libro'),
+        'USER': os.getenv('DB_USER', 'root'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '3306'),
     }
 }
 
