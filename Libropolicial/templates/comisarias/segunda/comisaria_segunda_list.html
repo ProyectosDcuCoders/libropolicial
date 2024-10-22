@@ -104,7 +104,7 @@
                             <a href="{% url 'comisaria_segunda_edit' record.pk %}" class="bg-yellow-500 text-white py-1 px-4 rounded hover:bg-yellow-600 block mb-2 text-center">Editar</a>
                         {% endif %}
                         {% if not request.user.get_full_name in record.firmas %}
-                            <button @click.prevent="recordIdToSign = {{ record.pk }}; showConfirmModal = true" class="bg-purple-500 text-white py-1 px-4 rounded hover:bg-purple-700 block text-center">Firmar</button>
+                            <button @click.prevent="recordIdToSign = {{ record.pk }}; showConfirmModal = true" class="bg-purple-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-purple-700 block text-center">Firmar</button>
                         {% endif %}
                         <!-- Nuevo botón "Full" -->
                         <a href="{% url 'comisaria_segunda_detail' record.pk %}" class="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-700 block text-center mt-2">Full</a>

@@ -2079,103 +2079,66 @@ def eliminar_comisaria_quinta(request, pk):
 
 # Vista para listar todas las comisarías
 class ComisariasCompletaListView(LoginRequiredMixin, ListView):
-    # Especifica la plantilla que se utilizará para renderizar la vista.
     template_name = 'comisarias/comisarias_completa_list.html'
-    
-    # Define el nombre del contexto que contendrá la lista de comisarías en la plantilla.
     context_object_name = 'comisarias'
 
-    # Obtiene el conjunto de consultas combinado de todas las comisarías
     def get_queryset(self):
-        # Obtiene el valor de la consulta de búsqueda desde la URL (si existe).
         query = self.request.GET.get('q', '')
-    
-        # Inicializa una lista vacía que contendrá las comisarías combinadas.
-        combined_list = []
 
-        # Obtiene todas las instancias de ComisariaPrimera, con relaciones pre-cargadas para mejorar el rendimiento.
-        comisarias_primera = ComisariaPrimera.objects.select_related('cuarto').all()
-        
-        # Obtiene todas las instancias de ComisariaSegunda, con relaciones pre-cargadas para mejorar el rendimiento.
-        comisarias_segunda = ComisariaSegunda.objects.select_related('cuarto').all()
-        
-        # Obtiene todas las instancias de ComisariaTercera, con relaciones pre-cargadas para mejorar el rendimiento.
-        comisarias_tercera = ComisariaTercera.objects.select_related('cuarto').all()
-        
-        # Obtiene todas las instancias de ComisariaCuarta, con relaciones pre-cargadas para mejorar el rendimiento.
-        comisarias_cuarta = ComisariaCuarta.objects.select_related('cuarto').all()
-        
-        # Obtiene todas las instancias de ComisariaQuinta, con relaciones pre-cargadas para mejorar el rendimiento.
-        comisarias_quinta = ComisariaQuinta.objects.select_related('cuarto').all()
+        # Filtrar solo las comisarías activas
+        comisarias_primera = ComisariaPrimera.objects.filter(activo=True).select_related('cuarto')
+        comisarias_segunda = ComisariaSegunda.objects.filter(activo=True).select_related('cuarto')
+        comisarias_tercera = ComisariaTercera.objects.filter(activo=True).select_related('cuarto')
+        comisarias_cuarta = ComisariaCuarta.objects.filter(activo=True).select_related('cuarto')
+        comisarias_quinta = ComisariaQuinta.objects.filter(activo=True).select_related('cuarto')
 
-        # Asigna el nombre 'Comisaria Primera' a cada instancia de ComisariaPrimera.
+        # Asignar nombres a cada instancia de comisaría
         for comisaria in comisarias_primera:
             comisaria.comisaria_nombre = 'Comisaria Primera'
-        
-        # Asigna el nombre 'Comisaria Segunda' a cada instancia de ComisariaSegunda.
         for comisaria in comisarias_segunda:
             comisaria.comisaria_nombre = 'Comisaria Segunda'
-        
-        # Asigna el nombre 'Comisaria Tercera' a cada instancia de ComisariaTercera.
         for comisaria in comisarias_tercera:
             comisaria.comisaria_nombre = 'Comisaria Tercera'
-        
-        # Asigna el nombre 'Comisaria Cuarta' a cada instancia de ComisariaCuarta.
         for comisaria in comisarias_cuarta:
             comisaria.comisaria_nombre = 'Comisaria Cuarta'
-        
-        # Asigna el nombre 'Comisaria Quinta' a cada instancia de ComisariaQuinta.
         for comisaria in comisarias_quinta:
             comisaria.comisaria_nombre = 'Comisaria Quinta'
 
-        # Combina todas las listas de comisarías en una sola lista.
+        # Combinar todas las listas de comisarías
         combined_list = list(comisarias_primera) + list(comisarias_segunda) + \
                         list(comisarias_tercera) + list(comisarias_cuarta) + \
                         list(comisarias_quinta)
 
-        # Si hay una consulta de búsqueda, filtra la lista combinada.
+        # Aplicar filtro de búsqueda si hay una consulta
         if query:
-            # Filtra las comisarías en la lista combinada para que coincidan con la consulta.
             combined_list = [comisaria for comisaria in combined_list if self.query_in_comisaria(comisaria, query)]
 
-        # Ordena la lista combinada por la fecha de creación (o actualización), de la más reciente a la más antigua.
+        # Ordenar la lista combinada por la fecha de creación, de la más reciente a la más antigua
         combined_list = sorted(combined_list, key=lambda x: x.created_at, reverse=True)
 
-        # Devuelve la lista combinada y filtrada como el queryset final.
         return combined_list
 
-    # Verifica si la consulta coincide con algún campo de la comisaría
+    # Función para verificar si la consulta está en algún campo de la comisaría
     def query_in_comisaria(self, comisaria, query):
-        # Convierte la consulta de búsqueda a minúsculas para una comparación insensible a mayúsculas.
         query_lower = query.lower()
-        
-        # Retorna True si la consulta coincide con alguno de los campos relevantes en la comisaría.
         return (
-            (query_lower in comisaria.comisaria_nombre.lower() if comisaria.comisaria_nombre else False) or
-            (query_lower in comisaria.cuarto.cuarto.lower() if comisaria.cuarto and comisaria.cuarto.cuarto else False) or
-            (query_lower in comisaria.codigo.codigo.lower() if comisaria.codigo and comisaria.codigo.codigo else False) or
+            (query_lower in comisaria.comisaria_nombre.lower()) or
+            (comisaria.cuarto and query_lower in comisaria.cuarto.cuarto.lower()) or
+            (comisaria.codigo and query_lower in comisaria.codigo.codigo.lower()) or
             (query_lower in comisaria.movil_patrulla.lower() if comisaria.movil_patrulla else False) or
             (query_lower in comisaria.a_cargo.lower() if comisaria.a_cargo else False) or
             (query_lower in comisaria.secundante.lower() if comisaria.secundante else False) or
             (query_lower in comisaria.lugar_codigo.lower() if comisaria.lugar_codigo else False) or
             (query_lower in comisaria.descripcion.lower() if comisaria.descripcion else False) or
-            (query_lower in comisaria.tareas_judiciales.lower() if comisaria.tareas_judiciales else False) or
-            (query_lower in comisaria.fecha_hora.strftime('%Y-%m-%d %H:%M:%S').lower() if comisaria.fecha_hora else False)
+            (query_lower in comisaria.fecha_hora.strftime('%Y-%m-%d %H:%M:%S').lower())
         )
 
-    # Añade información adicional al contexto
     def get_context_data(self, **kwargs):
-        # Llama al método original para obtener el contexto predeterminado.
         context = super().get_context_data(**kwargs)
-        
-        # Añade la consulta de búsqueda al contexto.
         context['query'] = self.request.GET.get('q', '')
-        
-        # Añade el valor de paginación al contexto, por defecto 10 elementos por página.
         context['paginate_by'] = self.request.GET.get('items_per_page', 10)
-        
-        # Devuelve el contexto completo para ser utilizado en la plantilla.
         return context
+
 
     
 #-------------------------------genera pdf para firma y descarga------------------------------------------------------
@@ -2191,7 +2154,8 @@ def generate_pdf_content(request, comisaria_model, add_signature=False):
     # 3. Filtrar los registros del modelo de la comisaría según las fechas de creación o actualización del día actual
     registros = comisaria_model.objects.filter(
         models.Q(created_at__range=(start_of_day, end_of_day)) |
-        models.Q(updated_at__range=(start_of_day, end_of_day))
+        models.Q(updated_at__range=(start_of_day, end_of_day)),
+        activo=True  # Filtrar solo los registros activos
     )
 
     # 4. Cargar la plantilla HTML que se usará para generar el PDF
