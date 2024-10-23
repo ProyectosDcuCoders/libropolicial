@@ -22,7 +22,7 @@ var/
 *.egg
 MANIFEST
 /static/css/
-/Libropolicial/settings.py
+Libropolicial/Libropolicial/settings.py
 
 
 # Django
