@@ -24,7 +24,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 # ADVERTENCIA DE SEGURIDAD: no ejecutes con debug activado en producción.
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['librodeguardia.com','www.librodeguardia.com']
 
 # Definición de la aplicación
 
@@ -121,8 +121,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Utiliza el backend MySQL
         'NAME': 'libro',  # Nombre de la base de datos
-        'USER': 'root',  # Usuario de la base de datos
-        'PASSWORD': '',  # Contraseña de la base de datos
+        'USER': 'libropolicial',  # Usuario de la base de datos
+        'PASSWORD': 'Dcu911+-',  # Contraseña de la base de datos
         'HOST': 'localhost',  # Host de la base de datos
         'PORT': '3306',  # Puerto de la base de datos
     }
