@@ -22,6 +22,8 @@ var/
 *.egg
 MANIFEST
 /static/css/
+#/Libropolicial/Libropolicial/settings.py
+
 
 # Django
 *.log
