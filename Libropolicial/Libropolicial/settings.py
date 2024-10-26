@@ -24,6 +24,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 # ADVERTENCIA DE SEGURIDAD: no ejecutes con debug activado en producción.
 DEBUG = True
 
+
+#el setting esta para desarrollo
 ALLOWED_HOSTS = []
 
 # Definición de la aplicación
