@@ -30,6 +30,7 @@
             row-gap: 8px;
         }
     }
+    
 </style>
 <div class="mx-auto mt-4 p-4 dark:text-white" x-data="{ 
     showModal: false, 
@@ -43,8 +44,8 @@
         if (this.recordIdToSign !== null) {
             window.location.href = '/comisarias/primera/firmar/' + this.recordIdToSign;
         }
-    } 
-}">
+        } 
+    }">
     <h1 class="text-2xl font-bold mb-4 text-center">Lista de Codigos en Comisaría Primera</h1>
 
     <div class="me-nu flex flex-wrap justify-center gap-4 mb-4">
