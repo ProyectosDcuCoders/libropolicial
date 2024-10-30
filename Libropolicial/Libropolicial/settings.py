@@ -24,6 +24,9 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 # ADVERTENCIA DE SEGURIDAD: no ejecutes con debug activado en producción.
 DEBUG = True
 
+
+#el setting esta para desarrollo
+# ALLOWED_HOSTS = ['192.168.1.114', 'localhost', '127.0.0.1']
 ALLOWED_HOSTS = []
 
 # Definición de la aplicación
@@ -108,6 +111,8 @@ ASGI_APPLICATION = 'Libropolicial.asgi.application'
 # }
 
 # settings.py
+
+
 
 
 # Base de datos
