@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 DEBUG = True
 
 
-#el setting esta para desarrollo
+#el setting esta para desarrollo nuevos cambios
 # ALLOWED_HOSTS = ['192.168.1.114', 'localhost', '127.0.0.1']
 ALLOWED_HOSTS = []
 
@@ -212,5 +212,6 @@ CKEDITOR_CONFIGS = {
         ],
         'height': 250,
         'width': 'auto',
+        'font_names': 'Arial/Arial, Helvetica, sans-serif; Times New Roman/Times New Roman, Times, serif; Verdana/Verdana, Geneva, sans-serif; Courier New/Courier New, Courier, monospace',
     },
 }
