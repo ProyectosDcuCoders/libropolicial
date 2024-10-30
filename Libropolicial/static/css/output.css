@@ -1885,6 +1885,10 @@ video {
   padding-inline-start: 1.25rem;
 }
 
+.pt-0 {
+  padding-top: 0px;
+}
+
 .pt-1 {
   padding-top: 0.25rem;
 }
