@@ -6,41 +6,39 @@
 {% block content %}
 <style>
     /* Modo oscuro para los elementos de DataTables */
-.dark .dataTables_length label,
-.dark .dataTables_filter label,
-.dark .dataTables_info,
-.dark .dataTables_paginate span a {
-    color: white !important;
-}
+    .dark .dataTables_length label,
+    .dark .dataTables_filter label,
+    .dark .dataTables_info,
+    .dark .dataTables_paginate span a {
+        color: white !important;
+    }
 
-.dark .paginate_button.current,
-.dark .paginate_button:hover {
-    background-color: #4B5563 !important;  /* Color gris oscuro */
-    color: white !important;
-}
+    .dark .paginate_button.current,
+    .dark .paginate_button:hover {
+        background-color: #4B5563 !important;  /* Color gris oscuro */
+        color: white !important;
+    }
 
-.dark .paginate_button {
-    color: white !important;
-}
-
+    .dark .paginate_button {
+        color: white !important;
+    }
 </style>
 <div class="mx-auto mt-4 p-4 dark:text-white" x-data="{ 
-    showModal: false, 
-    descripcion: '', 
-    showResolveModal: false, 
-    resolveId: null, 
-    resolveData: {},
-    showConfirmModal: false, 
-    recordIdToSign: null, 
-    confirmSign() {
-        if (this.recordIdToSign !== null) {
-            window.location.href = '/comisarias/quinta/firmar/' + this.recordIdToSign;
-        }
-    } 
-}">
+        showModal: false, 
+        descripcion: '', 
+        showResolveModal: false, 
+        resolveId: null, 
+        resolveData: {},
+        showConfirmModal: false, 
+        recordIdToSign: null, 
+        confirmSign() {
+            if (this.recordIdToSign !== null) {
+                window.location.href = '/comisarias/quinta/firmar/' + this.recordIdToSign;
+            }
+        }}">
     <h1 class="text-2xl font-bold mb-4 text-center">Lista de Codigos en Comisaría Quinta</h1>
 
-    <div class="flex flex-wrap justify-center gap-4 mb-4">
+    <div class="me-nu flex flex-wrap justify-center gap-4 mb-4">
         <a href="{% url 'comisaria_quinta_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
     
         <!-- Botón para 'jefessuperiores' -->
