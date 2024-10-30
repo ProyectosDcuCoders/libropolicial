@@ -183,7 +183,6 @@
 
 <body class="bg-gray-100 flex flex-col min-h-screen dark:bg-gray-800">
    
-
     <header class="menu-header flex justify-between items-center bg-black text-white p-2">
         <div class="flex items-center">
             <img class="mr-4" src="{% static 'comisarias/images/fabico.ico' %}" alt="" style="max-height: 60px;">
@@ -236,13 +235,9 @@
         </nav>
     </header>
 
-
     <main class="flex-grow mx-auto w-full p-4">
-      
-
         {% block content %}
         {% endblock %}
-        
     </main>
 
     <footer class="bg-black text-white text-center p-2 mt-auto mx-auto w-full">
@@ -251,6 +246,7 @@
             <p class="">Policia de la Provincia de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
         </div>
     </footer>
+
     <!-- MODO OSCURO -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
