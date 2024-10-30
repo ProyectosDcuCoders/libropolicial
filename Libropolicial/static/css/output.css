@@ -2001,6 +2001,10 @@ video {
   line-height: 1.5rem;
 }
 
+.leading-\[15px\] {
+  line-height: 15px;
+}
+
 .leading-\[25px\] {
   line-height: 25px;
 }
@@ -2682,6 +2686,10 @@ video {
     padding-bottom: 1rem;
   }
 
+  .sm\:pt-0 {
+    padding-top: 0px;
+  }
+
   .sm\:text-left {
     text-align: left;
   }
@@ -2690,9 +2698,23 @@ video {
     vertical-align: middle;
   }
 
+  .sm\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .sm\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
   .sm\:text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
+  }
+
+  .sm\:leading-\[25px\] {
+    line-height: 25px;
   }
 }
 
