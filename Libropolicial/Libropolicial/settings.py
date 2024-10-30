@@ -212,5 +212,6 @@ CKEDITOR_CONFIGS = {
         ],
         'height': 250,
         'width': 'auto',
+        'font_names': 'Arial/Arial, Helvetica, sans-serif; Times New Roman/Times New Roman, Times, serif; Verdana/Verdana, Geneva, sans-serif; Courier New/Courier New, Courier, monospace',
     },
 }
