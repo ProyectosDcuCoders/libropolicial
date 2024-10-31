@@ -22,12 +22,9 @@
         background-color: black;
         font-family: 'Roboto Slab', serif;
     }
-    /* body{
-        background-color: white;
-    } */
     .blur-background {
-        background-color: transparent; /* Fondo semitransparente */
-        backdrop-filter: blur(10px); /* Aplica el desenfoque al fondo detrás del div */
+        background-color: transparent;
+        backdrop-filter: blur(10px);
     }
 </style>
 <body class="flex mx-auto items-center min-h-screen">
@@ -54,16 +51,16 @@
             </form>
         </div>  
     </div>
+    
     <script>
         let contra = document.querySelector('.contra');
         console.log(contra);
         function ojo(){
-            
-                if(contra.type == 'password'){
-                    contra.type = 'text';
-                }else{
-                    contra.type = 'password';
-                }
+            if(contra.type == 'password'){
+                contra.type = 'text';
+            }else{
+                contra.type = 'password';
+            }
         }
     </script>
 </body>
