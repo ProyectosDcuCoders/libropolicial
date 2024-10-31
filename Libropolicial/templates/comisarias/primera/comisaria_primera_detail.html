@@ -4,9 +4,16 @@
 
 {% block content %}
 <style>
+    /* detalle de codigo */
+    /* lugar del codigo */
     #qwe{
         line-height: 25px;
     }
+    /* descripcion margin right */
+    .desc-detail{
+        padding-right: 38px;
+    }
+    /* rsponsivo de columnas de detallesde codigo */
     @media (max-width: 640px){
         .cont{
             grid-template-columns: 1fr 1fr;
@@ -120,7 +127,7 @@
         </div>
     </div>
   <!-- DESCRIPCIÓN -->
-<div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center" style="padding-right: 38px;">
+<div class="desc-detail py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
     <h2 class="text-lg pb-1 font-semibold">Descripción:</h2>
     <p class="block px-1 break-all" style="word-break: break-all;">
         {{ record.descripcion|safe|default:"S/N" }}
