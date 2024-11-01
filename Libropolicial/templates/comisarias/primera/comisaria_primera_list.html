@@ -76,11 +76,21 @@
         border: 1px solid #555 !important;
     }
     /*  */
-    .dark .dataTables_wrapper tbody tr:hover {
-        background-color: #3b82f6; /* Equivalente a blue-500 */
-    }
+    /* .dark .dataTables_wrapper tbody tr:hover {
+        background-color: #3b82f6;
+    } */
     #myTable th{
         text-align: center;
+    }
+    table.dataTable > tbody > tr.selected > * {
+        box-shadow: inset 0 0 0 9999px black !important; /* Fondo rojo */
+        color: white !important; /* Texto en blanco */
+    }
+    table.dataTable.hover > tbody > tr.selected:hover > *,
+    table.dataTable.display > tbody > tr.selected:hover > * {
+        box-shadow: inset 0 0 0 9999px inherit !important;
+        background-color: inherit !important; /* Fondo rojo sin transparencia */
+        color: white !important;
     }
 </style>
 
@@ -99,9 +109,9 @@
             }
             } 
         }">
-    <h1 class="text-2xl font-bold text-center">Lista de Codigos en Comisaría Primera</h1>
+    <h1 class="text-2xl font-bold text-center mb-4">Lista de Codigos en Comisaría Primera</h1>
     
-    <div class="me-nu flex flex-wrap justify-center gap-4 mb-4">
+    <div class="me-nu flex flex-wrap justify-center gap-4">
         <a href="{% url 'comisaria_primera_create' %}" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
     
         <!-- Botón para 'jefessuperiores' -->
@@ -143,7 +153,7 @@
                     <th class="px-4 py-4 text-center">Creado por</th>
                     <th class="px-4 py-4 text-center">1er Registro</th>
                     <th class="px-4 py-4 text-center">Editado por</th>                   
-                    <th class="px-4 py-4 text-center">Ultima Actualización</th>
+                    <th class="px-4 py-4 text-center">Ultima Modif.</th>
                     <th class="px-4 py-4 text-center">Acciones</th>
                 </tr>
             </thead>
@@ -167,12 +177,12 @@
                     <td class="py-1 px-2 text-center">
                         {% if record.updated_by %}
                             {{ record.updated_by.get_full_name|default:record.updated_by.username }}Auxiliar Walter Federico MONTERO
-                        {% endif %}
+                        {% endif %}Auxiliar Walter Federico MONTERO
                     </td>
                     <td class="py-1 px-2 text-center">
                         {% if record.updated_at and record.updated_at|date:"d/m/Y H:i:s" != record.created_at|date:"d/m/Y H:i:s" %}
                             {{ record.updated_at|date:"d/m/Y H:i:s" }}
-                        {% endif %}
+                        {% endif %}Auxiliar Walter Federico MONTERO
                     </td>
                     <td style="row-gap: 8px;"
                         class="py-1 px-2 text-center flex flex-col justify-center items-center">
