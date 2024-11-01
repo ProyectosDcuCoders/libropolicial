@@ -79,6 +79,9 @@
     .dark .dataTables_wrapper tbody tr:hover {
         background-color: #3b82f6; /* Equivalente a blue-500 */
     }
+    #myTable th{
+        text-align: center;
+    }
 </style>
 
 <div class="w-full max-w-7xl mx-auto px-4 pb-4 pt-2 rounded-lg dark:text-white"
@@ -129,13 +132,13 @@
 
     <div class="overflow-x-auto rounded-lg">
         <table id="myTable" class="display carajo w-full text-[13px] rounded-lg">
-            <thead class="bg-[#111] text-white text-[16px] rounded-lg">
+            <thead class="bg-[#111] text-white text-[15px] rounded-lg">
                 <tr>
                     <th class="px-4 py-4 text-center rounded-tl-lg">Cuarto</th>
-                    <th class="px-4 py-4 text-center">Fecha y hora</th>
+                    <th class="px-4 py-4 text-center mx-auto" style="white-space: nowrap;">Fecha y hora</th>
                     <th class="px-4 py-4 text-center" style="white-space: nowrap;">Código</th>
                     <th class="px-4 py-4 text-center">Lugar</th>
-                    <th class="px-4 py-4 text-center" style="white-space: nowrap;">Descripción</th>
+                    <th class="px-4 py-4 text-center" style="white-space: nowrap;">Descrip.</th>
                     <th class="px-4 py-4 text-center">Estado</th>
                     <th class="px-4 py-4 text-center">Creado por</th>
                     <th class="px-4 py-4 text-center">1er Registro</th>
