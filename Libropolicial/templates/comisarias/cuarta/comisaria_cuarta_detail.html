@@ -194,7 +194,7 @@
                         {% for detalle in record.detalles_dependencia_provincial.all %}
                         <div class="">
                             <li>
-                                <span class="font-semibold">Dependencia: </span>{{ detalle.dependencia_provincial.nombre|default:"S/N" }}
+                                <span class="font-semibold">Dependencia: </span>{{ detalle.dependencia_secundaria.dependencia|default:"S/N" }}
                             </li>
                             <li>
                                 <span class="font-semibold">Móvil: </span>{{ detalle.numero_movil_provincial|default:"S/N" }}

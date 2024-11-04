@@ -140,7 +140,7 @@
 
                         {% if is_jefessuperiores or user.is_superuser %}
                             <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_quinta_eliminar' record.pk %}' }"
-                                class="bg-red-600 text-white py-1 px-4 w-full rounded hover:bg-red-700 block text-center">
+                                class="bg-red-600 text-white py-1 px-4 w-full rounded hover:bg-red-700 block text-center" style="font-size: 10px; font-weight: 600;" >
                                 ELIMINAR
                             </button>
                        {% endif %}
