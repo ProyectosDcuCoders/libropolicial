@@ -119,27 +119,29 @@
                     </td>
                     <!-- ACCIONES -->
                     <td style="row-gap: 8px;"
-                        class="text-center flex flex-col bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
+                        class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
                         {% if record.estado or record.fecha_hora.date == today %}
                             <a href="{% url 'comisaria_cuarta_edit' record.pk %}" style="font-size: 10px; font-weight: 600;" 
-                            class="bg-yellow-500 text-black py-1 px-4 w-full rounded hover:bg-yellow-600 block  text-center">
+                            class="bg-yellow-500 text-black py-1 px-4 w-full rounded hover:bg-yellow-600 block  text-center my-2">
                                 EDITAR
                             </a>
                         {% endif %}
                         {% if not request.user.get_full_name in record.firmas %}
                             <button @click.prevent="recordIdToSign = {{ record.pk }}; showConfirmModal = true" 
-                                class="bg-teal-500 text-black py-1 px-4 w-full rounded hover:bg-teal-700 block text-center"style="font-size: 10px; font-weight: 600;" >
+                                class="bg-teal-500 text-black py-1 px-4 w-full rounded hover:bg-teal-700 block text-center my-2"
+                                style="font-size: 10px; font-weight: 600;" >
                                 FIRMAR
                             </button>
                         {% endif %}
                         <a href="{% url 'comisaria_cuarta_detail' record.pk %}" style="font-size: 10px; font-weight: 600;" 
-                            class="bg-blue-600 text-white py-1 px-4 w-full rounded hover:bg-blue-700 block text-center">
+                            class="bg-blue-600 text-white py-1 px-4 w-full rounded hover:bg-blue-700 block text-center my-2">
                             FULL
                         </a>
                         {% if is_jefessuperiores or user.is_superuser %}
                         <!-- Botón Eliminar (Soft Delete) con confirmación -->
                             <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_cuarta_eliminar' record.pk %}' }"
-                                class="bg-red-600 text-white py-1 px-4 w-full rounded hover:bg-red-700 block text-center" style="font-size: 10px; font-weight: 600;" >
+                                class="bg-red-600 text-white py-1 px-4 w-full rounded hover:bg-red-700 block text-center my-2" 
+                                style="font-size: 10px; font-weight: 600;" >
                                 ELIMINAR
                             </button>
                        {% endif %}
