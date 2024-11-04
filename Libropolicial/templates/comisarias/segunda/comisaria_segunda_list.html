@@ -8,6 +8,21 @@
     #comisarias-table_paginate {
         color: red;
     }
+    /* Modo oscuro para los elementos de DataTables */
+    .dark .dataTables_length label,
+    .dark .dataTables_filter label,
+    .dark .dataTables_info,
+    .dark .dataTables_paginate span a {
+        color: white !important;
+    }
+    .dark .paginate_button.current,
+    .dark .paginate_button:hover {
+        background-color: #4B5563 !important;  /* Color gris oscuro */
+        color: white !important;
+    }
+    .dark .paginate_button {
+        color: white !important;
+    }
 </style>
 <div class="mx-auto p-2 dark:text-white" x-data="{ 
         showModal: false, 
@@ -71,7 +86,7 @@
                     <td style="max-width: 200px;" class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.codigo|default_if_none:'' }}</td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
                         <p style="max-width: 150px;">
-                            {{ record.lugar_codigo|default_if_none:'' }}1
+                            {{ record.lugar_codigo|default_if_none:'' }}
                         </p>
                     </td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
@@ -81,7 +96,7 @@
                         {{ record.estado|yesno:"Activo,Finalizado" }}
                     </td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
-                        <p class="break-words" style="max-width: 117px;"> {{ record.created_by.get_full_name|default_if_none:'' }}Agente Luciana PACHECO NAHUELQUIN</p>
+                        <p class="break-words" style="max-width: 117px;"> {{ record.created_by.get_full_name|default_if_none:'' }}</p>
                     </td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.created_at|date:"d/m/Y H:i:s" }}</td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
@@ -89,7 +104,6 @@
                             {% if record.updated_by %}
                                 {{ record.updated_by.get_full_name|default:record.updated_by.username }}
                             {% endif %}
-                            Agente Luciana PACHECO NAHUELQUIN
                         </p>
                     </td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
