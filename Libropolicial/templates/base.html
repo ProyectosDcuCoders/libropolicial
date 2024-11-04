@@ -48,11 +48,11 @@
         h1{
             font-family: 'Roboto Slab', serif;
         }
-        .descripcion-container p{
-            margin-right: 0; !important
+        .descripcion-container {
+            margin-right: 28px; !important
         }
         .descripcion-container span{
-            margin-right: 0; !important
+            margin-right: 28px; !important
         }
         @media (max-width: 640px){
             .menu-header{
@@ -172,6 +172,34 @@
                     row-gap: 8px;
                 }
             }
+            /* detalle de codigo */
+        /* lugar del codigo */
+        #qwe{
+            line-height: 25px;
+        }
+        /* descripcion margin right */
+        .desc-detail{
+            padding-right: 38px;
+        }
+        /* rsponsivo de columnas de detallesde codigo */
+        @media (max-width: 640px){
+            .cont{
+                grid-template-columns: 1fr 1fr;
+            }
+            .first{
+                grid-column: span 2;
+                margin: auto;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+        @media (max-width: 440px){
+            .cont{
+                display: flex;
+                flex-direction: column;
+            }
+        }
     </style>
     <!-- Estilos CSS para el efecto de destello -->
 
@@ -183,7 +211,6 @@
 
 <body class="bg-gray-100 flex flex-col min-h-screen dark:bg-gray-800">
    
-
     <header class="menu-header flex justify-between items-center bg-black text-white p-2">
         <div class="flex items-center">
             <img class="mr-4" src="{% static 'comisarias/images/fabico.ico' %}" alt="" style="max-height: 60px;">
@@ -236,13 +263,9 @@
         </nav>
     </header>
 
-
     <main class="flex-grow mx-auto w-full p-4">
-      
-
         {% block content %}
         {% endblock %}
-        
     </main>
 
     <footer class="bg-black text-white text-center p-2 mt-auto mx-auto w-full">
@@ -251,6 +274,7 @@
             <p class="">Policia de la Provincia de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
         </div>
     </footer>
+
     <!-- MODO OSCURO -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -316,6 +340,9 @@
                         previous: "Anterior"
                     },
                 },
+                columnDefs: [
+                    { orderable: false, targets: [0, 2, 3, 4, 5, 6, 7, 8, 9, 10] } // Desactiva el orden para las columnas 0, 2 y 3 (ajusta los índices según tus necesidades)
+                ]
             });
     
             // Aplica estilos de modo oscuro si está activo

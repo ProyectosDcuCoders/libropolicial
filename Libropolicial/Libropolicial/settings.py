@@ -187,7 +187,7 @@ LOGIN_URL = 'login'  # URL de inicio de sesión
 # Configuración del motor de sesiones
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
-# Configuración de canales (WebSockets)
+# Configuración de canales (WebSockets) 'JustifyRight', 'JustifyBlock',
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
@@ -200,7 +200,7 @@ CKEDITOR_CONFIGS = {
             {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'Undo', 'Redo']},
             {'name': 'editing', 'items': ['Find', 'Replace', 'SelectAll', 'Scayt']},
             {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', 'RemoveFormat']},
-            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', 'Outdent', 'Indent', 'Blockquote', 'CreateDiv', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'BidiLtr', 'BidiRtl', 'Language']},
+            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', 'Outdent', 'Indent', 'Blockquote', 'CreateDiv', 'JustifyLeft','JustifyCenter',  'BidiLtr', 'BidiRtl', 'Language']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
             {'name': 'insert', 'items': ['Table', 'HorizontalRule', 'SpecialChar']},
             {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
@@ -210,5 +210,6 @@ CKEDITOR_CONFIGS = {
         ],
         'height': 250,
         'width': 'auto',
+        'font_names': 'Arial/Arial, Helvetica, sans-serif; Times New Roman/Times New Roman, Times, serif; Verdana/Verdana, Geneva, sans-serif; Courier New/Courier New, Courier, monospace',
     },
 }

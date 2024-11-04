@@ -4,9 +4,16 @@
 
 {% block content %}
 <style>
+    /* detalle de codigo */
+    /* lugar del codigo */
     #qwe{
         line-height: 25px;
     }
+    /* descripcion margin right */
+    .desc-detail{
+        padding-right: 38px;
+    }
+    /* rsponsivo de columnas de detallesde codigo */
     @media (max-width: 640px){
         .cont{
             grid-template-columns: 1fr 1fr;
@@ -86,20 +93,7 @@
     </div>
     <!-- DEPENDENCIAS Y CODIGOS SEC., ESTADO -->
     <div class="cont grid grid-cols-3 gap-x-4 py-4 my-2 bg-gray-200 rounded-md px-2">
-        <!-- DEPENDENCIAS SECUNDARIAS -->
-        <div class="first">
-            <!-- Detalles de relaciones ManyToMany -->
-            <h2 class="text-lg font-semibold">Dependencias Secundarias:</h2>
-            {% if record.dependencias_secundarias.all %}
-                <ul>
-                    {% for dependencia in record.dependencias_secundarias.all %}
-                    <li>{{ dependencia.dependencia|default:"S/N" }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>S/N</p>
-            {% endif %}
-        </div>
+        
         <!-- CODIGOS SECUNDARIOS -->
         <div class="">
             <h2 class="text-lg font-semibold">Codigos Secundarios:</h2>
@@ -120,7 +114,7 @@
         </div>
     </div>
   <!-- DESCRIPCIÓN -->
-<div class="py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
+<div class="desc-detail py-4 my-2 bg-gray-200 rounded-md px-2 text-center">
     <h2 class="text-lg pb-1 font-semibold">Descripción:</h2>
     <p class="block px-1 break-all" style="word-break: break-all;">
         {{ record.descripcion|safe|default:"S/N" }}
@@ -247,7 +241,7 @@
                         {% for detalle in record.detalles_dependencia_secundaria.all %}
                         <div class="">
                             <li>
-                                <span class="font-semibold">Dependencia: </span>{{ detalle.dependencia_secundaria.nombre|default:"S/N" }}
+                                <span class="font-semibold">Dependencia: </span>{{ detalle.dependencia_secundaria.dependencia|default:"S/N" }}
                             </li>
                             <li>
                                 <span class="font-semibold">Móvil: </span>{{ detalle.numero_movil_secundaria|default:"S/N" }}
