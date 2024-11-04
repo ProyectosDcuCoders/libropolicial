@@ -106,7 +106,7 @@
                         {{ record.estado|yesno:"Activo,Finalizado" }}
                     </td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
-                        <p  class="break-words" style="max-width: 117px;">{{ record.created_by.get_full_name|default_if_none:'' }}Agente Luciana PACHECO NAHUELQUIN</p>
+                        <p  class="break-words" style="max-width: 117px;">{{ record.created_by.get_full_name|default_if_none:'' }}</p>
                     </td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.created_at|date:"d/m/Y H:i:s" }}</td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
