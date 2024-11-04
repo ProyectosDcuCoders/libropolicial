@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Registros Completos de Comisarías{% endblock %}
+{% block title %}Comisaría Primera Ushuaia{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.dataTables.css" />
@@ -79,6 +79,12 @@
     /* .dark .dataTables_wrapper tbody tr:hover {
         background-color: #3b82f6;
     } */
+    #myTable thead{
+        background: #29313d;
+    }
+    html.dark #myTable thead {
+        background: black;
+    }
     #myTable th{
         text-align: center;
     }
@@ -133,7 +139,7 @@
             } 
         }">
     <h1 class="text-2xl font-bold text-center mb-4">Lista de Codigos en Comisaría Primera</h1>
-    
+    <!-- SUB MENU -->
     <div class="me-nu flex flex-wrap justify-center gap-4">
         <a href="{% url 'comisaria_primera_create' %}" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
     
@@ -162,10 +168,10 @@
     
     
     </div>
-
+    <!-- DATA TABLE -->
     <div class="overflow-x-auto rounded-lg">
         <table id="myTable" class="display carajo w-full text-[13px] rounded-lg">
-            <thead class="bg-[#111] text-white text-[15px] rounded-lg">
+            <thead class=" text-white text-[15px] rounded-lg ">
                 <tr>
                     <th class="px-4 py-4 text-center rounded-tl-lg">Cuarto</th>
                     <th class="px-4 py-4 text-center mx-auto">Fecha y hora</th>
@@ -180,6 +186,7 @@
                     <th class="px-4 py-4 text-center">Acciones</th>
                 </tr>
             </thead>
+            <!-- VARIABLES -->
             <tbody>
                 {% for record in records %}
                 <tr class="tede border-b cursor-pointer">
@@ -189,17 +196,16 @@
                     <td class="td-qth py-1 px-2 text-center">{{ record.lugar_codigo|default_if_none:'' }}</td>
                     <td class="py-1 px-2 text-center">
                         <button @click="descripcion = '{{ record.descripcion|escapejs }}'; showModal = true" 
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ver
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ver
                         </button>
                     </td>
                     <td class="py-1 px-2 text-center {% if record.estado %}blink-red{% endif %}">{{ record.estado|yesno:"Activo,Finalizado" }}</td>
-                    <td class="td-nombres py-1 px-2 text-center">{{ record.created_by.get_full_name|default_if_none:'' }}Escribiente CEJAS, Verónica Guadalupe</td>
+                    <td class="td-nombres py-1 px-2 text-center">{{ record.created_by.get_full_name|default_if_none:'' }}</td>
                     <td class="py-1 px-2 text-center">{{ record.created_at|date:"d/m/Y H:i:s" }}</td>
                     <td class="td-nombres py-1 px-2 text-center">
-                        Escribiente CEJAS, Verónica Guadalupe
-                        <!-- {% if record.updated_by %}
+                        {% if record.updated_by %}
                             {{ record.updated_by.get_full_name|default:record.updated_by.username }}
-                        {% endif %} -->
+                        {% endif %}
                     </td>
                     <td class="py-1 px-2 text-center">
                         {% if record.updated_at and record.updated_at|date:"d/m/Y H:i:s" != record.created_at|date:"d/m/Y H:i:s" %}
@@ -314,7 +320,7 @@
             {% for message in messages %}
                 Swal.fire({
                     icon: 'success',  // Cambia el ícono según el tipo de mensaje (success, error, etc.)
-                    title: '¡Éxito!',
+                    title: 'Hecho!',
                     text: '{{ message }}',
                     confirmButtonText: 'OK',
                     timer: 3000  // La alerta se cierra automáticamente después de 3 segundos
