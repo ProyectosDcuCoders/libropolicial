@@ -1,6 +1,7 @@
-<!-- comisarias/primera/comisaria_primera_list.html -->
+<!-- comisarias/tercera/comisaria_tercera_list.html -->
 {% extends "base.html" %}
 
+{% block title %}Comisaría Tercera Ushuaia{% endblock %}
 {% block title %}Comisaría Tercera Ushuaia{% endblock %}
 
 {% block content %}
@@ -256,6 +257,7 @@
                             class="bg-yellow-500 text-black  px-4 w-full rounded  block  text-center my-1">
                             EDITAR
                         </a>
+                        {% endif %}
                         {% endif %}
 
                         {% if is_jefessuperiores or user.is_superuser %}

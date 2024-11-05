@@ -251,6 +251,7 @@
                         </a>
                         {% endif %}
                         
+                        
                         {% if is_jefessuperiores or user.is_superuser %}
                         <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_primera_eliminar' record.pk %}' }"
                             class="bg-red-600 text-white  px-4 w-full rounded  block text-center my-1">
