@@ -1,7 +1,7 @@
 <!-- comisarias/primera/comisaria_primera_list.html -->
 {% extends "base.html" %}
 
-{% block title %}Lista de Codigos en Comisaría Quinta{% endblock %}
+{% block title %}Comisaría Quinta Ushuaia{% endblock %}
 
 {% block content %}
 <style>
@@ -23,7 +23,7 @@
         color: white !important;
     }
 </style>
-<div class="mx-auto mt-4 p-4 dark:text-white" x-data="{ 
+<div class="mx-auto p-2 dark:text-white" x-data="{ 
         showModal: false, 
         descripcion: '', 
         showResolveModal: false, 
@@ -67,19 +67,21 @@
     </div>
 <!-- DATA TABLE -->
     <div class="overflow-x-auto max-w-7xl mx-auto pt-2 sm:pt-0">
-        <table id="comisarias-table" class="min-w-full bg-gray-600 border dark:text-white border-gray-600 mt-4 dark:bg-gray-800 dark:border-gray-700">
+        <table id="comisarias-table" 
+            class="min-w-full bg-gray-600 border dark:text-white border-gray-600 mt-4 dark:bg-gray-800 dark:border-gray-700">
             <thead class="bg-slate-800 text-white dark:bg-slate-900 dark:text-gray-200">
                 <tr style="font-size: 15px;">
-                    <th style="padding: 10px;" class=" py-2 w-fit bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Cuarto</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Fecha y hora del código</th>
+                    <th style="padding: 10px;" 
+                        class=" py-2 w-fit bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Cuarto</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Fecha y hora</th>
                     <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Código</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Lugar Código</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Descripción</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Estado del código</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Creado por Usuario</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Primer Registro</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Editado por Usuario</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Ultima Actualización</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Lugar</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Descrip.</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Estado</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Creado por</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">1er Registro</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Editado por</th>
+                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Ultima Modif.</th>
                     <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Acciones</th>
                 </tr>
             </thead>
@@ -93,8 +95,11 @@
                         <p style="max-width: 150px;">{{ record.lugar_codigo|default_if_none:'' }}</p>
                     </td>
                     <td class="text-center bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
-                        <button @click="descripcion = '{{ record.descripcion|escapejs }}'; showModal = true" style="font-size: 10px; font-weight: 600;"
-                            class="bg-blue-600 text-white w-fit mx-auto px-3 py-2 rounded hover:bg-blue-700">VER</button>
+                        <button @click="descripcion = '{{ record.descripcion|escapejs }}'; showModal = true" 
+                            style="font-size: 10px; font-weight: 600;"
+                            class="bg-blue-600 text-white w-fit mx-auto px-3 py-2 rounded hover:bg-blue-700">
+                            VER
+                        </button>
                     </td>
                     <td class="text-center bg-gray-300 border text-gray-950 border-gray-300 px-2 py-2 {% if record.estado %}blink-red{% endif %} dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         {{ record.estado|yesno:"Activo,Finalizado" }}
@@ -121,28 +126,30 @@
 
                         <a href="{% url 'comisaria_quinta_detail' record.pk %}" style="font-size: 10px; font-weight: 600;"
                             class="bg-blue-600 text-white py-1 px-4 w-full rounded hover:bg-blue-700 block text-center my-2">
-                            Full
+                            FULL
                         </a>
 
                         {% if not request.user.get_full_name in record.firmas %}
-                            <button @click.prevent="recordIdToSign = {{ record.pk }}; showConfirmModal = true" style="font-size: 10px; font-weight: 600;" 
-                                class="bg-teal-500 text-black py-1 px-4 w-full rounded hover:bg-teal-700 block text-center my-2">
-                                FIRMAR
-                            </button>
+                        <button @click.prevent="recordIdToSign = {{ record.pk }}; showConfirmModal = true" 
+                            style="font-size: 10px; font-weight: 600;" 
+                            class="bg-teal-500 text-black py-1 px-4 w-full rounded hover:bg-teal-700 block text-center my-2">
+                            FIRMAR
+                        </button>
                         {% endif %}
 
                         {% if record.estado or record.fecha_hora.date == today %}
-                            <a href="{% url 'comisaria_quinta_edit' record.pk %}" style="font-size: 10px; font-weight: 600;" 
-                                class="bg-yellow-500 text-black py-1 px-4 w-full rounded hover:bg-yellow-600 block  text-center my-2">
-                                EDITAR
-                            </a>
+                        <a href="{% url 'comisaria_quinta_edit' record.pk %}" style="font-size: 10px; font-weight: 600;" 
+                            class="bg-yellow-500 text-black py-1 px-4 w-full rounded hover:bg-yellow-600 block  text-center my-2">
+                            EDITAR
+                        </a>
                         {% endif %}
 
                         {% if is_jefessuperiores or user.is_superuser %}
-                            <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_quinta_eliminar' record.pk %}' }"
-                                class="bg-red-600 text-white py-1 px-4 w-full rounded hover:bg-red-700 block text-center my-2" style="font-size: 10px; font-weight: 600;" >
-                                ELIMINAR
-                            </button>
+                        <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_quinta_eliminar' record.pk %}' }"
+                            class="bg-red-600 text-white py-1 px-4 w-full rounded hover:bg-red-700 block text-center my-2" 
+                            style="font-size: 10px; font-weight: 600;" >
+                            ELIMINAR
+                        </button>
                        {% endif %}
                     </td>
                 </tr>
