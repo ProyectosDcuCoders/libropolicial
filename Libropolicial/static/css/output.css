@@ -1452,16 +1452,16 @@ video {
   border-bottom-width: 0px;
 }
 
-.border-t-0 {
-  border-top-width: 0px;
-}
-
 .border-l {
   border-left-width: 1px;
 }
 
 .border-r {
   border-right-width: 1px;
+}
+
+.border-t-0 {
+  border-top-width: 0px;
 }
 
 .border-solid {
@@ -2696,10 +2696,6 @@ video {
 
   .sm\:pb-4 {
     padding-bottom: 1rem;
-  }
-
-  .sm\:pt-0 {
-    padding-top: 0px;
   }
 
   .sm\:text-left {
