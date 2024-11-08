@@ -81,48 +81,45 @@
     }
 </style>
 
-<div class="w-full mx-auto px-4 pb-4 pt-2 rounded-lg dark:text-white"
+<div class="w-full max-w-6xl mx-auto px-4 pb-4 pt-2 rounded-lg dark:text-white"
      x-data="{ showModal: false, descripcion: '' }">
     <h1 class="text-2xl font-bold text-center">Registros Completos de Comisarías</h1>
+    
     <div class="overflow-x-auto rounded-lg">
-        <table id="myTable" class="display carajo w-full  text-[13px] rounded-lg">
+        <table id="myTable" class="display carajo w-full text-[13px] rounded-lg">
             <thead class="bg-[#111] text-white text-[16px] rounded-lg">
-                <tr class="">
-                    <th class="px-4 py-4 rounded-tl-lg">Comisaria</th>
-                    <th class="px-4 py-4">Guardia</th>
-                    <th class="px-4 py-4"style="white-space: nowrap;">Fecha y Hora</th>
-                    <th class="px-4 py-4">Código</th>
-                    <th class="px-4 py-4" style="white-space: nowrap;">Móvil-Patrulla</th>
-                    <th class="px-4 py-4">A Cargo</th>
-                    <th class="px-4 py-4">Secundante</th>
-                    <th class="px-4 py-4">QTH</th>
-                    <th class="px-4 py-4">Descrip.</th>
-                    <th class="px-4 py-4">Instituciones Intervinientes</th>
-                    <th class="px-4 py-4">Tareas Judiciales</th>
-                    <th class="px-4 py-4 rounded-tr-lg">Fecha de Registro</th>
+                <tr>
+                    <th class="px-4 py-4 text-center rounded-tl-lg">Comisaria</th>
+                    <th class="px-4 py-4 text-center">Guardia</th>
+                    <th class="px-4 py-4 text-center" style="white-space: nowrap;">Fecha y Hora Codigo</th>
+                    <th class="px-4 py-4 text-center">Código</th>
+                    <th class="px-4 py-4 text-center" style="white-space: nowrap;">Móvil-Patrulla</th>
+                    <th class="px-4 py-4 text-center">A Cargo</th>
+                    <th class="px-4 py-4 text-center">Secundante</th>
+                    <th class="px-4 py-4 text-center">Lugar Codigo</th>
+                    <th class="px-4 py-4 text-center">Descrip.</th>                   
+                    <th class="px-4 py-4 text-center">Tareas Judiciales</th>
                 </tr>
             </thead>
-            <tbody class="">
+            <tbody>
                 {% for comisaria in comisarias %}
                 <tr class="border-b cursor-pointer">
-                    <td class="py-1 px-2 font-bold ">{{ comisaria.comisaria_nombre }}</td>
+                    <td class="py-1 px-2 font-bold text-center">{{ comisaria.comisaria_nombre }}</td>
                     <td class="py-1 px-2 text-center">{{ comisaria.cuarto.cuarto }}</td>
-                    <td class="py-1 px-2">{{ comisaria.fecha_hora|date:"Y-m-d H:i" }}</td>
-                    <td class="py-1 px-2"><p class="text-center">{{ comisaria.codigo.codigo }}</p></td>
-                    <td class="py-1 px-2"><p class="text-center">{{ comisaria.movil_patrulla|default_if_none:'' }}</p></td>
-                    <td class="py-1 px-2">{{ comisaria.a_cargo|default_if_none:'' }}</td>
-                    <td class="py-1 px-2">{{ comisaria.secundante|default_if_none:'' }}</td>
-                    <td class="py-1 px-2">{{ comisaria.lugar_codigo|default_if_none:'' }}</td>
-                    <td class="py-1 px-2">
+                    <td class="py-1 px-2 text-center">{{ comisaria.fecha_hora|date:"Y-m-d H:i" }}</td>
+                    <td class="py-1 px-2 text-center">{{ comisaria.codigo.codigo }}</td>
+                    <td class="py-1 px-2 text-center">{{ comisaria.movil_patrulla|default_if_none:'' }}</td>
+                    <td class="py-1 px-2 text-center">{{ comisaria.a_cargo|default_if_none:'' }}</td>
+                    <td class="py-1 px-2 text-center">{{ comisaria.secundante|default_if_none:'' }}</td>
+                    <td class="py-1 px-2 text-center">{{ comisaria.lugar_codigo|default_if_none:'' }}</td>
+                    <td class="py-1 px-2 text-center">
                         <button @click="descripcion = '{{ comisaria.descripcion|escapejs }}'; showModal = true" class="bg-[#00b3b3] text-white px-4 py-2 rounded hover:bg-gray-700">Ver</button>
                     </td>
-                    <td class="py-1 px-2"><p class="overflow-x-auto max-w-[300px]">{{ comisaria.instituciones_intervinientes }}</p></td>
-                    <td class="py-1 px-2">
+                    <td class="py-1 px-2 text-center">
                         <p class="overflow-auto max-w-[300px]" style="max-height: 60px; line-height: 18px;">
                             {{ comisaria.tareas_judiciales }}
                         </p>
                     </td>
-                    <td class="py-1 px-2">{{ comisaria.created_at }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -137,11 +134,9 @@
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                Descripción
-                            </h3>
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Descripción</h3>
                             <div class="mt-2">
-                                <p class="text-sm text-gray-500" x-html="descripcion"></p>
+                                <p class="text-sm text-gray-500 w-fit" x-html="descripcion"></p>
                             </div>
                         </div>
                     </div>
@@ -156,8 +151,10 @@
     </div>
     <!-- VOLVER -->
     <a href="/" class="inline-block text-[13px] bg-[#00b3b3] hover:bg-gray-700 text-white px-4 py-2 rounded text-center">Volver</a>
-    
 </div>
+
+
+
 <!-- DATATABLE CONFIG -->
 <script>
     $(document).ready(function() {

@@ -1,4 +1,3 @@
-
 #compartidos/views
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
@@ -38,4 +37,4 @@ class CustomLoginView(LoginView):
         #else:
          #   return reverse_lazy('no_permission')
 
-    
+
