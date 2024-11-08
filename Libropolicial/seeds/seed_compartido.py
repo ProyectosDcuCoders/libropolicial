@@ -78,6 +78,7 @@ def run():
     
     print('Successfully seeded CuartoGuardiaUSH data.')
 
+   
 # Execute the function if the script is run directly
 if __name__ == '__main__':
     run()
