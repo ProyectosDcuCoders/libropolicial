@@ -34,6 +34,16 @@ class RedirectAuthenticatedUserMiddleware(MiddlewareMixin):
                 return redirect('comisaria_cuarta_list')
             elif request.user.groups.filter(name='comisariaquinta').exists():
                 return redirect('comisaria_quinta_list')
+            elif request.user.groups.filter(name='comisariaprimeraRG').exists():
+                return redirect('comisaria_primeraRG_list')
+            elif request.user.groups.filter(name='comisariasegundaRG').exists():
+                return redirect('comisaria_segundaRG_list')
+            elif request.user.groups.filter(name='comisariaterceraRG').exists():
+                return redirect('comisaria_terceraRG_list')
+            elif request.user.groups.filter(name='comisariacuartaRG').exists():
+                return redirect('comisaria_cuartaRG_list') 
+            elif request.user.groups.filter(name='comisariaquintaRG').exists():
+                return redirect('comisaria_quintaRG_list')
             elif request.user.groups.filter(name='divisioncomunicaciones').exists():
                 return redirect('divisioncomunicaciones_list')
             elif request.user.groups.filter(name='estadisticas').exists():
