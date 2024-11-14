@@ -87,6 +87,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'compartido.context_processors.global_user_permissions',# agreege este nuevo para permisos globales dcu101
             ],
         },
     },

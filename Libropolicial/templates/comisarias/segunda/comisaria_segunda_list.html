@@ -157,22 +157,29 @@
     <h1 class="text-2xl font-bold text-center mb-4">Lista de Codigos en Comisaría Segunda</h1>
     <!-- SUB-MENU -->
     <div class="me-nu flex flex-wrap justify-center gap-4">
+        {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias or librero  %}
         <a href="{% url 'comisaria_segunda_create' %}" class="btn bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
-         <!-- Botón para 'jefessuperiores' -->
-        {% if is_jefessuperiores %}
+        {% endif %}
+
+        <!-- Botón para 'jefessuperiores' -->
+        {% if is_jefessuperiores or can_access_comisarias %}
         <a href="{% url 'comisarias_completa_list' %}" class="btn bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700">Libro general codigos</a>
         {% endif %}
+
          <!-- Botón para 'oficialesservicios' y 'jefessuperiores' -->
         {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
          <a href="{% url 'generate_comisaria_segunda_pdf_download' %}?signature=true" target="_blank" class="btn bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Ver y Descargar PDF</a>
          {% endif %}
+
          {% if user.is_authenticated and user.is_superuser %}
         <a href="{% url 'generate_comisaria_segunda_pdf_download_previous_day' %}" target="_blank" class="btn bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Descargar PDF del Día Anterior</a>
          {% endif %}
+
          <!-- Botón para 'oficialesservicios se agrego ' y 'jefessuperiores' --> <!-- Botón para subir y ver PDFs -->
          {% if is_oficialesservicios or is_jefessuperiores %}
         <a href="{% url 'subir_pdf' %}" class="btn bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-700">Subir PDF</a>
         {% endif %}
+
         {% if user.is_authenticated and user.is_superuser %}
         <a href="{% url 'ver_pdfs' %}" class="btn bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Ver PDF Libro</a>
         {% endif %}
@@ -235,18 +242,23 @@
                         </a>
 
                         {% if not request.user.get_full_name in record.firmas %}
+                        {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
                         <button @click.prevent="recordIdToSign = {{ record.pk }}; showConfirmModal = true"
                             class="bg-teal-500 text-black  px-4 w-full rounded  block text-center my-1">
                             FIRMAR
                         </button>
                         {% endif %}
+                        {% endif %}
 
                         {% if record.estado or record.fecha_hora.date == today %}
+                        {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
                         <a href="{% url 'comisaria_segunda_edit' record.pk %}" 
                             class="bg-yellow-500 text-black  px-4 w-full rounded  block  text-center my-1">
                             EDITAR
                         </a>
                         {% endif %}
+                        {% endif %}
+                        
                         
                         {% if is_jefessuperiores or user.is_superuser %}
                         <!-- Botón Eliminar (Soft Delete) con confirmación -->
