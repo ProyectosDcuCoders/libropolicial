@@ -2077,70 +2077,118 @@ def eliminar_comisaria_quinta(request, pk):
 
 #--------------------vista dee todas las comisarias-------------------------------------    
 
-# Vista para listar todas las comisarías
+from django.db.models import Value, Q, CharField
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 class ComisariasCompletaListView(LoginRequiredMixin, ListView):
     template_name = 'comisarias/comisarias_completa_list.html'
-    context_object_name = 'comisarias'
+    context_object_name = 'page_obj'
+
+    def get_paginate_by(self, queryset):
+        """Define el número de registros por página dinámicamente."""
+        items_per_page = self.request.GET.get('items_per_page', 10)
+        try:
+            return int(items_per_page)
+        except ValueError:
+            return 10  # Valor por defecto si no es válido
 
     def get_queryset(self):
-        query = self.request.GET.get('q', '')
+        query = self.request.GET.get('q', '').strip()  # Obtiene y limpia la consulta
 
-        # Filtrar solo las comisarías activas
-        comisarias_primera = ComisariaPrimera.objects.filter(activo=True).select_related('cuarto')
-        comisarias_segunda = ComisariaSegunda.objects.filter(activo=True).select_related('cuarto')
-        comisarias_tercera = ComisariaTercera.objects.filter(activo=True).select_related('cuarto')
-        comisarias_cuarta = ComisariaCuarta.objects.filter(activo=True).select_related('cuarto')
-        comisarias_quinta = ComisariaQuinta.objects.filter(activo=True).select_related('cuarto')
+        # Crea un filtro Q común para reutilizarlo
+        search_filter = (
+            Q(comisaria_nombre__icontains=query) |
+            Q(cuarto__cuarto__icontains=query) |
+            Q(codigo__codigo__icontains=query) |
+            Q(codigo__nombre_codigo__icontains=query) |
+            Q(movil_patrulla__icontains=query) |
+            Q(a_cargo__icontains=query) |
+            Q(secundante__icontains=query) |
+            Q(lugar_codigo__icontains=query) |
+            Q(tareas_judiciales__icontains=query) |
+            Q(descripcion__icontains=query) |
+            Q(fecha_hora__icontains=query)
+        ) if query else Q()  # Solo aplica el filtro si hay una consulta
 
-        # Asignar nombres a cada instancia de comisaría
-        for comisaria in comisarias_primera:
-            comisaria.comisaria_nombre = 'Comisaria Primera'
-        for comisaria in comisarias_segunda:
-            comisaria.comisaria_nombre = 'Comisaria Segunda'
-        for comisaria in comisarias_tercera:
-            comisaria.comisaria_nombre = 'Comisaria Tercera'
-        for comisaria in comisarias_cuarta:
-            comisaria.comisaria_nombre = 'Comisaria Cuarta'
-        for comisaria in comisarias_quinta:
-            comisaria.comisaria_nombre = 'Comisaria Quinta'
+        # Filtra y anota cada QuerySet individualmente
+        comisarias_primera = ComisariaPrimera.objects.filter(
+            activo=True
+        ).select_related('cuarto').annotate(
+            comisaria_nombre=Value('Comisaria Primera', output_field=CharField())
+        ).filter(search_filter)
 
-        # Combinar todas las listas de comisarías
-        combined_list = list(comisarias_primera) + list(comisarias_segunda) + \
-                        list(comisarias_tercera) + list(comisarias_cuarta) + \
-                        list(comisarias_quinta)
+        comisarias_segunda = ComisariaSegunda.objects.filter(
+            activo=True
+        ).select_related('cuarto').annotate(
+            comisaria_nombre=Value('Comisaria Segunda', output_field=CharField())
+        ).filter(search_filter)
 
-        # Aplicar filtro de búsqueda si hay una consulta
-        if query:
-            combined_list = [comisaria for comisaria in combined_list if self.query_in_comisaria(comisaria, query)]
+        comisarias_tercera = ComisariaTercera.objects.filter(
+            activo=True
+        ).select_related('cuarto').annotate(
+            comisaria_nombre=Value('Comisaria Tercera', output_field=CharField())
+        ).filter(search_filter)
 
-        # Ordenar la lista combinada por la fecha de creación, de la más reciente a la más antigua
-        combined_list = sorted(combined_list, key=lambda x: x.created_at, reverse=True)
+        comisarias_cuarta = ComisariaCuarta.objects.filter(
+            activo=True
+        ).select_related('cuarto').annotate(
+            comisaria_nombre=Value('Comisaria Cuarta', output_field=CharField())
+        ).filter(search_filter)
 
-        return combined_list
+        comisarias_quinta = ComisariaQuinta.objects.filter(
+            activo=True
+        ).select_related('cuarto').annotate(
+            comisaria_nombre=Value('Comisaria Quinta', output_field=CharField())
+        ).filter(search_filter)
 
-    # Función para verificar si la consulta está en algún campo de la comisaría
-    def query_in_comisaria(self, comisaria, query):
-        query_lower = query.lower()
-        return (
-            (query_lower in comisaria.comisaria_nombre.lower()) or
-            (comisaria.cuarto and query_lower in comisaria.cuarto.cuarto.lower()) or
-            (comisaria.codigo and query_lower in comisaria.codigo.codigo.lower()) or
-            (query_lower in comisaria.movil_patrulla.lower() if comisaria.movil_patrulla else False) or
-            (query_lower in comisaria.a_cargo.lower() if comisaria.a_cargo else False) or
-            (query_lower in comisaria.secundante.lower() if comisaria.secundante else False) or
-            (query_lower in comisaria.lugar_codigo.lower() if comisaria.lugar_codigo else False) or
-            (query_lower in comisaria.descripcion.lower() if comisaria.descripcion else False) or
-            (query_lower in comisaria.fecha_hora.strftime('%Y-%m-%d %H:%M:%S').lower())
+        # Unión de los QuerySets
+        combined_queryset = comisarias_primera.union(
+            comisarias_segunda,
+            comisarias_tercera,
+            comisarias_cuarta,
+            comisarias_quinta
         )
+
+        # Ordenar por fecha de creación
+        return combined_queryset.order_by('-created_at')
+    
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+
+    # Paginación
+        paginate_by = self.get_paginate_by(queryset)
+        paginator = Paginator(queryset, paginate_by)
+        page = self.request.GET.get('page')
+
+        try:
+           page_obj = paginator.page(page)
+        except PageNotAnInteger:
+           page_obj = paginator.page(1)
+        except EmptyPage:
+           page_obj = paginator.page(paginator.num_pages)
+
+    # Calcular el rango dinámico de páginas
+        current_page = page_obj.number
+        total_pages = page_obj.paginator.num_pages
+        range_start = max(current_page - 5, 1)
+        range_end = min(current_page + 5, total_pages) + 1  # Incluye la última página
+
+        context['page_obj'] = page_obj
         context['query'] = self.request.GET.get('q', '')
-        context['paginate_by'] = self.request.GET.get('items_per_page', 10)
+        context['items_per_page'] = paginate_by
+        context['page_range'] = range(range_start, range_end)
         return context
 
 
-    
+
+
+        
+
+
+
 #-------------------------------genera pdf para firma y descarga------------------------------------------------------
 
 def generate_pdf_content(request, comisaria_model, add_signature=False):
