@@ -346,7 +346,7 @@
                 </button>
 
         <!-- Dropdown solo visible para superusuarios -->
-        {% if user.is_authenticated and user.is_superuser %}
+        {% if can_access_comisarias %}
         <div x-data="{ open: false }" class="relative">
           <button
             @click="open = !open"
