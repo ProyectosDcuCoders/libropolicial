@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 #el setting esta para desarrollo nuevos cambios
 # ALLOWED_HOSTS = ['192.168.1.114', 'localhost', '127.0.0.1']
 
-
 # Definición de la aplicación
 
 INSTALLED_APPS = [
