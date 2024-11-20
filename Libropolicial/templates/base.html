@@ -423,6 +423,8 @@
             </li>
           </ul>          
         </div>
+        {% endif %}
+        {% if can_access_comisariasRG %}
         <div x-data="{ open: false }" class="relative">
           <button
             @click="open = !open"
@@ -486,7 +488,7 @@
               >
             </li>
           </ul>          
-        </div>
+        </div>        
         {% endif %}
 
         <!-- Puedes agregar aquí el nombre del usuario autenticado -->
