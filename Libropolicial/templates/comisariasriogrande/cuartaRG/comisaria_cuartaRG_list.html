@@ -1,29 +1,29 @@
-<!-- comisarias/primera/comisaria_primera_list.html -->
+<!-- comisarias/cuarta/comisaria_cuarta_list.html -->
 {% extends "base.html" %}
 
-{% block title %}Lista de Codigos en Comisaría Cuarta Rio Grande{% endblock %}
+{% block title %}Lista de Códigos en Comisaría Cuarta Rio Grande{% endblock %}
 
 {% block content %}
 <style>
     /* Modo oscuro para los elementos de DataTables */
-.dark .dataTables_length label,
-.dark .dataTables_filter label,
-.dark .dataTables_info,
-.dark .dataTables_paginate span a {
-    color: white !important;
-}
+    .dark .dataTables_length label,
+    .dark .dataTables_filter label,
+    .dark .dataTables_info,
+    .dark .dataTables_paginate span a {
+        color: white !important;
+    }
 
-.dark .paginate_button.current,
-.dark .paginate_button:hover {
-    background-color: #4B5563 !important;  /* Color gris oscuro */
-    color: white !important;
-}
+    .dark .paginate_button.current,
+    .dark .paginate_button:hover {
+        background-color: #4B5563 !important;
+        color: white !important;
+    }
 
-.dark .paginate_button {
-    color: white !important;
-}
+    .dark .paginate_button {
+        color: white !important;
+    }
+</style> 
 
-</style>
 <div class="mx-auto mt-4 p-4 dark:text-white" x-data="{ 
     showModal: false, 
     descripcion: '', 
@@ -38,94 +38,68 @@
         }
     } 
 }">
-    <h1 class="text-2xl font-bold mb-4 text-center">Lista de Codigos en Comisaría Cuarta Rio Grande</h1>
+    <h1 class="text-2xl font-bold mb-4 text-center">Lista de Códigos en Comisaría Cuarta Rio Grande</h1>
 
     <div class="flex flex-wrap justify-center gap-4 mb-4">
         {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias or librero %}
-        <a href="{% url 'comisaria_cuartaRG_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
+        <a href="{% url 'comisaria_cuartaRG_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Código</a>
         {% endif %}
-        
-        <!-- Botón para 'jefessuperiores' -->
+
         {% if is_jefessuperioresor or can_access_comisarias %}
-        <a href="{% url 'comisarias_completaRG_list' %}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700">Libro general codigos</a>
+        <a href="{% url 'comisarias_completaRG_list' %}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700">Libro general códigos</a>
         {% endif %}
-    
-        <!-- Botón para 'oficialesservicios' y 'jefessuperiores' -->
+
         {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
         <a href="{% url 'generate_comisaria_cuartaRG_pdf_download' %}?signature=true" target="_blank" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700">Ver y Descargar PDF</a>
         {% endif %}
-    
+
         {% if user.is_authenticated and user.is_superuser %}
         <a href="{% url 'generate_comisaria_cuartaRG_pdf_download_previous_day' %}" target="_blank" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Descargar PDF del Día Anterior</a>
         {% endif %}
-    
-        <!-- Botón para subir y ver PDFs -->
+
         {% if is_oficialesservicios or is_jefessuperiores %}
         <a href="{% url 'subir_pdfRG' %}" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-700">Subir PDF</a>
         {% endif %}
-    
+
         {% if user.is_authenticated and user.is_superuser %}
         <a href="{% url 'ver_pdfsRG' %}" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-700">Ver PDF Libro</a>
-        
         {% endif %}
     </div>
-    
-    
 
     <div class="overflow-x-auto max-w-7xl mx-auto">
         <table id="comisarias-table" class="min-w-full bg-gray-600 border dark:text-white border-gray-600 mt-4 dark:bg-gray-800 dark:border-gray-700">
             <thead class="bg-slate-800 text-white dark:bg-slate-900 dark:text-gray-200">
                 <tr>
-                    <!-- Aplica las clases de Tailwind para el modo oscuro -->
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Cuarto</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Fecha y hora del código</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Código</th>
-                   <!-- <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Movil Patrulla</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">A Cargo</th>-->
-                   <!-- <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Secundante</th>-->
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Lugar Código</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Descripción</th>
-                   <!-- <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Instituciones Intervinientes</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Tareas Judiciales</th>-->
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Estado del código</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Creado por Usuario</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Primer Registro</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Editado por Usuario</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Ultima Actualización</th>
-                    <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Acciones</th>
-                   <!--  <th class="px-2 py-2 bg-gray-600 border border-gray-600 dark:bg-gray-700 dark:border-gray-600">Audio</th>-->
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Cuarto</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Fecha y hora del código</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Código</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Lugar Código</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Descripción</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Estado del código</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Creado por Usuario</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Primer Registro</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Editado por Usuario</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Última Actualización</th>
+                    <th class="px-2 py-2 bg-gray-600 border dark:bg-gray-700">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for record in records %}
                 <tr>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.cuartoRG.cuartoRG }}</td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.fecha_hora|date:"d/m/Y H:i:s" }}</td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.codigoRG|default_if_none:'' }}</td>
-                   <!--  <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.movil_patrulla|default_if_none:'' }}</td>-->
-                   <!-- <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.a_cargo|default_if_none:'' }}</td>-->
-                   <!-- <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.secundante|default_if_none:'' }}</td>-->
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.lugar_codigo|default_if_none:'' }}</td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">{{ record.cuartoRG.cuartoRG }}</td>
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">{{ record.fecha_hora|date:"d/m/Y H:i:s" }}</td>
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">{{ record.codigoRG|default_if_none:'' }}</td>
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">{{ record.lugar_codigo|default_if_none:'' }}</td>
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">
                         <button @click="descripcion = '{{ record.descripcion|escapejs }}'; showModal = true" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Ver</button>
                     </td>
-                    <!--<td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.instituciones_intervinientes|default_if_none:'' }}</td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.tareas_judiciales|default_if_none:'' }}</td>-->
-                    <td class="bg-gray-300 border text-gray-950 border-gray-300 px-2 py-2 {% if record.estado %}blink-red{% endif %} dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">
                         {{ record.estado|yesno:"Activo,Finalizado" }}
                     </td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.created_by.get_full_name|default:'S/N' }}</td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">{{ record.created_at|date:"d/m/Y H:i:s" }}</td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
-                        {% if record.updated_by %}
-                            {{ record.updated_by.get_full_name|default:record.updated_by.username }}
-                        {% endif %}
-                    </td>
-                    <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
-                        {% if record.updated_at and record.updated_at|date:"d/m/Y H:i:s" != record.created_at|date:"d/m/Y H:i:s" %}
-                            {{ record.updated_at|date:"d/m/Y H:i:s" }}
-                        {% endif %}
-                    </td>
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">{{ record.created_by.get_full_name|default:'S/N' }}</td>
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">{{ record.created_at|date:"d/m/Y H:i:s" }}</td>
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">{{ record.updated_by.get_full_name|default:'' }}</td>
+                    <td class="bg-gray-300 border px-2 py-2 dark:bg-gray-700">{{ record.updated_at|date:"d/m/Y H:i:s" }}</td>
                     <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
                         {% if record.estado or record.fecha_hora.date == today %}
                             <a href="{% url 'comisaria_cuartaRG_edit' record.pk %}" class="bg-yellow-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-yellow-600 block mb-2 text-center">
@@ -144,43 +118,21 @@
                             class="bg-blue-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-blue-700 block text-center mt-2">
                             Full
                         </a>
+                        
                         {% if is_jefessuperiores or user.is_superuser %}
-                        <!-- Botón Eliminar (Soft Delete) con confirmación -->
-                            <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_cuartaRG_eliminar' record.pk %}' }"
-                            class="bg-red-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-red-600 block text-center mt-2">
-                            Eliminar
-                            </button>
-                       {% endif %}
+                         <!-- Botón Eliminar (Soft Delete) con confirmación -->
+                             <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_cuartaRG_eliminar' record.pk %}' }"
+                             class="bg-red-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-red-600 block text-center mt-2">
+                             Eliminar
+                             </button>
+                        {% endif %}
                     </td>
-                    
-                   <!--  <td class="bg-gray-300 border border-gray-300 px-2 py-2 dark:bg-gray-700 dark:border-gray-600">
-                        Botón para leer en voz alta 
-                        <button class="bg-pink-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-pink-700 block text-center mt-2"
-                          onclick="readRecord('{{ record.cuarto.cuarto }}', '{{ record.fecha_hora|date:"d/m/Y H:i:s" }}', 
-                                               '{{ record.codigo.codigo }}', '{{ record.codigo.nombre_codigo }}', 
-                                               '{{ record.lugar_codigo }}', '{{ record.descripcion|escapejs }}',
-                                               '{{ record.estado|yesno:"Activo,Finalizado" }}', 
-                                               '{{ record.created_by.get_full_name }}', '{{ record.updated_by.get_full_name }}')">
-                          Audio
-                        </button>-->
-                      
-                        <!-- Botón para detener el audio 
-                        <button class="bg-red-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-red-700 block text-center mt-2"
-                          onclick="stopAudio()">
-                          Detener
-                        </button>
-                      </td>-->
-                      
-                      
-                    
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    
-
-   <!-- Modal para Descripción -->
+     <!-- Modal para Descripción -->
 <div x-show="showModal" x-cloak class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-2 px-4 pb-20 text-center sm:block sm:p-0">
         <div x-show="showModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -228,24 +180,21 @@
         </div>
     </div>
 </div>
-
 </div>
-
 <!-- SweetAlert2 para mostrar el mensaje de éxito -->
 {% if messages %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            {% for message in messages %}
-                Swal.fire({
-                    icon: 'success',  // Cambia el ícono según el tipo de mensaje (success, error, etc.)
-                    title: '¡Éxito!',
-                    text: '{{ message }}',
-                    confirmButtonText: 'OK',
-                    timer: 3000  // La alerta se cierra automáticamente después de 3 segundos
-                });
-            {% endfor %}
-        });
-    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        {% for message in messages %}
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: '{{ message|escapejs }}',  <!-- Asegúrate de escapar el mensaje -->
+                confirmButtonText: 'OK',
+                timer: 3000
+            });
+        {% endfor %}
+    });
+</script>
 {% endif %}
-
 {% endblock %}
