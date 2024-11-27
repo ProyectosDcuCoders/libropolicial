@@ -1,3 +1,67 @@
+# Vista para listar todas las comisarías
+class ComisariasCompletaListView(LoginRequiredMixin, ListView):
+    template_name = 'comisarias/comisarias_completa_list.html'
+    context_object_name = 'comisarias'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+
+        # Filtrar solo las comisarías activas
+        comisarias_primera = ComisariaPrimera.objects.filter(activo=True).select_related('cuarto')
+        comisarias_segunda = ComisariaSegunda.objects.filter(activo=True).select_related('cuarto')
+        comisarias_tercera = ComisariaTercera.objects.filter(activo=True).select_related('cuarto')
+        comisarias_cuarta = ComisariaCuarta.objects.filter(activo=True).select_related('cuarto')
+        comisarias_quinta = ComisariaQuinta.objects.filter(activo=True).select_related('cuarto')
+
+        # Asignar nombres a cada instancia de comisaría
+        for comisaria in comisarias_primera:
+            comisaria.comisaria_nombre = 'Comisaria Primera'
+        for comisaria in comisarias_segunda:
+            comisaria.comisaria_nombre = 'Comisaria Segunda'
+        for comisaria in comisarias_tercera:
+            comisaria.comisaria_nombre = 'Comisaria Tercera'
+        for comisaria in comisarias_cuarta:
+            comisaria.comisaria_nombre = 'Comisaria Cuarta'
+        for comisaria in comisarias_quinta:
+            comisaria.comisaria_nombre = 'Comisaria Quinta'
+
+        # Combinar todas las listas de comisarías
+        combined_list = list(comisarias_primera) + list(comisarias_segunda) + \
+                        list(comisarias_tercera) + list(comisarias_cuarta) + \
+                        list(comisarias_quinta)
+
+        # Aplicar filtro de búsqueda si hay una consulta
+        if query:
+            combined_list = [comisaria for comisaria in combined_list if self.query_in_comisaria(comisaria, query)]
+
+        # Ordenar la lista combinada por la fecha de creación, de la más reciente a la más antigua
+        combined_list = sorted(combined_list, key=lambda x: x.created_at, reverse=True)
+
+        return combined_list
+
+    # Función para verificar si la consulta está en algún campo de la comisaría
+    def query_in_comisaria(self, comisaria, query):
+        query_lower = query.lower()
+        return (
+            (query_lower in comisaria.comisaria_nombre.lower()) or
+            (comisaria.cuarto and query_lower in comisaria.cuarto.cuarto.lower()) or
+            (comisaria.codigo and query_lower in comisaria.codigo.codigo.lower()) or
+            (query_lower in comisaria.movil_patrulla.lower() if comisaria.movil_patrulla else False) or
+            (query_lower in comisaria.a_cargo.lower() if comisaria.a_cargo else False) or
+            (query_lower in comisaria.secundante.lower() if comisaria.secundante else False) or
+            (query_lower in comisaria.lugar_codigo.lower() if comisaria.lugar_codigo else False) or
+            (query_lower in comisaria.descripcion.lower() if comisaria.descripcion else False) or
+            (query_lower in comisaria.fecha_hora.strftime('%Y-%m-%d %H:%M:%S').lower())
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        context['paginate_by'] = self.request.GET.get('items_per_page', 15)
+        return context
+
+
+
 import os
 import json
 import mimetypes

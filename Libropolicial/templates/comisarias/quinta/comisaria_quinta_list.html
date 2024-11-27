@@ -157,13 +157,14 @@
             }
         }}">
     <!-- TITULO -->
-    <h1 class="text-2xl font-bold text-center mb-4">Lista de Codigos en Comisaría Qinta</h1>
+    <h1 class="text-2xl font-bold text-center mb-4">Lista de Codigos en Comisaría Quinta</h1>
     <!-- SUB MENU -->
     <div class="me-nu flex flex-wrap justify-center gap-4">
+        {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
         <a href="{% url 'comisaria_quinta_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
-    
+        {% endif %}
         <!-- Botón para 'jefessuperiores' -->
-        {% if is_jefessuperiores %}
+        {% if is_jefessuperiores or can_access_comisarias %}
         <a href="{% url 'comisarias_completa_list' %}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700">Libro general codigos</a>
         {% endif %}
     
@@ -244,17 +245,21 @@
                         </a>
 
                         {% if not request.user.get_full_name in record.firmas %}
+                        {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
                         <button @click.prevent="recordIdToSign = {{ record.pk }}; showConfirmModal = true" 
                             class="bg-teal-500 text-black  px-4 w-full rounded  block text-center my-1">
                             FIRMAR
                         </button>
                         {% endif %}
+                        {% endif %}
 
                         {% if record.estado or record.fecha_hora.date == today %}
+                        {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
                         <a href="{% url 'comisaria_quinta_edit' record.pk %}" 
                             class="bg-yellow-500 text-black  px-4 w-full rounded  block  text-center my-1">
                             EDITAR
                         </a>
+                        {% endif %}
                         {% endif %}
                         
                         {% if is_jefessuperiores or user.is_superuser %}
@@ -299,38 +304,41 @@
         </div>
     </div>
 
-    <!-- Modal de confirmación para firmar -->
-    <div x-show="showConfirmModal" x-cloak class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-2 px-4 pb-20 text-center sm:block sm:p-0">
-            <div x-show="showConfirmModal" 
-                class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true">
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div x-show="showConfirmModal" 
-                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Confirmación</h3>
-                            <div class="mt-2">
-                                <p class="text-sm text-gray-500">¿Está seguro/a de que desea firmar este codigo?</p>
-                            </div>
+   <!-- Modal de confirmación para firmar -->
+<div x-show="showConfirmModal" x-cloak class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-2 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Fondo del modal -->
+        <div x-show="showConfirmModal" 
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true">
+        </div>
+        <!-- Contenido del modal -->
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div x-show="showConfirmModal" 
+            class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Confirmación</h3>
+                        <div class="mt-2">
+                            <p class="text-sm text-gray-500">¿Está seguro/a de que desea firmar este código?</p>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-300 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button @click="confirmSign()" type="button" 
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Sí
-                    </button>
-                    <button @click="showConfirmModal = false" type="button" 
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm">
-                        No
-                    </button>
-                </div>
+            </div>
+            <div class="bg-gray-300 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button @click="confirmSign()" type="button" 
+                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Sí
+                </button>
+                <button @click="showConfirmModal = false" type="button" 
+                    class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm">
+                    No
+                </button>
             </div>
         </div>
     </div>
+</div>
+
 
 </div>
 

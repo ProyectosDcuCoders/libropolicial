@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 #el setting esta para desarrollo nuevos cambios
 # ALLOWED_HOSTS = ['192.168.1.114', 'localhost', '127.0.0.1']
 
-
 # Definición de la aplicación
 
 INSTALLED_APPS = [
@@ -87,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'compartido.context_processors.global_user_permissions',# agreege este nuevo para permisos globales dcu101
             ],
         },
     },

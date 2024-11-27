@@ -120,7 +120,7 @@ def sign_comisaria_quintaRG(request, pk):
     comisaria.save(update_fields=['firmas'])  # Solo actualiza el campo firmas
     return redirect(reverse('comisaria_quintaRG_list'))
 
-#-------------------clase para ver la tabla los codigos -------------------------------------------------------------------------
+#-------------------clase para ver la tabla los codigos comisariaprimeraRG filtrando con los permisos-------------------------------------------------------------------------
 
 # views.py
 
@@ -200,6 +200,76 @@ class ComisariaPrimeraRGListView(LoginRequiredMixin, UserPassesTestMixin, ListVi
         
         # Devuelve el contexto completo.
         return context
+
+#-------------------clase para ver la tabla los codigos comisariaprimeraRG desde la base de datos-------------------------------------------------------------------------#     
+from django.db.models import Value, Q, CharField
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# Vista para listar todas las comisarías de  RG
+class ComisariasPrimeraRGListView(LoginRequiredMixin, ListView):
+    template_name = 'comisariasriogrande/comisarias_completaprimeraRG_list.html'
+    context_object_name = 'page_obj'
+
+    def get_paginate_by(self, queryset):
+        """Define el número de registros por página dinámicamente."""
+        items_per_page = self.request.GET.get('items_per_page', 10)
+        try:
+            return int(items_per_page)
+        except ValueError:
+            return 10  # Valor por defecto si no es válido
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '').strip()  # Obtiene y limpia la consulta
+
+        # Filtro de búsqueda
+        search_filter = (
+            Q(cuartoRG__cuartoRG__icontains=query) |
+            Q(codigoRG__codigoRG__icontains=query) |
+            Q(codigoRG__nombre_codigoRG__icontains=query) |
+            Q(movil_patrulla__icontains=query) |
+            Q(a_cargo__icontains=query) |
+            Q(secundante__icontains=query) |
+            Q(lugar_codigo__icontains=query) |
+            Q(tareas_judiciales__icontains=query) |
+            Q(descripcion__icontains=query) |
+            Q(fecha_hora__icontains=query)
+        ) if query else Q()  # Solo aplica el filtro si hay una consulta
+
+        # Obtiene los datos filtrados
+        queryset = ComisariaCuartaRG.objects.filter(
+            activo=True
+        ).select_related('cuartoRG').filter(search_filter)
+
+        # Ordenar por fecha de creación
+        return queryset.order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+
+        # Paginación
+        paginate_by = self.get_paginate_by(queryset)
+        paginator = Paginator(queryset, paginate_by)
+        page = self.request.GET.get('page')
+
+        try:
+            page_obj = paginator.page(page)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        # Calcular el rango dinámico de páginas
+        current_page = page_obj.number
+        total_pages = page_obj.paginator.num_pages
+        range_start = max(current_page - 5, 1)
+        range_end = min(current_page + 5, total_pages) + 1  # Incluye la última página
+
+        context['page_obj'] = page_obj
+        context['query'] = self.request.GET.get('q', '')
+        context['items_per_page'] = paginate_by
+        context['page_range'] = range(range_start, range_end)
+        return context
+
 
 #---------------------------clase para el create del formulario------------------------------------------------------------------------------------
    
@@ -1358,7 +1428,7 @@ def eliminar_comisaria_terceraRG(request, pk):
 
 
 
-#--------------------------vista para para la comisria cuartaRG------------------------------------------------------
+#--------------------------vista para para la comisaria cuartaRG------------------------------------------------------
 
 
 
@@ -1693,15 +1763,86 @@ class ComisariaCuartaRGUpdateView(LoginRequiredMixin, UserPassesTestMixin, Updat
         messages.success(self.request, 'El código ha sido guardado exitosamente.')
         return super().form_valid(form)
     
-   
-
-
-#---------------------detalle de comisaria cuartaRG-----------------------------------------------
-
+#--------------------detalle para comisariacuartaRG-------------------------------------  
+#    
 class ComisariaCuartaRGDetailView(DetailView):
     model = ComisariaCuartaRG
     template_name = 'comisariasriogrande/cuartaRG/comisaria_cuartaRG_detail.html'
     context_object_name = 'record'
+
+
+
+#--------------------vista desde la base de datos para comisariacuartaRG-------------------------------------   
+
+
+from django.db.models import Value, Q, CharField
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# Vista para listar todas las comisarías de  RG
+class ComisariasCuartaRGListView(LoginRequiredMixin, ListView):
+    template_name = 'comisariasriogrande/comisarias_completacuartaRG_list.html'
+    context_object_name = 'page_obj'
+
+    def get_paginate_by(self, queryset):
+        """Define el número de registros por página dinámicamente."""
+        items_per_page = self.request.GET.get('items_per_page', 10)
+        try:
+            return int(items_per_page)
+        except ValueError:
+            return 10  # Valor por defecto si no es válido
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '').strip()  # Obtiene y limpia la consulta
+
+        # Filtro de búsqueda
+        search_filter = (
+            Q(cuartoRG__cuartoRG__icontains=query) |
+            Q(codigoRG__codigoRG__icontains=query) |
+            Q(codigoRG__nombre_codigoRG__icontains=query) |
+            Q(movil_patrulla__icontains=query) |
+            Q(a_cargo__icontains=query) |
+            Q(secundante__icontains=query) |
+            Q(lugar_codigo__icontains=query) |
+            Q(tareas_judiciales__icontains=query) |
+            Q(descripcion__icontains=query) |
+            Q(fecha_hora__icontains=query)
+        ) if query else Q()  # Solo aplica el filtro si hay una consulta
+
+        # Obtiene los datos filtrados
+        queryset = ComisariaCuartaRG.objects.filter(
+            activo=True
+        ).select_related('cuartoRG').filter(search_filter)
+
+        # Ordenar por fecha de creación
+        return queryset.order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+
+        # Paginación
+        paginate_by = self.get_paginate_by(queryset)
+        paginator = Paginator(queryset, paginate_by)
+        page = self.request.GET.get('page')
+
+        try:
+            page_obj = paginator.page(page)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+
+        # Calcular el rango dinámico de páginas
+        current_page = page_obj.number
+        total_pages = page_obj.paginator.num_pages
+        range_start = max(current_page - 5, 1)
+        range_end = min(current_page + 5, total_pages) + 1  # Incluye la última página
+
+        context['page_obj'] = page_obj
+        context['query'] = self.request.GET.get('q', '')
+        context['items_per_page'] = paginate_by
+        context['page_range'] = range(range_start, range_end)
+        return context
+
 
 
 #----------------------------softdelete-------------------------------------------------------------
@@ -2083,69 +2224,111 @@ def eliminar_comisaria_quintaRG(request, pk):
 
 
 #--------------------vista dee todas las comisariasRG-------------------------------------    
-
+from django.db.models import Value, Q, CharField
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Vista para listar todas las comisarías de  RG
 class ComisariasCompletaRGListView(LoginRequiredMixin, ListView):
     template_name = 'comisariasriogrande/comisarias_completaRG_list.html'
-    context_object_name = 'comisarias'
+    context_object_name = 'page_obj'
+  
+
+    def get_paginate_by(self, queryset):
+        """Define el número de registros por página dinámicamente."""
+        items_per_page = self.request.GET.get('items_per_page', 10)
+        try:
+            return int(items_per_page)
+        except ValueError:
+            return 10  # Valor por defecto si no es válido
 
     def get_queryset(self):
-        query = self.request.GET.get('q', '')
+        query = self.request.GET.get('q', '').strip()  # Obtiene y limpia la consulta
 
-        # Filtrar solo las comisarías activas
-        comisarias_primeraRG = ComisariaPrimeraRG.objects.filter(activo=True).select_related('cuartoRG')
-        comisarias_segundaRG = ComisariaSegundaRG.objects.filter(activo=True).select_related('cuartoRG')
-        comisarias_terceraRG = ComisariaTerceraRG.objects.filter(activo=True).select_related('cuartoRG')
-        comisarias_cuartaRG = ComisariaCuartaRG.objects.filter(activo=True).select_related('cuartoRG')
-        comisarias_quintaRG = ComisariaQuintaRG.objects.filter(activo=True).select_related('cuartoRG')
+        # Crea un filtro Q común para reutilizarlo
+        search_filter = (
+            Q(comisaria_nombre__icontains=query) |
+            Q(cuartoRG__cuartoRG__icontains=query) |
+            Q(codigoRG__codigoRG__icontains=query) |
+            Q(codigoRG__nombre_codigoRG__icontains=query) |
+            Q(movil_patrulla__icontains=query) |
+            Q(a_cargo__icontains=query) |
+            Q(secundante__icontains=query) |
+            Q(lugar_codigo__icontains=query) |
+            Q(tareas_judiciales__icontains=query) |
+            Q(descripcion__icontains=query) |
+            Q(fecha_hora__icontains=query)
+        ) if query else Q()  # Solo aplica el filtro si hay una consulta
 
-        # Asignar nombres a cada instancia de comisaría
-        for comisaria in comisarias_primeraRG:
-            comisaria.comisaria_nombre = 'Comisaria PrimeraRG'
-        for comisaria in comisarias_segundaRG:
-            comisaria.comisaria_nombre = 'Comisaria SegundaRG'
-        for comisaria in comisarias_terceraRG:
-            comisaria.comisaria_nombre = 'Comisaria TerceraRG'
-        for comisaria in comisarias_cuartaRG:
-            comisaria.comisaria_nombre = 'Comisaria CuartaRG'
-        for comisaria in comisarias_quintaRG:
-            comisaria.comisaria_nombre = 'Comisaria QuintaRG'
+        # Filtra y anota cada QuerySet individualmente
+        comisarias_primeraRG = ComisariaPrimeraRG.objects.filter(
+            activo=True
+        ).select_related('cuartoRG').annotate(
+            comisaria_nombre=Value('Comisaria Primera Rio Grande', output_field=CharField())
+        ).filter(search_filter)
 
-        # Combinar todas las listas de comisarías
-        combined_list = list(comisarias_primeraRG) + list(comisarias_segundaRG) + \
-                        list(comisarias_terceraRG) + list(comisarias_cuartaRG) + \
-                        list(comisarias_quintaRG)
+        comisarias_segundaRG = ComisariaSegundaRG.objects.filter(
+            activo=True
+        ).select_related('cuartoRG').annotate(
+            comisaria_nombre=Value('Comisaria Segunda Rio Grande', output_field=CharField())
+        ).filter(search_filter)
 
-        # Aplicar filtro de búsqueda si hay una consulta
-        if query:
-            combined_list = [comisaria for comisaria in combined_list if self.query_in_comisaria(comisaria, query)]
+        comisarias_terceraRG = ComisariaTerceraRG.objects.filter(
+            activo=True
+        ).select_related('cuartoRG').annotate(
+            comisaria_nombre=Value('Comisaria Tercera Rio Grande', output_field=CharField())
+        ).filter(search_filter)
 
-        # Ordenar la lista combinada por la fecha de creación, de la más reciente a la más antigua
-        combined_list = sorted(combined_list, key=lambda x: x.created_at, reverse=True)
+        comisarias_cuartaRG = ComisariaCuartaRG.objects.filter(
+            activo=True
+        ).select_related('cuartoRG').annotate(
+            comisaria_nombre=Value('Comisaria Cuarta Rio Grande', output_field=CharField())
+        ).filter(search_filter)
 
-        return combined_list
+        comisarias_quintaRG = ComisariaQuintaRG.objects.filter(
+            activo=True
+        ).select_related('cuartoRG').annotate(
+            comisaria_nombre=Value('Comisaria Quinta Rio Grande', output_field=CharField())
+        ).filter(search_filter)
 
-    # Función para verificar si la consulta está en algún campo de la comisaría
-    def query_in_comisaria(self, comisaria, query):
-        query_lower = query.lower()
-        return (
-            (query_lower in comisaria.comisaria_nombre.lower()) or
-            (comisaria.cuartoRG and query_lower in comisaria.cuartoRG.cuartoRG.lower()) or
-            (comisaria.codigoRG and query_lower in comisaria.codigoRG.codigoRG.lower()) or
-            (query_lower in comisaria.movil_patrulla.lower() if comisaria.movil_patrulla else False) or
-            (query_lower in comisaria.a_cargo.lower() if comisaria.a_cargo else False) or
-            (query_lower in comisaria.secundante.lower() if comisaria.secundante else False) or
-            (query_lower in comisaria.lugar_codigo.lower() if comisaria.lugar_codigo else False) or
-            (query_lower in comisaria.descripcion.lower() if comisaria.descripcion else False) or
-            (query_lower in comisaria.fecha_hora.strftime('%Y-%m-%d %H:%M:%S').lower())
+        # Unión de los QuerySets
+        combined_queryset = comisarias_primeraRG.union(
+            comisarias_segundaRG,
+            comisarias_terceraRG,
+            comisarias_cuartaRG,
+            comisarias_quintaRG
         )
+
+        # Ordenar por fecha de creación
+        return combined_queryset.order_by('-created_at')
+    
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['query'] = self.request.GET.get('q', '')
-        context['paginate_by'] = self.request.GET.get('items_per_page', 10)
-        return context
+        queryset = self.get_queryset()
 
+    # Paginación
+        paginate_by = self.get_paginate_by(queryset)
+        paginator = Paginator(queryset, paginate_by)
+        page = self.request.GET.get('page')
+
+        try:
+           page_obj = paginator.page(page)
+        except PageNotAnInteger:
+           page_obj = paginator.page(1)
+        except EmptyPage:
+           page_obj = paginator.page(paginator.num_pages)
+
+    # Calcular el rango dinámico de páginas
+        current_page = page_obj.number
+        total_pages = page_obj.paginator.num_pages
+        range_start = max(current_page - 5, 1)
+        range_end = min(current_page + 5, total_pages) + 1  # Incluye la última página
+
+        context['page_obj'] = page_obj
+        context['query'] = self.request.GET.get('q', '')
+        context['items_per_page'] = paginate_by
+        context['page_range'] = range(range_start, range_end)
+        return context
 
     
 #-------------------------------genera pdf para firma y descarga------------------------------------------------------

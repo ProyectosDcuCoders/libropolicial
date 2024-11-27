@@ -272,6 +272,18 @@
                 flex-direction: column;
             }
         }
+        /* DESBORDE DE TEXTO DE MODAL-DESCRIPCION */
+        .descripcion-container *{
+            margin-right: 0 !important;
+        }
+        /* COLOR TEXT MODAL DESCRIPCION */
+        html.dark .descripcion-container * {
+            color: rgba(245, 245, 245, 0.96) !important;
+        }
+        [x-cloak] {
+            display: none !important;
+        }
+        
     </style>
     <!-- Estilos CSS para el efecto de destello -->
 
@@ -346,7 +358,7 @@
                 </button>
 
         <!-- Dropdown solo visible para superusuarios -->
-        {% if user.is_authenticated and user.is_superuser %}
+        {% if can_access_comisarias %}
         <div x-data="{ open: false }" class="relative">
           <button
             @click="open = !open"
@@ -411,6 +423,8 @@
             </li>
           </ul>          
         </div>
+        {% endif %}
+        {% if can_access_comisariasRG %}
         <div x-data="{ open: false }" class="relative">
           <button
             @click="open = !open"
@@ -474,7 +488,7 @@
               >
             </li>
           </ul>          
-        </div>
+        </div>        
         {% endif %}
 
         <!-- Puedes agregar aquí el nombre del usuario autenticado -->

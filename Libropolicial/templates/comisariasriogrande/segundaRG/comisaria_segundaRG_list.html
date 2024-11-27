@@ -21,9 +21,11 @@
     <h1 class="text-2xl font-bold mb-4 text-center">Lista de Codigos en Comisaría Segunda Rio Grande</h1>
 
     <div class="flex flex-wrap justify-center gap-4 mb-4">
+        {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias or librero %}
         <a href="{% url 'comisaria_segundaRG_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Codigo</a>
+        {% endif %}
          <!-- Botón para 'jefessuperiores' -->
-        {% if is_jefessuperiores %}
+        {% if is_jefessuperiores or can_access_comisarias %}
         <a href="{% url 'comisarias_completaRG_list' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Libro general codigos</a>
         {% endif %}
          <!-- Botón para 'oficialesservicios' y 'jefessuperiores' -->
@@ -104,7 +106,9 @@
                             <a href="{% url 'comisaria_segundaRG_edit' record.pk %}" class="bg-yellow-500 text-white py-1 px-4 rounded hover:bg-yellow-600 block mb-2 text-center">Editar</a>
                         {% endif %}
                         {% if not request.user.get_full_name in record.firmas %}
+                        {% if is_oficialesservicios or is_jefessuperiores or is_encargadosguardias %}
                             <button @click.prevent="recordIdToSign = {{ record.pk }}; showConfirmModal = true" class="bg-purple-500 text-white py-1 px-4 w-full min-w-[120px] rounded hover:bg-purple-700 block text-center">Firmar</button>
+                        {% endif %}
                         {% endif %}
                         <!-- Nuevo botón "Full" -->
                         <a href="{% url 'comisaria_segundaRG_detail' record.pk %}" class="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-700 block text-center mt-2">Full</a>
