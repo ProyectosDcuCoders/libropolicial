@@ -39,7 +39,7 @@ from compartido.utils import user_is_in_group
 import base64
 
 
-#------------------funcion par de realizar las firmas--------------------------------------------#
+#------------------funcion par de realizar las firmas--------------------------------------------
 
 @login_required
 def sign_comisaria_primera(request, pk):
