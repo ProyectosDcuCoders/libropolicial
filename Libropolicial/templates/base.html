@@ -84,17 +84,6 @@
             /* Texto en color oscuro */
         }
 
-        html,
-        body {
-            max-width: 100% !important;
-            overflow-x: hidden !important;
-        }
-
-        /* fuente roboto */
-        h1 {
-            font-family: 'Roboto Slab', serif;
-        }
-
         .descripcion-container {
             margin-right: 28px;
             !important
@@ -253,6 +242,7 @@
         nav {
             flex-direction: column !important; 
         }
+        
     }
 
     @media (max-width: 440px) {
@@ -276,7 +266,7 @@
         }
 
         nav {
-            flex-direction: column;
+            
         }
 
         .luz-and-droopdown {
@@ -288,6 +278,9 @@
         .luz {
             order: 2;
         }
+    }
+    .cerrar-sesion span{
+        color: red!important;
     }
     </style>
     <!-- Estilos CSS para el efecto de destello -->
@@ -305,8 +298,7 @@
         <nav class="flex items-center">
             <div class="luz-and-droopdown flex"> 
                 <!-- BOTON MODO OSCURO--> 
-                <button id="theme-toggle"
-                    class="luz focus:outline-none"> 
+                <button id="theme-toggle" class="luz focus:outline-none"> 
                     <svg id="sun-icon" class="w-6 h-6 hidden" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -324,9 +316,8 @@
                 <!-- Dropdown solo visible para superusuarios -->
                 {% if can_access_comisarias %}
                 <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open"
-                        class="cerrar-sesion focus:outline-none bg-transparent text-white font-semibold py-2 px-4 rounded inline-flex items-center">
-                        <span>Comisarías Ushuaia</span>
+                    <button @click="open = !open" class="cerrar-sesion focus:outline-none bg-transparent text-white font-semibold py-2 px-4 rounded inline-flex items-center">
+                        <span>Comisarías Ushuaiadd</span>
                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -368,7 +359,7 @@
                 {% if can_access_comisariasRG %}
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open"
-                        class="focus:outline-none bg-transparent text-white font-semibold py-2 px-4 rounded inline-flex items-center">
+                        class="cerrar-sesion focus:outline-none bg-transparent text-white font-semibold py-2 px-4 rounded inline-flex items-center">
                         <span>Comisarías Rio Grande</span>
                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
