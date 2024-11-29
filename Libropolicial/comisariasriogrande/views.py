@@ -34,7 +34,7 @@ from xhtml2pdf import pisa
 from Libropolicial.settings import MEDIA_ROOT
 from .forms import ComisariaPrimeraRGForm, ComisariaSegundaRGForm, ComisariaTerceraRGForm, ComisariaCuartaRGForm, ComisariaQuintaRGForm, CustomLoginForm
 from .models import ComisariaPrimeraRG, ComisariaSegundaRG, ComisariaTerceraRG, ComisariaCuartaRG, ComisariaQuintaRG, DependenciasSecundariasRG, CodigoPolicialRG, DetalleDependenciaSecundariaRG, DetalleInstitucionFederal, DetalleServicioEmergenciaRG, DetalleInstitucionHospitalariaRG, DetalleDependenciaMunicipalRG, DetalleDependenciaProvincialRG 
-from compartido.models import UploadedPDF
+from compartido.models import UploadedPDFRG
 
 from compartido.utils import user_is_in_group
 import base64
@@ -2571,7 +2571,7 @@ def subir_pdfRG(request):
                 folder = 'partespdfRG/'
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, folder))
                 filename = fs.save(pdf.name, pdf)
-                new_pdf = UploadedPDF(file=os.path.join(folder, filename), uploaded_by=request.user)
+                new_pdf = UploadedPDFRG(file=os.path.join(folder, filename), uploaded_by=request.user)
                 new_pdf.save()
                 return JsonResponse({'success': 'El archivo PDF se ha subido correctamente.'})
             except Exception as e:
@@ -2581,7 +2581,7 @@ def subir_pdfRG(request):
     return render(request, 'comisariasriogrande/subir_pdfRG.html')
 
 
-#-----------------------------------funcion para ver todos los registros  de los pdf--------------------------------------------------------------
+#-----------------------------------funcion para ver todos los registros  de los pdfRG--------------------------------------------------------------
 
 
 
@@ -2589,14 +2589,14 @@ from django.http import FileResponse
 
 def ver_pdfsRG(request):
     # Obtiene todos los registros de PDF almacenados en la base de datos
-    pdfs = UploadedPDF.objects.all()
+    pdfs = UploadedPDFRG.objects.all()
     
     # Renderiza la plantilla 'ver_pdfsRG.html' y pasa los registros de PDF al contexto
     return render(request, 'comisariasriogrande/ver_pdfsRG.html', {'pdfs': pdfs})
 
 def mostrar_pdfRG(request, pdf_id):
-    # Obtiene el objeto UploadedPDF por ID
-    pdf = UploadedPDF.objects.get(id=pdf_id)
+    # Obtiene el objeto UploadedPDFRG por ID
+    pdf = UploadedPDFRG.objects.get(id=pdf_id)
     
     # Abre el archivo desde el sistema de archivos
     pdf_path = pdf.file.path
