@@ -127,7 +127,7 @@ class BaseComisariaRG(models.Model):
         abstract = True  # Define que esta clase es abstracta, es decir, no se creará una tabla de base de datos para esta clase, sino para sus subclases.
 
 
-# Subclases concretas de BaseComisaria para cada comisaría.
+# Subclases concretas de BaseComisaria para cada comisaría. se realizaron cambios
 class ComisariaPrimeraRG(BaseComisariaRG):
     def delete(self, *args, **kwargs):
         self.activo = False

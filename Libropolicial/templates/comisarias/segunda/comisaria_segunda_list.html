@@ -208,7 +208,7 @@
                 <tr class="tede">
                     <td class="py-1 px-2 font-bold text-center">{{ record.cuarto.cuarto }}</td>
                     <td class="py-1 px-2 text-center">{{ record.fecha_hora|date:"d/m/Y H:i:s" }}</td>
-                    <td class="td-codigo py-1 px-2 text-center border-r border-l border-gray-600">
+                    <td class="td-codigo py-1 px-2 text-center">
                         <p>{{ record.codigo|default_if_none:'' }}</p>
                     </td>
                     <td class="td-qth py-1 px-2 text-center">{{ record.lugar_codigo|default_if_none:'' }}</td>
