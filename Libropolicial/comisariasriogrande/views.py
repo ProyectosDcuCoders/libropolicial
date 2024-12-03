@@ -324,120 +324,120 @@ class ComisariaPrimeraRGCreateView(LoginRequiredMixin, UserPassesTestMixin, Crea
 
     # Método que se llama cuando el formulario es válido.
     def form_valid(self, form):
-        # Guarda el objeto pero sin enviarlo aún a la base de datos.
-        self.object = form.save(commit=False)
-        
-        # Asigna al campo 'created_by' el usuario actual.
-        self.object.created_by = self.request.user
-        
-        # Inicializa los campos 'updated_by' y 'updated_at' como None.
-        self.object.updated_by = None
-        self.object.updated_at = None
-
-        # Obtiene la latitud y longitud desde el formulario y convierte las comas en puntos.
-        latitude = self.request.POST.get('latitude').replace(',', '.')
-        longitude = self.request.POST.get('longitude').replace(',', '.')
-
-        # Asigna las coordenadas al objeto si están disponibles.
-        self.object.latitude = float(latitude) if latitude else None
-        self.object.longitude = float(longitude) if longitude else None
-
-        # Guarda el objeto en la base de datos.
-        self.object.save()
-        
-        # Guarda las relaciones many-to-many del formulario.
-        form.save_m2m()
-
-        # Guardar los detalles adicionales para cada servicio de emergencia.
-        for servicioRG in form.cleaned_data['servicios_emergenciaRG']:
-            # Obtiene los datos específicos para cada servicio de emergencia desde el formulario.
-            numero_movil_bomberosRG = self.request.POST.get(f'numero_movil_bomberos_{servicioRG.id}')
-            nombre_a_cargo_bomberosRG = self.request.POST.get(f'nombre_a_cargo_bomberos_{servicioRG.id}')
+            # Guarda el objeto pero sin enviarlo aún a la base de datos.
+            self.object = form.save(commit=False)
             
-            # Si se proporcionan datos, crea un registro en DetalleServicioEmergencia.
-            if numero_movil_bomberosRG or nombre_a_cargo_bomberosRG:
-                DetalleServicioEmergenciaRG.objects.create(
-                    servicio_emergenciaRG=servicioRG,
-                    comisaria_primeraRG=self.object,
-                    numero_movil_bomberosRG=numero_movil_bomberosRG,
-                    nombre_a_cargo_bomberosRG=nombre_a_cargo_bomberosRG
-                )
-
-        # Guardar los detalles adicionales para cada institución hospitalaria.
-        for institucionRG in form.cleaned_data['instituciones_hospitalariasRG']:
-            # Obtiene los datos específicos para cada institución hospitalaria desde el formulario.
-            numero_movil_hospitalRG = self.request.POST.get(f'numero_movil_hospital_{institucionRG.id}')
-            nombre_a_cargo_hospitalRG = self.request.POST.get(f'nombre_a_cargo_hospital_{institucionRG.id}')
+            # Asigna al campo 'created_by' el usuario actual.
+            self.object.created_by = self.request.user
             
-            # Si se proporcionan datos, crea un registro en DetalleInstitucionHospitalaria.
-            if numero_movil_hospitalRG or nombre_a_cargo_hospitalRG:
-                DetalleInstitucionHospitalariaRG.objects.create(
-                    institucion_hospitalariaRG=institucionRG,
-                    comisaria_primeraRG=self.object,
-                    numero_movil_hospitalRG=numero_movil_hospitalRG,
-                    nombre_a_cargo_hospitalRG=nombre_a_cargo_hospitalRG
-                )
+            # Inicializa los campos 'updated_by' y 'updated_at' como None.
+            self.object.updated_by = None
+            self.object.updated_at = None
 
-        # Guardar los detalles adicionales para cada dependencia municipal.
-        for dependencia_municipalRG in form.cleaned_data['dependencias_municipalesRG']:
-            # Obtiene los datos específicos para cada dependencia municipal desde el formulario.
-            numero_movil_municipalRG = self.request.POST.get(f'numero_movil_municipal_{dependencia_municipalRG.id}')
-            nombre_a_cargo_municipalRG = self.request.POST.get(f'nombre_a_cargo_municipal_{dependencia_municipalRG.id}')
+            # Obtiene la latitud y longitud desde el formulario y convierte las comas en puntos.
+            latitude = self.request.POST.get('latitude').replace(',', '.')
+            longitude = self.request.POST.get('longitude').replace(',', '.')
+
+            # Asigna las coordenadas al objeto si están disponibles.
+            self.object.latitude = float(latitude) if latitude else None
+            self.object.longitude = float(longitude) if longitude else None
+
+            # Guarda el objeto en la base de datos.
+            self.object.save()
             
-            # Si se proporcionan datos, crea un registro en DetalleDependenciaMunicipal.
-            if numero_movil_municipalRG or nombre_a_cargo_municipalRG:
-                DetalleDependenciaMunicipalRG.objects.create(
-                    dependencia_municipalRG=dependencia_municipalRG,
-                    comisaria_primeraRG=self.object,
-                    numero_movil_municipalRG=numero_movil_municipalRG,
-                    nombre_a_cargo_municipalRG=nombre_a_cargo_municipalRG
-                )
+            # Guarda las relaciones many-to-many del formulario.
+            form.save_m2m()
 
-        # Guardar los detalles adicionales para cada dependencia provincial.
-        for dependencia_provincialRG in form.cleaned_data['dependencias_provincialesRG']:
-            # Obtiene los datos específicos para cada dependencia provincial desde el formulario.
-            numero_movil_provincialRG = self.request.POST.get(f'numero_movil_provincial_{dependencia_provincialRG.id}')
-            nombre_a_cargo_provincialRG = self.request.POST.get(f'nombre_a_cargo_provincial_{dependencia_provincialRG.id}')
+            # Guardar los detalles adicionales para cada servicio de emergencia.
+            for servicioRG in form.cleaned_data['servicios_emergenciaRG']:
+                # Obtiene los datos específicos para cada servicio de emergencia desde el formulario.
+                numero_movil_bomberosRG = self.request.POST.get(f'numero_movil_bomberos_{servicioRG.id}')
+                nombre_a_cargo_bomberosRG = self.request.POST.get(f'nombre_a_cargo_bomberos_{servicioRG.id}')
+                
+                # Si se proporcionan datos, crea un registro en DetalleServicioEmergencia.
+                if numero_movil_bomberosRG or nombre_a_cargo_bomberosRG:
+                    DetalleServicioEmergenciaRG.objects.create(
+                        servicio_emergenciaRG=servicioRG,
+                        comisaria_primeraRG=self.object,
+                        numero_movil_bomberosRG=numero_movil_bomberosRG,
+                        nombre_a_cargo_bomberosRG=nombre_a_cargo_bomberosRG
+                    )
+
+            # Guardar los detalles adicionales para cada institución hospitalaria.
+            for institucionRG in form.cleaned_data['instituciones_hospitalariasRG']:
+                # Obtiene los datos específicos para cada institución hospitalaria desde el formulario.
+                numero_movil_hospitalRG = self.request.POST.get(f'numero_movil_hospital_{institucionRG.id}')
+                nombre_a_cargo_hospitalRG = self.request.POST.get(f'nombre_a_cargo_hospital_{institucionRG.id}')
+                
+                # Si se proporcionan datos, crea un registro en DetalleInstitucionHospitalaria.
+                if numero_movil_hospitalRG or nombre_a_cargo_hospitalRG:
+                    DetalleInstitucionHospitalariaRG.objects.create(
+                        institucion_hospitalariaRG=institucionRG,
+                        comisaria_primeraRG=self.object,
+                        numero_movil_hospitalRG=numero_movil_hospitalRG,
+                        nombre_a_cargo_hospitalRG=nombre_a_cargo_hospitalRG
+                    )
+
+            # Guardar los detalles adicionales para cada dependencia municipal.
+            for dependencia_municipalRG in form.cleaned_data['dependencias_municipalesRG']:
+                # Obtiene los datos específicos para cada dependencia municipal desde el formulario.
+                numero_movil_municipalRG = self.request.POST.get(f'numero_movil_municipal_{dependencia_municipalRG.id}')
+                nombre_a_cargo_municipalRG = self.request.POST.get(f'nombre_a_cargo_municipal_{dependencia_municipalRG.id}')
+                
+                # Si se proporcionan datos, crea un registro en DetalleDependenciaMunicipal.
+                if numero_movil_municipalRG or nombre_a_cargo_municipalRG:
+                    DetalleDependenciaMunicipalRG.objects.create(
+                        dependencia_municipalRG=dependencia_municipalRG,
+                        comisaria_primeraRG=self.object,
+                        numero_movil_municipalRG=numero_movil_municipalRG,
+                        nombre_a_cargo_municipalRG=nombre_a_cargo_municipalRG
+                    )
+
+            # Guardar los detalles adicionales para cada dependencia provincial.
+            for dependencia_provincialRG in form.cleaned_data['dependencias_provincialesRG']:
+                # Obtiene los datos específicos para cada dependencia provincial desde el formulario.
+                numero_movil_provincialRG = self.request.POST.get(f'numero_movil_provincial_{dependencia_provincialRG.id}')
+                nombre_a_cargo_provincialRG = self.request.POST.get(f'nombre_a_cargo_provincial_{dependencia_provincialRG.id}')
+                
+                # Si se proporcionan datos, crea un registro en DetalleDependenciaProvincial.
+                if numero_movil_provincialRG or nombre_a_cargo_provincialRG:
+                    DetalleDependenciaProvincialRG.objects.create(
+                        dependencia_provincialRG=dependencia_provincialRG,
+                        comisaria_primeraRG=self.object,
+                        numero_movil_provincialRG=numero_movil_provincialRG,
+                        nombre_a_cargo_provincialRG=nombre_a_cargo_provincialRG
+                    )
+
+            # Guardar los detalles adicionales para dependencias secundarias
+            for dependencia_secundariaRG in form.cleaned_data['dependencias_secundariasRG']:
+                numero_movil_secundariaRG = self.request.POST.get(f'numero_movil_secundaria_{dependencia_secundariaRG.id}')
+                nombre_a_cargo_secundariaRG = self.request.POST.get(f'nombre_a_cargo_secundaria_{dependencia_secundariaRG.id}')
+                if numero_movil_secundariaRG or nombre_a_cargo_secundariaRG:
+                    DetalleDependenciaSecundariaRG.objects.create(
+                        dependencia_secundariaRG=dependencia_secundariaRG,
+                        comisaria_primeraRG=self.object,
+                        numero_movil_secundariaRG=numero_movil_secundariaRG,
+                        nombre_a_cargo_secundariaRG=nombre_a_cargo_secundariaRG
+                    )
+
+            # Guardar los detalles adicionales para instituciones federales
+            for institucion_federal in form.cleaned_data['instituciones_federales']:
+                numero_movil_federal = self.request.POST.get(f'numero_movil_federal_{institucion_federal.id}')
+                nombre_a_cargo_federal = self.request.POST.get(f'nombre_a_cargo_federal_{institucion_federal.id}')
+                if numero_movil_federal or nombre_a_cargo_federal:
+                    DetalleInstitucionFederal.objects.create(
+                        institucion_federal=institucion_federal,
+                        comisaria_primeraRG=self.object,
+                        numero_movil_federal=numero_movil_federal,
+                        nombre_a_cargo_federal=nombre_a_cargo_federal
+                    )        
+
+            # Llama al método form_valid de la clase base para completar la operación.
+            # Añadir un mensaje de éxito al sistema de mensajes
+            messages.success(self.request, 'El código ha sido guardado exitosamente.')
             
-            # Si se proporcionan datos, crea un registro en DetalleDependenciaProvincial.
-            if numero_movil_provincialRG or nombre_a_cargo_provincialRG:
-                DetalleDependenciaProvincialRG.objects.create(
-                    dependencia_provincialRG=dependencia_provincialRG,
-                    comisaria_primeraRG=self.object,
-                    numero_movil_provincialRG=numero_movil_provincialRG,
-                    nombre_a_cargo_provincialRG=nombre_a_cargo_provincialRG
-                )
-
-        # Guardar los detalles adicionales para dependencias secundarias
-        for dependencia_secundariaRG in form.cleaned_data['dependencias_secundariasRG']:
-            numero_movil_secundariaRG = self.request.POST.get(f'numero_movil_secundaria_{dependencia_secundariaRG.id}')
-            nombre_a_cargo_secundariaRG = self.request.POST.get(f'nombre_a_cargo_secundaria_{dependencia_secundariaRG.id}')
-            if numero_movil_secundariaRG or nombre_a_cargo_secundariaRG:
-                DetalleDependenciaSecundariaRG.objects.create(
-                    dependencia_secundariaRG=dependencia_secundariaRG,
-                    comisaria_primeraRG=self.object,
-                    numero_movil_secundariaRG=numero_movil_secundariaRG,
-                    nombre_a_cargo_secundariaRG=nombre_a_cargo_secundariaRG
-                )
-
-        # Guardar los detalles adicionales para instituciones federales
-        for institucion_federal in form.cleaned_data['instituciones_federales']:
-            numero_movil_federal = self.request.POST.get(f'numero_movil_federal_{institucion_federal.id}')
-            nombre_a_cargo_federal = self.request.POST.get(f'nombre_a_cargo_federal_{institucion_federal.id}')
-            if numero_movil_federal or nombre_a_cargo_federal:
-                DetalleInstitucionFederal.objects.create(
-                    institucion_federal=institucion_federal,
-                    comisaria_primeraRG=self.object,
-                    numero_movil_federal=numero_movil_federal,
-                    nombre_a_cargo_federal=nombre_a_cargo_federal
-                )        
-
-        # Llama al método form_valid de la clase base para completar la operación.
-        # Añadir un mensaje de éxito al sistema de mensajes
-        messages.success(self.request, 'El código ha sido guardado exitosamente.')
+            return super().form_valid(form)
         
-        return super().form_valid(form)
-    
  #------------------------clase para el edit updtae------------------------------------------------------
 
 

@@ -262,10 +262,11 @@
                         {% endif %}
                         
                         {% if is_jefessuperiores or user.is_superuser %}
-                        <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_cuarta_eliminar' record.pk %}' }"
-                            class="bg-red-600 text-white  px-4 w-full rounded  block text-center my-1">
-                            ELIMINAR
-                        </button>
+                       <!-- Botón Eliminar (Soft Delete) con confirmación -->
+                       <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_cuarta_eliminar' record.pk %}' }"
+                       class="bg-red-600 text-white  px-4 w-full rounded  block text-center my-1">
+                       ELIMINAR
+                       </button>
                        {% endif %}
                     </td>
                 </tr>
@@ -381,6 +382,7 @@
             }
     });
 </script>
+
 
 <!-- SweetAlert2 para mostrar el mensaje de éxito -->
 {% if messages %}

@@ -385,20 +385,19 @@
             }
     });
 </script>
-<!-- SweetAlert2 para mostrar el mensaje de éxito -->
+<script>
 {% if messages %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            {% for message in messages %}
-                Swal.fire({
-                    icon: 'success',  // Cambia el ícono según el tipo de mensaje (success, error, etc.)
-                    // title: 'Hecho!',
-                    text: '{{ message }}',
-                    confirmButtonText: 'OK',
-                    timer: 3000  // La alerta se cierra automáticamente después de 3 segundos
-                });
-            {% endfor %}
-        });
-    </script>
-{% endif %}
+document.addEventListener('DOMContentLoaded', function () {
+{% for message in messages %}
+  Swal.fire({
+  icon: 'success',  // Cambia el ícono según el tipo de mensaje (success, error, etc.)
+  // title: 'Hecho!',
+  text: '{{ message }}',
+  confirmButtonText: 'OK',
+  timer: 3000  // La alerta se cierra automáticamente después de 3 segundos
+  });
+  {% endfor %}
+  });
+  {% endif %} 
+</script>   
 {% endblock %}

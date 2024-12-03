@@ -263,10 +263,11 @@
                         {% endif %}
                         
                         {% if is_jefessuperiores or user.is_superuser %}
-                        <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_quinta_eliminar' record.pk %}' }"
-                            class="bg-red-600 text-white  px-4 w-full rounded  block text-center my-1">
-                            ELIMINAR
-                        </button>
+                       <!-- Botón Eliminar (Soft Delete) con confirmación -->
+                       <button @click.prevent="if (confirm('¿Estás seguro/a de que deseas eliminar este registro?')) { window.location.href = '{% url 'comisaria_quinta_eliminar' record.pk %}' }"
+                       class="bg-red-600 text-white  px-4 w-full rounded  block text-center my-1">
+                       ELIMINAR
+                       </button>
                        {% endif %}
                     </td>
                 </tr>
@@ -380,6 +381,39 @@
             }
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Delegación de eventos: escuchamos eventos sobre los botones de eliminar
+        document.body.addEventListener('click', function (event) {
+            if (event.target && event.target.classList.contains('eliminar-btn')) {
+                // Evitar el envío inmediato del formulario
+                event.preventDefault();
+
+                // Encontrar el formulario padre
+                const form = event.target.closest('form');  // El formulario relacionado con este botón
+
+                // Mostrar SweetAlert para confirmación
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: '¿Deseas eliminar este código?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'No, cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, enviamos el formulario
+                        form.submit();  // Enviar el formulario
+                    } else {
+                        // Si el usuario cancela, mostramos el mensaje correspondiente
+                        Swal.fire('Cancelado', 'El código no fue eliminado.', 'info');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
 
 <!-- SweetAlert2 para mostrar el mensaje de éxito -->
 {% if messages %}

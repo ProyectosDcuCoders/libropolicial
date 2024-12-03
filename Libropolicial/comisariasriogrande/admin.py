@@ -70,8 +70,3 @@ class DependenciasProvincialesRGAdmin(admin.ModelAdmin):
     list_per_page = 20  # Paginación
     actions = [make_active, make_inactive]  # Acciones personalizadas
 
-admin.site.register(ComisariaTerceraRG)
-admin.site.register(ComisariaSegundaRG)
-admin.site.register(ComisariaPrimeraRG)
-admin.site.register(ComisariaCuartaRG)
-admin.site.register(ComisariaQuintaRG)
