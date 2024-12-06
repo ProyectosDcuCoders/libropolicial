@@ -139,7 +139,7 @@
 <div class="contenedor mx-auto mt-4 p-4 dark:text-white">
     <!-- TITULO -->
     <h1 class="text-2xl font-bold mb-4 text-center">Registrar en comisarias</h1>
-    <form method="post" class="dark:text-gray-300" autocomplete="off">
+    <form method="post" id="comisaria-form" class="dark:text-gray-300" autocomplete="off">
         {% csrf_token %}
         <!-- TOP -->
         <!-- BOTONES -->
@@ -539,11 +539,43 @@
         </div>
         <!-- GUARDAR -->
         <div class="guardar w-fit mt-4">
-            <button type="submit" 
-                class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-700 w-full">
+            <button type="submit" id="submit-button" class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-700 w-full">
                 Guardar
             </button>
-        </div>
+        <!-- Campop oculto para el guardado -->  
+            <input type="hidden" name="is_confirmed" id="is_confirmed" value="false">
+        </div>        
     </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('comisaria-form');  // El formulario
+            const submitButton = document.getElementById('submit-button');  // El botón de guardar
+            const isConfirmedInput = document.getElementById('is_confirmed');  // El campo oculto para la confirmación
+    
+            // Evitar que el formulario se envíe inmediatamente
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();  // Evita el envío inmediato del formulario
+    
+                // Muestra el SweetAlert de confirmación
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: '¿Deseas guardar este código?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, guardar',
+                    cancelButtonText: 'No, cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, marca como 'true' y envía el formulario
+                        isConfirmedInput.value = 'true';  // Establece el valor de 'is_confirmed' a 'true'
+                        form.submit();  // Envía el formulario
+                    } else {
+                        // Si el usuario cancela, muestra un mensaje informando que la acción fue cancelada
+                        Swal.fire('Cancelado', 'No se guardó el código.', 'info');
+                    }
+                });
+            });
+        });
+    </script>
 </div>
 {% endblock %}

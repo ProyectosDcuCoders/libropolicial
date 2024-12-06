@@ -25,10 +25,9 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 DEBUG = True
 
 
+ALLOWED_HOSTS = []
 #el setting esta para desarrollo nuevos cambios
 # ALLOWED_HOSTS = ['192.168.1.114', 'localhost', '127.0.0.1']
-#ALLOWED_HOSTS = ['librodeguardia.com','www.librodeguardia.com']
-ALLOWED_HOSTS = []
 
 # Definición de la aplicación
 
@@ -64,7 +63,6 @@ MIDDLEWARE = [
     # 'comisarias.middleware.RedirectAuthenticatedUserMiddleware',  # Añadir este middleware si es necesario
     # 'comisarias.middleware.InactivityLogoutMiddleware',  # Añadir este middleware si es necesario
    
-
 ]
 
 CACHES = {
@@ -103,7 +101,6 @@ TEMPLATES = [
 # settings.py
 
 ASGI_APPLICATION = 'Libropolicial.asgi.application'
-
 
 
 # En desarrollo, si no quieres usar Redis todavía
